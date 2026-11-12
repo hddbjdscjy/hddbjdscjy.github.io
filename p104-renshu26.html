@@ -13,6 +13,7 @@ main{max-width:760px;margin:0 auto;padding:14px}
 .hint{display:none;background:#fff8e1;border-left:4px solid #f2c230;padding:8px 12px;margin:8px 0;border-radius:4px}
 .ans{display:none;background:#e8f5e9;border-left:4px solid #43a047;padding:8px 12px;margin:8px 0;border-radius:4px}
 .sol{display:none;background:#eef4fb;border-left:4px solid #5b7f95;padding:8px 12px;margin:8px 0;border-radius:4px}
+.alt{display:none;background:#f3eefb;border-left:4px solid #7a5ba6;padding:8px 12px;margin:8px 0;border-radius:4px}
 button{background:#2e4a3e;color:#fff;border:0;border-radius:20px;padding:8px 16px;font-size:14px;margin:6px 6px 0 0;cursor:pointer}
 button.sub{background:#8a9a5b}
 button:disabled{background:#aaa}
@@ -27,8 +28,8 @@ figcaption{font-size:13px;color:#555}
 .done{font-size:14px;color:#2e4a3e}
 .howto{background:#eef4fb;border-left:4px solid #5b7f95;padding:10px 14px;border-radius:4px;margin:14px 0;font-size:14px}
 #prog{font-weight:bold;color:#2e4a3e}
-@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
-</style></head><body><header><h1>教科書p.104の練習26｜数学A</h1><p>図形の性質｜2つの円（教科書 p.104）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習26（教科書 p.104）</h2><div class='q'>半径が r と r′ である2つの円の中心間の距離が d であるとき、共通内接線の長さ AB を、r, r′, d を用いて表せ。<figure><svg width='200' height='165' viewBox='0 0 200 165'><circle cx='60.0' cy='110.0' r='39.0' fill='none' stroke='#2e4a3e' stroke-width='2.5'/><circle cx='138.0' cy='110.0' r='26.0' fill='none' stroke='#2e4a3e' stroke-width='2.5'/><line x1='83.7' y1='75.1' x2='125.2' y2='137.7' stroke='#2e4a3e' stroke-width='2.5'/><line x1='60.0' y1='110.0' x2='92.5' y2='88.4' stroke='#2e4a3e' stroke-width='2'/><line x1='138.0' y1='110.0' x2='116.3' y2='124.4' stroke='#2e4a3e' stroke-width='2'/><line x1='60.0' y1='110.0' x2='138.0' y2='110.0' stroke='#2e4a3e' stroke-width='2' stroke-dasharray='5 4'/><text x='92' y='66' font-size='15' fill='#222'>A</text><text x='108' y='145' font-size='15' fill='#222'>B</text><text x='44' y='126' font-size='15' fill='#222'>O</text><text x='140' y='126' font-size='15' fill='#222'>O′</text><text x='68' y='90' font-size='14' fill='#222'>r</text><text x='120' y='107' font-size='14' fill='#222'>r′</text><text x='102' y='127' font-size='14' fill='#222'>d</text><text x='58' y='54' font-size='14' fill='#222'>ℓ</text></svg><figcaption>練習26の図</figcaption></figure></div><p class='hcount'>ヒントは 3 個あります</p><div class='hint'><b>ヒント1：</b>内接線の場合も、直角三角形を作る作戦は同じ。大きい円の中心 O から接線と平行な直線を引き、小さい円の中心 O′ からその直線に垂線を下ろす。</div><div class='hint'><b>ヒント2：</b>できる直角三角形の斜辺は d、もう1辺は半径の和 r ＋ r′ になる。外接線の場合の「差」との違いがポイント。</div><div class='hint'><b>ヒント3：</b>残りの辺の長さが AB と等しい。三平方の定理で表す。</div><div class='ans'><b>答え：</b><b>AB ＝ √(d² − (r ＋ r′)²)</b></div><div class='sol'><b>詳解：</b>O から接線 AB と平行な直線を引き、O′ からその直線に下ろした垂線の足を C とすると、O′C ＝ r ＋ r′、OO′ ＝ d の直角三角形 OO′C ができる。OC ＝ √(d² − (r ＋ r′)²)。AB ＝ OC だから AB ＝ √(d² − (r ＋ r′)²)。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div></main><script>
+@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol,.alt{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
+</style></head><body><header><h1>教科書p.104の練習26｜数学A</h1><p>図形の性質｜2つの円（教科書 p.104）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。別の解き方が用意されている問題では、別解も見てみましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習26（教科書 p.104）</h2><div class='q'>半径が r と r′ である2つの円の中心間の距離が d であるとき、共通内接線の長さ AB を、r, r′, d を用いて表せ。<figure><svg width='200' height='165' viewBox='0 0 200 165'><circle cx='60.0' cy='110.0' r='39.0' fill='none' stroke='#2e4a3e' stroke-width='2.5'/><circle cx='138.0' cy='110.0' r='26.0' fill='none' stroke='#2e4a3e' stroke-width='2.5'/><line x1='83.7' y1='75.1' x2='125.2' y2='137.7' stroke='#2e4a3e' stroke-width='2.5'/><line x1='60.0' y1='110.0' x2='92.5' y2='88.4' stroke='#2e4a3e' stroke-width='2'/><line x1='138.0' y1='110.0' x2='116.3' y2='124.4' stroke='#2e4a3e' stroke-width='2'/><line x1='60.0' y1='110.0' x2='138.0' y2='110.0' stroke='#2e4a3e' stroke-width='2' stroke-dasharray='5 4'/><text x='92' y='66' font-size='15' fill='#222'>A</text><text x='108' y='145' font-size='15' fill='#222'>B</text><text x='44' y='126' font-size='15' fill='#222'>O</text><text x='140' y='126' font-size='15' fill='#222'>O′</text><text x='68' y='90' font-size='14' fill='#222'>r</text><text x='120' y='107' font-size='14' fill='#222'>r′</text><text x='102' y='127' font-size='14' fill='#222'>d</text><text x='58' y='54' font-size='14' fill='#222'>ℓ</text></svg><figcaption>練習26の図</figcaption></figure></div><p class='hcount'>ヒントは 3 個あります</p><div class='hint'><b>ヒント1：</b>内接線の場合も、直角三角形を作る作戦は同じ。大きい円の中心 O から接線と平行な直線を引き、小さい円の中心 O′ からその直線に垂線を下ろす。</div><div class='hint'><b>ヒント2：</b>できる直角三角形の斜辺は d、もう1辺は半径の和 r ＋ r′ になる。外接線の場合の「差」との違いがポイント。</div><div class='hint'><b>ヒント3：</b>残りの辺の長さが AB と等しい。三平方の定理で表す。</div><div class='ans'><b>答え：</b><b>AB ＝ √(d² − (r ＋ r′)²)</b></div><div class='sol'><b>詳解：</b>O から接線 AB と平行な直線を引き、O′ からその直線に下ろした垂線の足を C とすると、O′C ＝ r ＋ r′、OO′ ＝ d の直角三角形 OO′C ができる。OC ＝ √(d² − (r ＋ r′)²)。AB ＝ OC だから AB ＝ √(d² − (r ＋ r′)²)。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div></main><script>
 function showHint(btn){
   var card = btn.closest('.card');
   var hints = card.querySelectorAll('.hint');
@@ -53,6 +54,14 @@ function showAns(btn){
   var open = (ans.style.display === 'block');
   ans.style.display = open ? 'none' : 'block';
   btn.textContent = open ? '答えを見る' : '答えを隠す';
+}
+
+function showAlt(btn){
+  var card = btn.closest('.card');
+  var alt = card.querySelector('.alt');
+  var open = (alt.style.display === 'block');
+  alt.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '別解を見る' : '別解を隠す';
 }
 
 document.addEventListener('DOMContentLoaded', function(){

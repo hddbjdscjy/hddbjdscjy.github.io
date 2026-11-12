@@ -13,6 +13,7 @@ main{max-width:760px;margin:0 auto;padding:14px}
 .hint{display:none;background:#fff8e1;border-left:4px solid #f2c230;padding:8px 12px;margin:8px 0;border-radius:4px}
 .ans{display:none;background:#e8f5e9;border-left:4px solid #43a047;padding:8px 12px;margin:8px 0;border-radius:4px}
 .sol{display:none;background:#eef4fb;border-left:4px solid #5b7f95;padding:8px 12px;margin:8px 0;border-radius:4px}
+.alt{display:none;background:#f3eefb;border-left:4px solid #7a5ba6;padding:8px 12px;margin:8px 0;border-radius:4px}
 button{background:#2e4a3e;color:#fff;border:0;border-radius:20px;padding:8px 16px;font-size:14px;margin:6px 6px 0 0;cursor:pointer}
 button.sub{background:#8a9a5b}
 button:disabled{background:#aaa}
@@ -27,8 +28,8 @@ figcaption{font-size:13px;color:#555}
 .done{font-size:14px;color:#2e4a3e}
 .howto{background:#eef4fb;border-left:4px solid #5b7f95;padding:10px 14px;border-radius:4px;margin:14px 0;font-size:14px}
 #prog{font-weight:bold;color:#2e4a3e}
-@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
-</style></head><body><header><h1>教科書p.135の練習8｜数学I</h1><p>図形と計量｜三角比の相互関係（教科書 p.135）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習8（教科書 p.135）</h2><div class='q'>θ は鋭角とする。tanθ ＝ √2 のとき，cosθ と sinθ の値を求めよ。</div><p class='hcount'>ヒントは 3 個あります</p><div class='hint'><b>ヒント1：</b>例題3 と同じく，1 ＋ tan²θ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> を使う。</div><div class='hint'><b>ヒント2：</b><span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> ＝ 1 ＋ (√2)² を計算して cos²θ を出す。cosθ は正の値になる。</div><div class='hint'><b>ヒント3：</b>sinθ ＝ tanθ × cosθ で求める。</div><div class='ans'><b>答え：</b>cosθ ＝ <b><span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span></b>，sinθ ＝ <b><span class='frac'><span class='top'>√2</span><span class='bot'>√3</span></span></b></div><div class='sol'><b>詳解：</b><span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> ＝ 1 ＋ (√2)² ＝ 3 より cos²θ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>3</span></span>。cosθ ＞ 0 だから cosθ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span>。sinθ ＝ √2 × <span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span> ＝ <span class='frac'><span class='top'>√2</span><span class='bot'>√3</span></span>。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div><script>
+@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol,.alt{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
+</style></head><body><header><h1>教科書p.135の練習8｜数学I</h1><p>図形と計量｜三角比の相互関係（教科書 p.135）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。別の解き方が用意されている問題では、別解も見てみましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習8（教科書 p.135）</h2><div class='q'>θ は鋭角とする。tanθ ＝ √2 のとき，cosθ と sinθ の値を求めよ。</div><p class='hcount'>ヒントは 3 個あります</p><div class='hint'><b>ヒント1：</b>例題3 と同じく，1 ＋ tan²θ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> を使う。</div><div class='hint'><b>ヒント2：</b><span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> ＝ 1 ＋ (√2)² を計算して cos²θ を出す。cosθ は正の値になる。</div><div class='hint'><b>ヒント3：</b>sinθ ＝ tanθ × cosθ で求める。</div><div class='ans'><b>答え：</b>cosθ ＝ <b><span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span></b>，sinθ ＝ <b><span class='frac'><span class='top'>√2</span><span class='bot'>√3</span></span></b></div><div class='sol'><b>詳解：</b><span class='frac'><span class='top'>1</span><span class='bot'>cos²θ</span></span> ＝ 1 ＋ (√2)² ＝ 3 より cos²θ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>3</span></span>。cosθ ＞ 0 だから cosθ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span>。sinθ ＝ √2 × <span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span> ＝ <span class='frac'><span class='top'>√2</span><span class='bot'>√3</span></span>。</div><div class='alt'><b>別解：</b>対辺：隣辺 ＝ √2：1 の直角三角形を考えると，斜辺の2乗は (√2)² ＋ 1² ＝ 3 だから，斜辺は √3。よって，cosθ ＝ <span class='frac'><span class='top'>1</span><span class='bot'>√3</span></span>，sinθ ＝ <span class='frac'><span class='top'>√2</span><span class='bot'>√3</span></span>。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button><button class='sub' onclick='showAlt(this)'>別解を見る</button></div><script>
 function showHint(btn){
   var card = btn.closest('.card');
   var hints = card.querySelectorAll('.hint');
@@ -53,6 +54,14 @@ function showAns(btn){
   var open = (ans.style.display === 'block');
   ans.style.display = open ? 'none' : 'block';
   btn.textContent = open ? '答えを見る' : '答えを隠す';
+}
+
+function showAlt(btn){
+  var card = btn.closest('.card');
+  var alt = card.querySelector('.alt');
+  var open = (alt.style.display === 'block');
+  alt.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '別解を見る' : '別解を隠す';
 }
 
 document.addEventListener('DOMContentLoaded', function(){

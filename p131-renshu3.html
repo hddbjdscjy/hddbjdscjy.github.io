@@ -13,6 +13,7 @@ main{max-width:760px;margin:0 auto;padding:14px}
 .hint{display:none;background:#fff8e1;border-left:4px solid #f2c230;padding:8px 12px;margin:8px 0;border-radius:4px}
 .ans{display:none;background:#e8f5e9;border-left:4px solid #43a047;padding:8px 12px;margin:8px 0;border-radius:4px}
 .sol{display:none;background:#eef4fb;border-left:4px solid #5b7f95;padding:8px 12px;margin:8px 0;border-radius:4px}
+.alt{display:none;background:#f3eefb;border-left:4px solid #7a5ba6;padding:8px 12px;margin:8px 0;border-radius:4px}
 button{background:#2e4a3e;color:#fff;border:0;border-radius:20px;padding:8px 16px;font-size:14px;margin:6px 6px 0 0;cursor:pointer}
 button.sub{background:#8a9a5b}
 button:disabled{background:#aaa}
@@ -27,9 +28,9 @@ figcaption{font-size:13px;color:#555}
 .done{font-size:14px;color:#2e4a3e}
 .howto{background:#eef4fb;border-left:4px solid #5b7f95;padding:10px 14px;border-radius:4px;margin:14px 0;font-size:14px}
 #prog{font-weight:bold;color:#2e4a3e}
-@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
-</style></head><body><header><h1>教科書p.131の練習3｜数学I</h1><p>図形と計量｜三角比（教科書 p.131）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習3（教科書 p.131）</h2><div class='q'>次の値を三角比の表から求めよ。<br>(1) sin12°　(2) cos48°　(3) tan75°</div><p class='hcount'>ヒントは 2 個あります</p><div class='hint'><b>ヒント1：</b>表は「行が角度、列が sin・cos・tan」。求めたい角度の行と、求めたい三角比の列が交わる所を読む。</div><div class='hint'><b>ヒント2：</b>sin と cos は 0〜1 の間の値、tan75° のように大きな角の tan は 1 より大きくなる。値の大きさの見当をつけてから読むと、行や列の読み間違いに気づける。</div><div class='ans'><b>答え：</b>(1) sin12° ＝ <b>0.2079</b>　(2) cos48° ＝ <b>0.6691</b>　(3) tan75° ＝ <b>3.7321</b></div><div class='sol'><b>詳解：</b>三角比の表で、求める角度の行と sin・cos・tan の列が交わる値を読み取る。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div>
-<div class='card ruidai'><h2>類題2<span class='badge'>類題</span></h2><div class='q'>次の値を三角比の表から求めよ。<br>(1) sin40°　(2) cos25°　(3) tan10°</div><p class='hcount'>ヒントは 2 個あります</p><div class='hint'><b>ヒント1：</b>練習3 と同じ読み方。行（角度）と列（sin・cos・tan）の交わる所を読む。</div><div class='hint'><b>ヒント2：</b>tan10° のように小さい角の tan は 1 より小さい値になる。</div><div class='ans'><b>答え：</b>(1) sin40° ＝ <b>0.6428</b>　(2) cos25° ＝ <b>0.9063</b>　(3) tan10° ＝ <b>0.1763</b><div class='sol'><b>詳解：</b>三角比の表で、求める角度の行と sin・cos・tan の列が交わる値を読み取る。(1) 40° の行・sin の列が 0.6428、(2) 25° の行・cos の列が 0.9063、(3) 10° の行・tan の列が 0.1763。</div></div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div><script>
+@media print{button,.done,.hcount,#progbar,.howto{display:none!important}.hint,.ans,.sol,.alt{display:none!important}body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}.card{box-shadow:none;border:1px solid #bbb;page-break-inside:avoid}}
+</style></head><body><header><h1>教科書p.131の練習3｜数学I</h1><p>図形と計量｜三角比（教科書 p.131）｜ノートに図を描きながら進めましょう</p></header><main><div class='howto'><b>使い方：</b>まずノートに図を描いて、自分の力で解きましょう。つまったらヒントを1つずつ開きます。答えを見たら、詳解で途中式も確認しましょう。別の解き方が用意されている問題では、別解も見てみましょう。解けたら各問題の「できた」にチェックを付けましょう（チェックはこの端末に残ります）。</div><div id='progbar'><span id='prog'></span></div><div class='card'><h2>練習3（教科書 p.131）</h2><div class='q'>次の値を三角比の表から求めよ。<br>(1) sin12°　(2) cos48°　(3) tan75°</div><p class='hcount'>ヒントは 2 個あります</p><div class='hint'><b>ヒント1：</b>表は「行が角度、列が sin・cos・tan」。求めたい角度の行と、求めたい三角比の列が交わる所を読む。</div><div class='hint'><b>ヒント2：</b>sin と cos は 0〜1 の間の値、tan75° のように大きな角の tan は 1 より大きくなる。値の大きさの見当をつけてから読むと、行や列の読み間違いに気づける。</div><div class='ans'><b>答え：</b>(1) sin12° ＝ <b>0.2079</b>　(2) cos48° ＝ <b>0.6691</b>　(3) tan75° ＝ <b>3.7321</b></div><div class='sol'><b>詳解：</b>三角比の表で、求める角度の行と sin・cos・tan の列が交わる値を読み取る。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div>
+<div class='card ruidai'><h2>類題2<span class='badge'>類題</span></h2><div class='q'>次の値を三角比の表から求めよ。<br>(1) sin40°　(2) cos25°　(3) tan10°</div><p class='hcount'>ヒントは 2 個あります</p><div class='hint'><b>ヒント1：</b>練習3 と同じ読み方。行（角度）と列（sin・cos・tan）の交わる所を読む。</div><div class='hint'><b>ヒント2：</b>tan10° のように小さい角の tan は 1 より小さい値になる。</div><div class='ans'><b>答え：</b>(1) sin40° ＝ <b>0.6428</b>　(2) cos25° ＝ <b>0.9063</b>　(3) tan10° ＝ <b>0.1763</b></div><div class='sol'><b>詳解：</b>三角比の表で、求める角度の行と sin・cos・tan の列が交わる値を読み取る。(1) 40° の行・sin の列が 0.6428、(2) 25° の行・cos の列が 0.9063、(3) 10° の行・tan の列が 0.1763。</div><button onclick='showHint(this)'>ヒントを見る</button><button class='sub' onclick='showAns(this)'>答えを見る</button><button class='sub' onclick='showSol(this)'>詳解を見る</button></div><script>
 function showHint(btn){
   var card = btn.closest('.card');
   var hints = card.querySelectorAll('.hint');
@@ -54,6 +55,14 @@ function showAns(btn){
   var open = (ans.style.display === 'block');
   ans.style.display = open ? 'none' : 'block';
   btn.textContent = open ? '答えを見る' : '答えを隠す';
+}
+
+function showAlt(btn){
+  var card = btn.closest('.card');
+  var alt = card.querySelector('.alt');
+  var open = (alt.style.display === 'block');
+  alt.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '別解を見る' : '別解を隠す';
 }
 
 document.addEventListener('DOMContentLoaded', function(){
