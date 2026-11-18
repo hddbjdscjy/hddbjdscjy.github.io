@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R8_情報I_自己学習用解説</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Noto Sans CJK JP", sans-serif; color: #1c2733; margin: 0; background: #f4f6f8; font-size: 17px; line-height: 1.85; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 27px; margin: 10px 0 4px; color: #14456e; line-height: 1.4; }
+  .sub { color: #46586a; font-size: 15px; margin-bottom: 18px; }
+  h2.sec { font-size: 23px; color: #ffffff; background: #14456e; border-radius: 10px; padding: 12px 18px; margin: 40px 0 8px; line-height: 1.45; }
+  .secmeta { color: #46586a; font-size: 15px; margin: 0 2px 14px; }
+  .howto { background: #ffffff; border: 2px solid #14456e; border-radius: 12px; padding: 16px 22px; margin-bottom: 10px; }
+  .howto h2 { font-size: 19px; margin: 0 0 8px; color: #14456e; }
+  .howto ol { margin: 0; padding-left: 24px; }
+  .howto li { margin-bottom: 4px; }
+  .progress { background: #eaf2f9; border-radius: 10px; padding: 10px 18px; font-size: 16px; margin: 14px 0 4px; }
+  nav.toc { background: #ffffff; border: 1px solid #c9d4de; border-radius: 12px; padding: 12px 22px; margin: 14px 0 6px; }
+  nav.toc a { color: #14456e; text-decoration: none; margin-right: 18px; font-weight: 700; white-space: nowrap; }
+  nav.toc a:hover { text-decoration: underline; }
+  .card { background: #ffffff; border: 1px solid #c9d4de; border-radius: 12px; padding: 20px 24px; margin: 18px 0; }
+  .card h3 { font-size: 20px; margin: 0 0 4px; color: #14456e; line-height: 1.5; }
+  .card h3 .pts { font-size: 14px; color: #ffffff; background: #5b7d9e; border-radius: 20px; padding: 2px 12px; margin-left: 8px; vertical-align: middle; white-space: nowrap; }
+  .qbox { background: #f7f9fb; border-left: 5px solid #5b7d9e; padding: 12px 18px; margin: 12px 0; }
+  .qbox p { margin: 6px 0; }
+  .choices { margin: 8px 0 4px; padding-left: 6px; }
+  .choices div { margin: 3px 0; }
+  .num { display: inline-block; min-width: 1.7em; text-align: center; background: #e3ebf3; border-radius: 50%; font-weight: 700; margin-right: 6px; padding: 0 4px; }
+  button.tgl { background: #14456e; color: #fff; border: none; border-radius: 8px; font-size: 16px; padding: 10px 22px; cursor: pointer; margin: 10px 0 4px; }
+  button.tgl:hover { background: #1d639c; }
+  .ans { display: none; border-top: 2px dashed #c9d4de; margin-top: 14px; padding-top: 12px; }
+  .ans.open { display: block; }
+  .ans h4 { font-size: 17px; margin: 16px 0 6px; color: #14456e; }
+  .ans h4:first-child { margin-top: 2px; }
+  .ans ol, .ans ul { margin: 6px 0; padding-left: 26px; }
+  .ans li { margin-bottom: 7px; }
+  .kekka { background: #e9f7ec; border: 2px solid #3d9970; border-radius: 10px; padding: 12px 18px; margin: 14px 0; font-size: 18px; }
+  .kekka b { color: #14663c; }
+  .point { background: #fff8e1; border: 2px solid #d9a92b; border-radius: 10px; padding: 12px 18px; margin: 14px 0; }
+  .point b.head { color: #8a6408; }
+  .term { background: #eef4fb; border-radius: 8px; padding: 10px 16px; margin: 10px 0; font-size: 16px; }
+  .term b { color: #14456e; }
+  table { border-collapse: collapse; margin: 12px 0; background: #fff; }
+  th, td { border: 1px solid #93a7ba; padding: 7px 13px; text-align: center; font-size: 16px; }
+  th { background: #e3ebf3; }
+  td.l, th.l { text-align: left; }
+  .hl { background: #fff3b0; font-weight: 700; }
+  pre.code { background: #1e2a36; color: #e8f1f8; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-size: 15.5px; line-height: 1.75; font-family: "Osaka-Mono", "Noto Sans Mono CJK JP", monospace; }
+  pre.code .cm { color: #9fc3e0; }
+  .mono { font-family: "Osaka-Mono", "Noto Sans Mono CJK JP", monospace; background: #eef1f4; padding: 1px 6px; border-radius: 4px; }
+  .bit { font-family: monospace; letter-spacing: 2px; font-weight: 700; }
+  .stitch { border-collapse: collapse; margin: 10px auto; }
+  .stitch td { width: 44px; height: 44px; font-size: 24px; border: 1px solid #7c8ea0; padding: 0; color: #14456e; background: #fff; }
+  .stitch td.on { background: #fdfdfd; }
+  .figcap { text-align: center; font-size: 14.5px; color: #46586a; margin: 2px 0 12px; }
+  .figrow { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; }
+  .figrow > div { text-align: center; }
+  .done { margin-top: 14px; padding-top: 10px; border-top: 1px solid #e1e8ee; font-size: 16px; }
+  .done input { width: 20px; height: 20px; vertical-align: -3px; margin-right: 6px; }
+  .blocks { display: grid; grid-template-columns: 1fr 1fr; max-width: 420px; margin: 10px auto; border: 3px solid #1c2733; }
+  .blocks > div { border: 1.5px solid #1c2733; padding: 22px 6px; text-align: center; font-weight: 700; position: relative; }
+  .blocks .center4 { background: rgba(180,180,180,.45); }
+  .summary table { width: 100%; }
+  .summary td, .summary th { font-size: 15.5px; padding: 6px 10px; }
+  input.score { width: 76px; font-size: 17px; padding: 5px 8px; text-align: center; }
+  .total { font-size: 20px; font-weight: 700; color: #14456e; }
+  .small { font-size: 14.5px; color: #46586a; }
+  @media print {
+    button.tgl, nav.toc, .done, .progress { display: none; }
+    .ans { display: block; }
+    body { background: #fff; font-size: 13.5px; }
+    .card { break-inside: avoid; border-color: #999; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>令和8年度 共通テスト「情報I」自己学習用解説</h1>
+<div class="sub">本試験（100点満点）を、1人で読み進めて理解できるように解説したページです。問題文は手元の問題冊子と並べて見てください。</div>
+
+<div class="howto">
+  <h2>このページの使い方</h2>
+  <ol>
+    <li>まず問題冊子でその小問を自分で解く（大問ごとの目標時間を目安に）。</li>
+    <li>解けたら（分からなくても一度考えたら）、「考え方と答えを見る」ボタンを押して解説を読む。</li>
+    <li>解説は「なぜそうなるか」を順番に追えるように書いてある。途中で分からなくなったら、1つ前のステップに戻る。</li>
+    <li>読み終わったら「分かった」にチェックを入れる。進み具合は自動で残る（この端末の中だけに保存される）。</li>
+    <li>最後に一番下の正解一覧で自己採点をする。</li>
+  </ol>
+</div>
+
+<div class="progress">進み具合： <b><span id="doneCount">0</span> / <span id="allCount">0</span></b> 小問が終わった</div>
+
+<nav class="toc">
+  <a href="#q1">第1問（20点）</a>
+  <a href="#q2">第2問（30点）</a>
+  <a href="#q3">第3問（25点）</a>
+  <a href="#q4">第4問（25点）</a>
+  <a href="#matome">正解一覧・自己採点</a>
+</nav>
+
+<!-- ================= 第1問 ================= -->
+<h2 class="sec" id="q1">第1問　小問集合（20点）</h2>
+<p class="secmeta">目標時間：12分。知識で即答できる問題と、図や表に書き出して考える問題が混ざっています。知識問題で時間を残すのがコツです。</p>
+
+<div class="card" id="q1-1a">
+  <h3>問1a　記憶装置のしくみ <span class="pts">ア・イで2点</span></h3>
+  <div class="qbox">
+    <p>コンピュータの記憶装置は主記憶装置と補助記憶装置に大別される。一般に、主記憶装置に比べ、補助記憶装置はデータを読み書きする速度が <b>ア</b> であり、<b>イ</b> のために用いられる。</p>
+    <div class="choices">
+      <div>アの選択肢： <span class="num">0</span>低速　<span class="num">1</span>同程度　<span class="num">2</span>高速</div>
+      <div>イの選択肢： <span class="num">0</span>容量が小さく、データの短期的な保存　<span class="num">1</span>容量が小さく、データの長期的な保存　<span class="num">2</span>容量が大きく、データの短期的な保存　<span class="num">3</span>容量が大きく、データの長期的な保存</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>主記憶装置</b>はメモリのこと。CPUが直接読み書きする作業机で、速い代わりに電源を切ると中身が消える。<b>補助記憶装置</b>はSSDやHDDのこと。机の引き出しや倉庫にあたり、電源を切っても中身が残る。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>2つの装置の「対比」を思い出す。主記憶装置＝速い・容量が小さい・短期保存。補助記憶装置＝遅い・容量が大きい・長期保存。この表が頭にあれば終わる問題。</li>
+      <li>ア：速度は主記憶装置の方が速い。補助記憶装置は主記憶に比べて「低速」→ 0。</li>
+      <li>イ：補助記憶装置の役割は「容量が大きく」かつ「長期的な保存」の2つがそろったもの。「容量が大きく・短期的」「容量が小さく・長期的」のような片方だけ合っている選択肢に引っかからないこと。</li>
+      <li>迷ったら具体例に置き換える。「SSDやHDD＝電源を切っても残る大きな置き場所」と考えれば、イは3しかない。</li>
+    </ol>
+    <div class="kekka">正解　ア ＝ <b>0（低速）</b>　／　イ ＝ <b>3（容量が大きく、データの長期的な保存）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：主記憶と補助記憶は「速さ・容量・保存の長さ」の3点セットで対比して覚える。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-1a">分かった</label></div>
+</div>
+
+<div class="card" id="q1-1b">
+  <h3>問1b　情報セキュリティ <span class="pts">ウ 2点</span></h3>
+  <div class="qbox">
+    <p>情報セキュリティに関する記述として最も適当なものを1つ選ぶ。</p>
+    <div class="choices">
+      <div><span class="num">0</span>犯罪につながる情報が公開されているWebサイトに日本国内からアクセスすると、不正アクセス禁止法違反になる。</div>
+      <div><span class="num">1</span>ネットワークの通信速度を高速にすることにより、マルウェアによる被害を最小限に抑えることができる。</div>
+      <div><span class="num">2</span>ソーシャルエンジニアリングによる被害を防ぐには、コンピュータの主記憶装置（メモリ）を増設することが有効である。</div>
+      <div><span class="num">3</span>保有するデータをバックアップしておくことで、情報セキュリティの要素である「可用性」を高めることができる。</div>
+      <div><span class="num">4</span>ファイアウォールを利用することによって、無線LANでの通信内容が盗聴されることを防ぐことができる。</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　情報セキュリティの3要素は、<b>機密性</b>（許可された人だけが見られる）、<b>完全性</b>（改ざんされていない）、<b>可用性</b>（必要なときに使える）。<b>ソーシャルエンジニアリング</b>は、電話やメールで人をだましてパスワードなどを聞き出す手口。<b>ファイアウォール</b>は、通信を許可するか遮断するかを判断する関所のような仕組み。</div>
+    <h4>考え方（消去法で1つずつ落とす）</h4>
+    <ol>
+      <li>選択肢0：不正アクセス禁止法が禁じるのは、他人のIDを使うなどの「不正アクセス行為」。犯罪情報のサイトにアクセスするだけでは違反にならない → ×。</li>
+      <li>選択肢1：通信速度とマルウェア（ウイルスなどの悪意あるソフト）の被害は無関係 → ×。</li>
+      <li>選択肢2：ソーシャルエンジニアリングは「人をだます」手口なので、対策は利用者への教育や確認の手順。メモリ増設は無関係 → ×。</li>
+      <li>選択肢4：ファイアウォールの役割は通信の許可・遮断。無線LANの盗聴を防ぐのは「暗号化」の役割 → ×。</li>
+      <li>残った選択肢3：バックアップがあれば、障害やランサムウェアでデータが使えなくなっても復旧できる。つまり「必要なときに使える」＝可用性が高まる → これが正解。</li>
+    </ol>
+    <div class="kekka">正解　ウ ＝ <b>3</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：「バックアップ＝可用性」「暗号化＝機密性」という対応で押さえる。対策と目的が対応しているかを1つずつ確かめるのが消去法のコツ。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-1b">分かった</label></div>
+</div>
+
+<div class="card" id="q1-2a">
+  <h3>問2（前半）　刺繍の図案と16進法 <span class="pts">エ・オで2点</span></h3>
+  <div class="qbox">
+    <p>クロスステッチの図案（4×4マス）で、縫うマスを1、縫わないマスを0で表す。1行（4マス）を2進法4桁とみると16進法1桁に直せる。図1の図案は <span class="bit">8C8F</span> と表せる。この方式で図2の図案を表すと、<b>エ</b> <b>オ</b> 27 となる。エ・オに入る数字または文字を求める。</p>
+    <div class="figrow">
+      <div>
+        <table class="stitch">
+          <tr><td>×</td><td></td><td></td><td></td></tr>
+          <tr><td>×</td><td>×</td><td></td><td></td></tr>
+          <tr><td>×</td><td></td><td></td><td></td></tr>
+          <tr><td>×</td><td>×</td><td>×</td><td>×</td></tr>
+        </table>
+        <div class="figcap">図1（例）</div>
+      </div>
+      <div>
+        <table class="stitch">
+          <tr><td>×</td><td>×</td><td>×</td><td></td></tr>
+          <tr><td></td><td>×</td><td></td><td></td></tr>
+          <tr><td></td><td></td><td>×</td><td></td></tr>
+          <tr><td></td><td>×</td><td>×</td><td>×</td></tr>
+        </table>
+        <div class="figcap">図2</div>
+      </div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>2進法</b>は0と1だけで数を表す方法、<b>16進法</b>は0〜9とA〜F（A=10、B=11、C=12、D=13、E=14、F=15）で表す方法。2進法4桁は、ちょうど16進法1桁（0〜15）と対応する。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>まず図1でやり方を検算する。4桁の重みは左から <b>8・4・2・1</b>。1行目 1000 は 8 → 16進法で 8。2行目 1100 は 8＋4＝12 → C。3行目 1000 → 8。4行目 1111 は 8＋4＋2＋1＝15 → F。続けて書くと 8C8F となり、問題文と一致する。読み取り方はこれで正しい。</li>
+      <li>図2も同じように1行ずつ読む。1行目は ×××□ ＝ 1110。重みで足すと 8＋4＋2＝14 → 16進法では E（数字ではなく文字。当てはまる文字がA〜Fの場合は a〜f の記号をマークする、という指示に従う）。これがエ。</li>
+      <li>2行目は □×□□ ＝ 0100 → 4。これがオ。（3行目 0010＝2、4行目 0111＝7 で、問題文の「27」とも一致する。）</li>
+    </ol>
+    <div class="kekka">正解　エ ＝ <b>e（16進数の E）</b>　／　オ ＝ <b>4</b>　（図2全体では E427）</div>
+    <div class="point"><b class="head">ここがポイント</b>：「2進法4桁＝16進法1桁」「重みは左から8・4・2・1」。まず問題文の例（図1）で読み方を検算してから、本命（図2）に進む。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-2a">分かった</label></div>
+</div>
+
+<div class="card" id="q1-2b">
+  <h3>問2（後半）　図案の変換と組み合わせ <span class="pts">カ・キ・ク・ケ 4点</span></h3>
+  <div class="qbox">
+    <p>変換方法は次の3つ。変換A：各行を2進法で表して桁を逆順にする（左右反転）。変換B：全体を16進法で表して桁を逆順にする。変換C：変換Aの後に変換Bを行う。</p>
+    <p>4×4マスの図案を4枚、下の配置で並べて8×8マスの図案を作る。元の図案が <span class="bit">35AD</span> のとき、中央の4×4マス（網掛け部分）の図案を16進法で表すと <b>カキクケ</b> となる。</p>
+    <div class="blocks">
+      <div>元の図案</div><div>変換A</div>
+      <div>変換B</div><div>変換C</div>
+    </div>
+    <div class="figcap">図3の配置（中央の4×4が網掛け部分）</div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>まず元の図案 35AD を1行ずつ2進法に直す。3＝0011、5＝0101、A＝1010、D＝1101。</li>
+      <li>変換A（各行を逆順＝左右反転）：0011→1100（C）、0101→1010（A）、1010→0101（5）、1101→1011（B）。よって変換Aの結果は <b>CA5B</b>。</li>
+      <li>変換B（全体の桁を逆順）：35AD の文字の並びを逆にするだけ → <b>DA53</b>。中身を見ると、行の順序だけが逆になり、各行の中身は元のまま（上下反転）だと分かる。</li>
+      <li>変換C（Aの結果にB）：CA5B の桁を逆順 → <b>B5AC</b>。図形で見ると180度回転と同じになる。</li>
+      <li>4枚を配置し、中央の4×4を取り出す。中央は「各ブロックの、中心に寄った2×2」からできている。
+        <table>
+          <tr><th>中央の行</th><th class="l">作り方</th><th>2進法</th><th>16進法</th></tr>
+          <tr><td>1行目</td><td class="l">元の図案3行目の右半分「10」＋変換A3行目の左半分「01」</td><td class="bit">1001</td><td>9</td></tr>
+          <tr><td>2行目</td><td class="l">元の図案4行目の右半分「01」＋変換A4行目の左半分「10」</td><td class="bit">0110</td><td>6</td></tr>
+          <tr><td>3行目</td><td class="l">変換B1行目の右半分「01」＋変換C1行目の左半分「10」</td><td class="bit">0110</td><td>6</td></tr>
+          <tr><td>4行目</td><td class="l">変換B2行目の右半分「10」＋変換C2行目の左半分「01」</td><td class="bit">1001</td><td>9</td></tr>
+        </table>
+      </li>
+      <li>並べると 9・6・6・9 になる。</li>
+    </ol>
+    <div class="kekka">正解　カ ＝ <b>9</b>、キ ＝ <b>6</b>、ク ＝ <b>6</b>、ケ ＝ <b>9</b>　（中央の図案は 9669）</div>
+    <div class="point"><b class="head">ここがポイント</b>：変換Bは「ビット列全体の逆順」ではなく「16進法の桁単位の逆順」。だから結果は行の並び替え（上下反転）になる。頭の中だけでやらず、4枚の図案を紙に書き出してから中央を切り取ること。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-2b">分かった</label></div>
+</div>
+
+<div class="card" id="q1-3">
+  <h3>問3　入力インタフェースと代表値 <span class="pts">コ・サ 各2点</span></h3>
+  <div class="qbox">
+    <p>生年をホイール（リストをスクロールして中央に合わせる方式）で入力する。初期値は2000年。スクロールする移動距離を「スクロール距離」と呼ぶ。</p>
+    <p>コ：新規ユーザの生年の分布が過去の登録データと同じだとすると、スクロール距離の平均が一番小さくなる初期値は、候補（中央値1961／最頻値1967／範囲の中央の値1970／最大値2005）の中のどれか。</p>
+    <p>サ：誕生月も同じ方式で入力する。ただし月リストは循環する（12の下は1、1の上は12）。誕生月の分布に偏りがない場合、初期値をどの月にしてもスクロール距離の平均はどうなるか。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>中央値</b>は、データを大きさの順に並べたとき真ん中に来る値。<b>最頻値</b>は一番多く現れる値。<b>代表値</b>はデータ全体を代表させる値の総称（平均値・中央値・最頻値など）。</div>
+    <h4>考え方（コ）</h4>
+    <ol>
+      <li>まずスクロール距離の意味を確認する。初期値2000に対して、2008年生まれは8年分、1997年生まれは3年分スクロールする。つまりスクロール距離＝｜初期値 − その人の生年｜（絶対値の差）。</li>
+      <li>聞かれているのは「｜初期値 − 生年｜の平均を一番小さくする初期値」。ここで使える性質：<b>絶対差の合計（平均）は、初期値を中央値にしたとき一番小さくなる</b>。平均値が最小にするのは「差の二乗」の方なので、混同しないこと。</li>
+      <li>小さな例で確かめる。生年が {2, 3, 10} の3人だけだとする。初期値を平均値5にすると絶対差は 3＋2＋5＝10。中央値3にすると 1＋0＋7＝8 で、中央値の方が小さい。</li>
+      <li>分布のグラフの形を眺めても答えは出ない。「どの代表値が何を最小にするか」という性質で決まる問題。よってコは中央値（選択肢0）。</li>
+    </ol>
+    <h4>考え方（サ）</h4>
+    <ol>
+      <li>年の場合と決定的に違うのは、月リストが<b>循環する（輪になっている）</b>こと。端がない。</li>
+      <li>誕生月に偏りがない（一様）なら、初期値をどの月に置いても、各月までの距離の並びは「0, 1, 2, …, 11 の順番がずれたもの」になるだけで、合計も平均も変わらない。</li>
+      <li>よってサは「どの月にしても変わらない」（選択肢3）。「真ん中の6月・7月にすれば近くなるはず」という考えは、端のある直線の場合の話で、輪には当てはまらない。</li>
+    </ol>
+    <div class="kekka">正解　コ ＝ <b>0（中央値）</b>　／　サ ＝ <b>3（どの月にしても変わらない）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：「絶対差の平均を最小にするのは中央値、二乗の差の平均を最小にするのは平均値」。サは「月は循環する」という条件の読み取りが勝負。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-3">分かった</label></div>
+</div>
+
+<div class="card" id="q1-4a">
+  <h3>問4a　メールアドレスの間違いはどこで検出されるか <span class="pts">シ 1点・ス 2点・セ 2点</span></h3>
+  <div class="qbox">
+    <p>カオルさん（kaoru@example.ac.jp）がシノブさん（shinobu@example.ed.jp）にメールを送る。流れは「カオルさん → 送信側メールサーバA → 受信側メールサーバB → シノブさん」。次の宛先ミスのそれぞれについて、届けられないことが<b>最初に</b>検出されるサーバと理由の組合せを選ぶ。</p>
+    <div class="choices">
+      <div>あ： <span class="mono">sinobu@example.ed.jp</span>（ユーザ名の綴りミス）→ シ</div>
+      <div>い： <span class="mono">example.ed.jp@sinobu</span>（前後が入れ替わっている）→ ス</div>
+      <div>う： <span class="mono">sinobu@exmple.ed.jp</span>（ドメイン名の綴りミス）→ セ</div>
+    </div>
+    <p class="small">選択肢は「サーバA／B」×「送信側のドメイン名が存在しない／受信側のドメイン名が存在しない／ユーザ名が存在しない／受信側のドメイン名とユーザ名の両方が存在しない」の組合せ。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>大原則は2つだけ。<b>ドメイン名が存在するかどうか</b>は、宛先を調べる送信側サーバAの段階で分かる。<b>ユーザ名が存在するかどうか</b>は、受信側サーバBが自分の抱えるユーザと照合する段階で初めて分かる。</li>
+      <li>あ：ドメイン example.ed.jp は実在するので、メールはBまで届く。Bがユーザ一覧を見て「sinobu というユーザはいない」と検出する → サーバB・ユーザ名が存在しない ＝ 5。</li>
+      <li>い：メールアドレスは「ユーザ名@ドメイン名」の形。@の後ろがドメイン名だから、この宛先のドメインは「sinobu」という存在しないもの。Aが宛先ドメインを調べた時点で検出 → サーバA・受信側のドメイン名が存在しない ＝ 2。</li>
+      <li>う：ドメイン exmple.ed.jp が存在しないので、やはりAの段階で検出 → サーバA・受信側のドメイン名が存在しない ＝ 2。ユーザ名も間違っているが、Bまで届かないので、ユーザ名の誤りは検出されない。「両方が存在しない」は選ばない。</li>
+    </ol>
+    <table>
+      <tr><th>誤りの例</th><th>最初に検出するサーバ</th><th>理由</th><th>正解</th></tr>
+      <tr><td>あ sinobu@…</td><td>B</td><td class="l">ユーザ名が存在しない</td><td><b>シ＝5</b></td></tr>
+      <tr><td>い …@sinobu</td><td>A</td><td class="l">受信側のドメイン名が存在しない</td><td><b>ス＝2</b></td></tr>
+      <tr><td>う sinobu@exmple…</td><td>A</td><td class="l">受信側のドメイン名が存在しない</td><td><b>セ＝2</b></td></tr>
+    </table>
+    <div class="kekka">正解　シ ＝ <b>5</b>　／　ス ＝ <b>2</b>　／　セ ＝ <b>2</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：「ドメインの確認はA、ユーザの確認はB」。検出されるのは最初に引っかかる1か所だけ。また「送信側のドメイン名が存在しない」は、3例とも宛先（受信側）のミスなので当てはまらない。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-4a">分かった</label></div>
+</div>
+
+<div class="card" id="q1-4b">
+  <h3>問4b　IPアドレスを特定する仕組み <span class="pts">ソ 1点</span></h3>
+  <div class="qbox">
+    <p>メールを送る過程で用いられる、通信先のIPアドレスを特定する仕組みとして最も適当なものを選ぶ。</p>
+    <div class="choices">
+      <div><span class="num">0</span>DNS　<span class="num">1</span>WWW　<span class="num">2</span>パケット通信　<span class="num">3</span>ルーティング</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>DNS</b>は、ドメイン名（例：example.ed.jp）からIPアドレスを引く（調べる）仕組み。人間の覚えやすい名前と、機械が使う番号（IPアドレス）の対応表のようなもの。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>問われているのは「通信先のIPアドレスを<b>特定する</b>仕組み」。メールサーバAは、宛先ドメイン名 example.ed.jp からサーバBのIPアドレスを知る必要がある。</li>
+      <li>他の選択肢を役割で落とす。WWW＝Webページを公開・閲覧する仕組み。パケット通信＝データを小分けにして送る方式。ルーティング＝データを届ける経路の選択（「どの道を通るか」であって「宛先の番号を知る」ことではない）。</li>
+      <li>「ドメイン名 → IPアドレス」の対応を調べるのはDNS → ソは0。</li>
+    </ol>
+    <div class="kekka">正解　ソ ＝ <b>0（DNS）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：ルーティング（経路の選択）とDNS（宛先の番号を引く）を区別する。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q1-4b">分かった</label></div>
+</div>
+
+<!-- ================= 第2問 ================= -->
+<h2 class="sec" id="q2">第2問　情報システムと画像の合成（30点）</h2>
+<p class="secmeta">目標時間：18分。Aは「誰が・何を・誰に送るか」を図の番号順に追う問題。Bは画素ごとのビット演算（OR／AND／NOT）の問題です。</p>
+
+<div class="card" id="q2-a1">
+  <h3>A問1　紙の住民証明（図1）と電子データ（図2）の違い <span class="pts">ア・イで3点（順序不問）</span></h3>
+  <div class="qbox">
+    <p>図1は、コンビニの多機能プリンタで住民証明（紙媒体）を印刷し、提出先へ持参・郵送する方式。図2は、請求者が自宅のPCから住民証明（電子データ）を請求して入手し、そのまま提出先へ送信できる方式。図2には図1と異なる特徴が2つある。</p>
+    <div class="choices">
+      <div><span class="num">0</span>デジタルデバイドが解消され、誰でも簡単に請求できる</div>
+      <div><span class="num">1</span>住民証明（電子データ）を入手するにはコンビニエンスストアを訪れる必要がある</div>
+      <div><span class="num">2</span>自宅や出先から住民証明（電子データ）を請求できる</div>
+      <div><span class="num">3</span>請求者が操作しなくても提出先は住民証明（電子データ）を入手できる</div>
+      <div><span class="num">4</span>入手した住民証明（電子データ）をインターネット経由で送ることができる</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>デジタルデバイド</b>は、情報技術を使える人と使えない人の間に生じる格差のこと。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>図1の不便さを先に確認する。請求者はプリンタのある場所まで出向き、印刷した紙を持参・郵送しなければならない。</li>
+      <li>図2の流れを番号順に追う。1 請求操作（自宅PCから）→ 2 データ要求 → 3 住民証明（電子データ）が役所からPCへ → 4 送信操作で提出先へ。消えた手間は「印刷のために出向く」ことと「紙を運ぶ」ことの2つ。</li>
+      <li>選択肢と照合する。2「自宅や出先から請求できる」＝出向く手間が消えた。4「インターネット経由で送ることができる」＝紙を運ぶ手間が消えた。この2つが図2の特徴そのもの。</li>
+      <li>落とす理由：0は逆で、PCとインターネット環境が前提になる方式なので格差はむしろ残る（広がりうる）。1は図1の説明。3は誤りで、請求も送信も請求者自身が操作する。</li>
+    </ol>
+    <div class="kekka">正解　ア ＝ <b>2</b>　／　イ ＝ <b>4</b>　（順序は問わない）</div>
+    <div class="point"><b class="head">ここがポイント</b>：設問の「図1と異なり」という一文が軸。2つの図で「請求者がどこで何をするか」の違いだけを見る。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-a1">分かった</label></div>
+</div>
+
+<div class="card" id="q2-a2">
+  <h3>A問2　アクセスコード方式（図3） <span class="pts">ウ・エ・オで3点／カ 2点</span></h3>
+  <div class="qbox">
+    <p>図2の方式では、入手した住民証明（電子データ）を請求者が勝手に変更できてしまうおそれがある。そこで図3では「アクセスコード」方式にする。役所は請求ごとにアクセスコードを発行し、請求者はそのコードを提出先に渡す（4 送信操作）。提出先がコードを役所に示すと、対応する住民証明を受け取れる。図の5・6・7の段階に入るものが ウ・エ・オ。また、図2と異なり図3では カ 。</p>
+    <div class="choices">
+      <div>ウ〜オの選択肢（番号×データの組合せ）： <span class="num">0</span>5 コード要求　<span class="num">1</span>5 アクセスコード　<span class="num">2</span>5 住民証明（電子データ）　<span class="num">3</span>6 コード要求　<span class="num">4</span>6 アクセスコード　<span class="num">5</span>6 住民証明（電子データ）　<span class="num">6</span>7 コード要求　<span class="num">7</span>7 アクセスコード　<span class="num">8</span>7 住民証明（電子データ）</div>
+      <div>カの選択肢： <span class="num">0</span>請求者が住民証明（電子データ）の内容を見ることができる　<span class="num">1</span>提出先が住民証明（電子データ）の内容を見ることができる　<span class="num">2</span>請求者が住民証明（電子データ）を送る必要がない　<span class="num">3</span>役所が住民証明（電子データ）を提供する必要がない</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>この方式の狙いを先に押さえる：<b>請求者が改ざんできるデータを手元に置かない</b>こと。請求者が提出先に渡すのはアクセスコードだけで、住民証明そのものは役所から提出先へ直接渡る。</li>
+      <li>確定している流れを確認する。1 請求操作 → 2 コード要求 → 3 アクセスコード（役所から請求者へ）→ 4 送信操作（請求者が提出先へ送るのはコード）。</li>
+      <li>残りの5・6・7は「提出先がコードを使って役所から証明を受け取る場面」。最後の7に来るのは、提出先が最終的に手にする「住民証明（電子データ）」→ エ＝8。</li>
+      <li>5・6は、提出先が役所に対してコードを示す段階なので、どちらも「アクセスコード」。5がオ＝1、6がウ＝4。</li>
+      <li>カは図2との差分で考える。図2では、入手した証明を請求者が自分で送信操作して送っていた。図3ではその送信自体が不要になる → カ＝2。選択肢1「提出先が内容を見る」は図2でも当然できるので「異なる特徴」にはならない。選択肢3も誤りで、提供の主体はあくまで役所のまま。</li>
+    </ol>
+    <div class="kekka">正解　ウ ＝ <b>4（6 アクセスコード）</b>　／　エ ＝ <b>8（7 住民証明（電子データ））</b>　／　オ ＝ <b>1（5 アクセスコード）</b>　／　カ ＝ <b>2</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：流れるのが「データそのもの」か「コードだけ」かを区別する。番号と中身はセットで選ぶこと。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-a2">分かった</label></div>
+</div>
+
+<div class="card" id="q2-a3">
+  <h3>A問3　確認依頼コード方式（図4） <span class="pts">キ 2点・ク 2点・ケ 3点</span></h3>
+  <div class="qbox">
+    <p>図3では、アクセスコードが第三者に漏れると住民情報が流出するおそれがある。そこで図4では「確認依頼コード」方式にする。住民情報そのものは、請求者が履歴書などに書いて提出先へ直接伝える。提出先は「確認依頼コードと住民情報」を役所へ送り、役所からは「正しいかどうか」の情報が返る。</p>
+    <p>図1〜図3で役所の役割は <b>キ</b> することだったが、図4では役所の役割を キ することから <b>ク</b> することに変更している。また、図4の確認依頼コードは図3のアクセスコードと異なり、<b>ケ</b> 。</p>
+    <div class="choices">
+      <div>キ・クの選択肢： <span class="num">0</span>住民情報を入手　<span class="num">1</span>住民情報を提供　<span class="num">2</span>住民情報を削除　<span class="num">3</span>住民情報を電子化　<span class="num">4</span>住民情報の誤りを訂正　<span class="num">5</span>住民情報の正しさを証明</div>
+      <div>ケの選択肢： <span class="num">0</span>コードのコピーを誰も作れない　<span class="num">1</span>コードだけを送信すれば住民情報を入手できる　<span class="num">2</span>コードだけを送信しても住民情報を入手できない　<span class="num">3</span>コードに住民情報が含まれる　<span class="num">4</span>コードに住民情報が含まれない</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>キ：図1〜図3を振り返ると、どの方式でも役所は「登録された住民情報を証明として相手に渡して」いた。つまり役割は「住民情報を提供する」→ キ＝1。</li>
+      <li>ク：図4で役所が返すのは証明データではなく「正しいかどうか」の情報だけ。役所が担うのは情報の中身ではなく正しさの判定 → 役割は「住民情報の正しさを証明する」→ ク＝5。</li>
+      <li>ケ：漏れたときの被害で対比する。図3のアクセスコードは、それ自体が証明を取り出す鍵なので、漏れれば第三者が住民情報を入手できてしまう。図4の確認依頼コードは照合に使うだけのものなので、コードだけでは何の情報も引き出せない → ケ＝2。</li>
+      <li>選択肢4「コードに住民情報が含まれない」は、図3のアクセスコードでも（コード自体に情報が埋め込まれているわけではないので）成り立ってしまう。設問は「図3と異なり」と対比を聞いているので、違いを生むのは「コードだけで情報を入手できるかどうか」の方。選択肢1はアクセスコード側の性質なので、図3と図4を取り違えると選んでしまう。</li>
+    </ol>
+    <div class="kekka">正解　キ ＝ <b>1（住民情報を提供）</b>　／　ク ＝ <b>5（住民情報の正しさを証明）</b>　／　ケ ＝ <b>2（コードだけを送信しても住民情報を入手できない）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：図4の発想の転換は「情報そのものは本人が伝える。役所は正しさの判定だけを担う」。だからコードが漏れても情報は漏れない。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-a3">分かった</label></div>
+</div>
+
+<div class="card" id="q2-b1">
+  <h3>B問1　マスク画像とのOR演算 <span class="pts">コ・サ 各1点</span></h3>
+  <div class="qbox">
+    <p>画像は1画素を4ビットで表す16階調のグレースケールとし、黒＝<span class="bit">0000</span>、白＝<span class="bit">1111</span> とする。キャラクターの部分をすべて白、透過したい部分をすべて黒にした画像（マスク画像）を用意し、背景画像と重ねて、重なる各点の4ビットについてビットごとにOR演算をする。</p>
+    <p>コ：マスクの白い点 <span class="bit">1111</span> と重なる背景の点 <span class="bit">1010</span> のOR演算結果。　サ：マスクの黒い点 <span class="bit">0000</span> と重なる背景の点 <span class="bit">0110</span> のOR演算結果。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>OR演算（論理和）</b>は、2つのビットについて「どちらか一方でも1なら1、両方0のときだけ0」。<b>ビットごとに</b>とは、桁上がりをせず、同じ位置の桁どうしだけで計算すること。<b>マスク画像</b>は、残す部分と消す部分を白と黒で塗り分けた下準備の画像。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>真理値表を書く。0 OR 0＝0、0 OR 1＝1、1 OR 0＝1、1 OR 1＝1。</li>
+      <li>コは桁ごとに見る。
+        <table>
+          <tr><th></th><th>桁1（左端）</th><th>桁2</th><th>桁3</th><th>桁4</th></tr>
+          <tr><td>マスク</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>背景の点</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>OR結果</td><td class="hl">1</td><td class="hl">1</td><td class="hl">1</td><td class="hl">1</td></tr>
+        </table>
+        4桁すべてに少なくとも一方の1があるので、全桁1で <span class="bit">1111</span>。
+      </li>
+      <li>サは <span class="bit">0000</span> と <span class="bit">0110</span>。相手が0の桁では、もう一方の値がそのまま出る → <span class="bit">0110</span> のまま。</li>
+      <li>一般則として覚える：「<b>1111とのORは必ず1111</b>（白で潰れる）」「<b>0000とのORは相手がそのまま</b>」。この計算の意味は、キャラを置く場所は真っ白に潰れ、背景を残す場所は背景の値がそのまま残った画像ができること。</li>
+    </ol>
+    <div class="kekka">正解　コ ＝ <b>7（1111）</b>　／　サ ＝ <b>3（0110）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：ORは2進数の足し算とは違う。桁ごとに独立で、桁上がりは一切ない。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-b1">分かった</label></div>
+</div>
+
+<div class="card" id="q2-b2">
+  <h3>B問2　合成を完成させる演算 <span class="pts">シ 3点</span></h3>
+  <div class="qbox">
+    <p>B問1のOR演算で作った画像（キャラの場所が白く潰れ、背景の場所は背景の値のままの画像）に、キャラクター画像（キャラ＋白い背景）を重ねて、ビットごとに「ある演算」を行うと合成が完成する。「ある演算」は何か。</p>
+    <div class="choices">
+      <div><span class="num">0</span>AND演算　<span class="num">1</span>OR演算　<span class="num">2</span>AND演算の後にNOT演算　<span class="num">3</span>OR演算の後にNOT演算</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>AND演算（論理積）</b>は「両方1のときだけ1、それ以外は0」。<b>NOT演算（否定）</b>は0と1を反転させる。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>完成図で必要な振る舞いを2つに分ける。(a) マスクが黒だった場所（背景を出す場所）→ 背景画像の値を出したい。(b) マスクが白だった場所（キャラを出す場所）→ キャラクター画像の値を出したい。</li>
+      <li>ANDの真理値表から性質を引き出す：「<b>1111 AND x ＝ x</b>（白とのANDは相手がそのまま）」「<b>0000 AND x ＝ 0000</b>」。</li>
+      <li>ORで作った画像とキャラクター画像をANDした場合を、場所ごとに検証する。
+        <table>
+          <tr><th>場所</th><th>ORで作った画像</th><th>キャラクター画像</th><th>AND結果</th><th>判定</th></tr>
+          <tr><td>背景の場所</td><td>背景の値</td><td>白背景＝1111</td><td>背景の値のまま</td><td>(a) 達成</td></tr>
+          <tr><td>キャラの場所</td><td>1111</td><td>キャラの値</td><td>キャラの値</td><td>(b) 達成</td></tr>
+        </table>
+      </li>
+      <li>両方を同時に満たすのはANDだけ。ORを選ぶと、背景の場所でキャラ画像側の白背景1111が勝って背景まで真っ白に潰れる（B問1の一般則がそのまま消去法になる）。NOT付きの選択肢は色が反転してしまうので完成図と合わない。</li>
+    </ol>
+    <div class="kekka">正解　シ ＝ <b>0（AND演算）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：「1111とのANDは相手がそのまま、0000とのANDは黒に潰れる」。演算の候補は、場所ごとに分けて検証すると決まる。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-b2">分かった</label></div>
+</div>
+
+<div class="card" id="q2-b3">
+  <h3>B問3　ヒストグラムから背景の範囲を指定する <span class="pts">ス 3点</span></h3>
+  <div class="qbox">
+    <p>背景が一色でない画像（図9：熊と、布のような一色でない背景）から、熊だけを切り抜くためのマスク（図10）を作りたい。色の範囲を指定して領域を選択できる画像編集ソフトで背景を選択する。図11は図9の各階調の画素数を表したヒストグラム（1画素8ビット、256階調。横軸は左が黒（暗い）・右が白（明るい））。背景（熊以外）だけを選択するには、階調のどの範囲を指定すればよいか。図11中の 0〜4 のうちから選ぶ。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>ヒストグラム</b>は、階調（明るさ）ごとに、その明るさの画素が何個あるかを数えたグラフ。明るさの分布が「山」として見える。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>まず図9を目で見て、明暗の対応を固定する。熊は中くらいの暗さ（グレー）、背景の布は全体に明るい。</li>
+      <li>図11を見ると山が2つある。左寄りの、なだらかで低い山が熊（暗めの階調に画素が散らばっている）。右寄りの、高くて鋭い山が背景（明るい階調に画素が集中している）。</li>
+      <li>図11の範囲の意味を確認する。0＝一番暗い端の、どちらの山にも入らない範囲。1＝熊の山の範囲。2＝背景の山の範囲。3＝熊の山の途中から背景の山まで。4＝熊の山の始まりから一番明るい端まで（ほぼ全部）。</li>
+      <li>「背景だけ」を選択したいので、背景の山全体を含み、熊の山を含まない範囲は2だけ。範囲を広く取りすぎると熊の一部まで含まれ、狭すぎると背景の一部が漏れる。「山全体を含み、2つの山の間の谷を越えない」ことが基準になる。</li>
+    </ol>
+    <div class="kekka">正解　ス ＝ <b>2</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：ヒストグラムの2つの山を「どちらの部分の明るさか」と対応づけてから範囲を選ぶ。軸の向き（左＝黒、右＝白）の取り違えが一番のミス。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-b3">分かった</label></div>
+</div>
+
+<div class="card" id="q2-b4">
+  <h3>B問4　マスクを使った合成手順（図13） <span class="pts">セ・ソで2点／タ 3点／チ 2点</span></h3>
+  <div class="qbox">
+    <p>風景画像（雪山）に、別の画像の熊の部分だけを切り抜いて合成する手順（図13）を考える。ここでは1画素8ビットで、黒＝<span class="bit">00000000</span>、白＝<span class="bit">11111111</span> とする。手順は次の通り。</p>
+    <div class="choices">
+      <div>(1) 風景画像と <b>セ</b> をAND演算 → 熊の形に黒く抜けた風景画像ができる</div>
+      <div>(2) セ をNOT演算 → <b>ソ</b></div>
+      <div>(3) ソ と熊の画像を <b>タ</b> 演算 → <b>チ</b></div>
+      <div>(4) (1)の結果と チ をOR演算 → 合成が完成する</div>
+    </div>
+    <p class="small">セ・ソ・チの選択肢は「背景と熊がそれぞれ何色か」を表した小さな画像（0〜5）。タの選択肢は 0 AND演算／1 OR演算／2 ANDの後にNOT／3 ORの後にNOT。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>全体の作戦は「マスクを作る → NOTで反転したマスクも用意する → 風景側と熊側を別々に下ごしらえする → 最後にORで合わせる」。B問1・B問2の応用である。</li>
+      <li>セを決める。(1)では風景画像とのANDで「熊を置く場所だけを黒（00000000）に抜き、他の場所は風景のまま」にしたい。ANDの性質「11111111とのANDは相手がそのまま、00000000とのANDは0になる」を使うので、セは「熊の部分が黒、背景が白」のマスク → セ＝3。</li>
+      <li>ソは、セをNOT演算で反転させたもの。白と黒が入れ替わって「熊の部分が白、背景が黒」のマスク → ソ＝5。</li>
+      <li>タとチを決める。熊の画像（熊＋明るい背景）とソを演算して、「熊だけが残り、背景は黒に潰れた画像」チを作りたい。背景の場所ではソが黒（00000000）なので、ANDなら熊の画像の背景部分が0に潰れる。熊の場所ではソが白（11111111）なので、ANDなら熊の絵がそのまま残る。よってタ＝AND演算（0）、チ＝「背景が黒、熊だけが残った画像」（0）。</li>
+      <li>最後の(4)：(1)の風景（熊の場所が黒＝0に抜けている）とチ（熊以外の場所が0）をORすると、0とのORは相手がそのままなので、抜けた場所にだけ熊の絵が入り、合成が完成する。</li>
+    </ol>
+    <div class="kekka">正解　セ ＝ <b>3（背景が白・熊が黒のマスク）</b>　／　ソ ＝ <b>5（背景が黒・熊が白のマスク）</b>　／　タ ＝ <b>0（AND演算）</b>　／　チ ＝ <b>0（背景が黒・熊だけが残った画像）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：役割分担は「途中の振り分けはAND、仕上げはOR、反転はNOT」。各段階で「白＝残す側か、潰す側か」を必ず確認する。マスクの白黒が反対になると、熊ではなく背景の方が切り抜かれてしまう。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-b4">分かった</label></div>
+</div>
+
+<!-- ================= 第3問 ================= -->
+<h2 class="sec" id="q3">第3問　プログラミング（25点）</h2>
+<p class="secmeta">目標時間：15分。文化祭のゲーム体験について、来訪者の待ち時間を調べる問題です。武器は「トレース表」（到着・開始・終了・待ちの4列の表）。プログラムを読む前に、まず手で表を作るのが近道です。</p>
+
+<div class="card" id="q3-1">
+  <h3>問1　手作業で待ち時間を追う <span class="pts">ア・イ・ウで3点／エ・オ 各1点</span></h3>
+  <div class="qbox">
+    <p>来訪者は到着した順にゲームを体験する。同時刻に到着する人はいない。体験時間は全員同じ3分。1人目〜6人目の到着時刻は 0・3・4・10・11・12 分。</p>
+    <p>3人目の終了時刻は <b>ア</b> 分、5人目の待ち時間は <b>イ</b> 分間、6人目の待ち時間は <b>ウ</b> 分間。</p>
+    <p>また、2人目以降について、開始時刻は「<b>エ</b> より遅く到着した場合には <b>オ</b>、それ以外の場合は エ」になり、待ち時間は「本人の開始時刻と オ の差」で求められる。エ・オの選択肢： 0 本人の到着時刻／1 直前の来訪者の到着時刻／2 本人の終了時刻／3 直前の来訪者の終了時刻。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　この問題の3つの量の関係が全て。<b>開始時刻</b>＝本人が体験を始める時刻、<b>終了時刻</b>＝体験が終わる時刻、<b>待ち時間</b>＝到着してから開始までの時間。</div>
+    <h4>考え方（1人ずつ表を埋める）</h4>
+    <ol>
+      <li>ルールは1つだけ。本人は「自分が到着した時刻」と「直前の人が終わった時刻」の<b>遅い方</b>に開始する。前の人がまだ体験中なら待たされるし、前の人が終わった後に到着すれば待たずに始められる。</li>
+      <li>1人目：先客がいないので到着と同時に開始。開始0、終了は0＋3＝3、待ち0。</li>
+      <li>2人目：到着3。1人目がちょうど3に終わるので待ちなし。開始3、終了6、待ち0。</li>
+      <li>3人目：到着4だが、2人目は6まで体験中。開始は遅い方の6、終了は6＋3＝<b>9（ア）</b>、待ちは6−4＝2。</li>
+      <li>4人目：到着10。3人目は9（ア）に終わっているので待ちなし。開始10、終了13、待ち0。</li>
+      <li>5人目：到着11だが、4人目は13まで体験中。開始13、終了16、待ちは13−11＝<b>2（イ）</b>。</li>
+      <li>6人目：到着12だが、5人目は16まで体験中。開始16、終了19、待ちは16−12＝<b>4（ウ）</b>。</li>
+    </ol>
+    <table>
+      <tr><th>来訪者</th><th>到着</th><th>開始</th><th>終了</th><th>待ち</th></tr>
+      <tr><td>1人目</td><td>0</td><td>0</td><td>3</td><td>0</td></tr>
+      <tr><td>2人目</td><td>3</td><td>3</td><td>6</td><td>0</td></tr>
+      <tr><td>3人目</td><td>4</td><td>6</td><td class="hl">9</td><td>2</td></tr>
+      <tr><td>4人目</td><td>10</td><td>10</td><td>13</td><td>0</td></tr>
+      <tr><td>5人目</td><td>11</td><td>13</td><td>16</td><td class="hl">2</td></tr>
+      <tr><td>6人目</td><td>12</td><td>16</td><td>19</td><td class="hl">4</td></tr>
+    </table>
+    <ol start="7">
+      <li>エ・オは、このルールを文章で言い換えたもの。「<b>エ（直前の来訪者の終了時刻）</b>より遅く到着した場合には、開始は<b>オ（本人の到着時刻）</b>。それ以外の場合はエ（直前の人の終了時刻）」となる。待ち時間は「開始時刻とオ（本人の到着時刻）の差」。</li>
+    </ol>
+    <div class="kekka">正解　ア ＝ <b>9</b>　／　イ ＝ <b>2</b>　／　ウ ＝ <b>4</b>　／　エ ＝ <b>3（直前の来訪者の終了時刻）</b>　／　オ ＝ <b>0（来訪者本人の到着時刻）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：3つの式「開始＝遅い方（本人の到着、直前の人の終了）」「終了＝開始＋体験時間」「待ち＝開始−到着」は、問2・問3でもそのまま使い回される。待ち時間の定義は「開始−到着」で、「終了−到着」とすると体験時間3分が混ざって全部ずれる。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q3-1">分かった</label></div>
+</div>
+
+<div class="card" id="q3-2">
+  <h3>問2　待ち時間を求めるプログラムの空所 <span class="pts">カ・キ 各2点／ク・ケ・コ 各2点</span></h3>
+  <div class="qbox">
+    <p>問1の考え方をプログラムにしたもの。空所 カ〜コ に入るものを選ぶ。</p>
+<pre class="code">(01) taiken = 3
+(02) Touchaku = [0, 3, 4, 10, 11, 12]
+(03) kyakusu = 要素数(Touchaku)
+(04) Kaishi = [0, 0, 0, 0, 0, 0]
+(05) Shuryou = [0, 0, 0, 0, 0, 0]
+(06) Shuryou[1] = taiken
+(07) i を 2 から kyakusu まで 1 ずつ増やしながら繰り返す:
+(08)   Kaishi[i] = 最大値( カ , キ )
+(09)   Shuryou[i] = ク
+(10)   表示する(i, "人目の待ち時間：", ケ − コ , "分間")</pre>
+    <div class="choices">
+      <div>カ・キ・コの選択肢： <span class="num">0</span>Touchaku[i−1]　<span class="num">1</span>Shuryou[i−1]　<span class="num">2</span>Touchaku[i]　<span class="num">3</span>Shuryou[i]　<span class="num">4</span>Touchaku[i+1]　<span class="num">5</span>Shuryou[i+1]</div>
+      <div>ク・ケの選択肢： <span class="num">0</span>Kaishi[i−1]　<span class="num">1</span>Kaishi[i] + Touchaku[i]　<span class="num">2</span>Kaishi[i]　<span class="num">3</span>Kaishi[i] + Shuryou[i]　<span class="num">4</span>Kaishi[i+1]　<span class="num">5</span>Kaishi[i] + taiken</div>
+    </div>
+    <p class="small">関数の説明：「要素数(配列)」は配列の要素数を返す。「最大値(x, y)」は2つの値のうち大きい方を返す。配列の添字は1から始まる。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>配列</b>は値を並べて入れる箱の列。<b>添字</b>は箱の番号で、この問題では<b>1から</b>始まる。Touchaku[3] は「3人目の到着時刻＝4」のこと。先頭の値0は「添字0」ではなく「1人目の到着時刻が0分」という意味なので混同しないこと。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>準備の行を確認する。kyakusu ＝ 要素数(Touchaku) ＝ 6。(06)行目 Shuryou[1] ＝ taiken は「1人目の終了時刻＝0＋3＝3」を先に入れている。だから繰り返しは i＝2（2人目）から始まる。</li>
+      <li>カ・キ（(08)行目）：問1のルール「開始＝遅い方（本人の到着、直前の人の終了）」をそのまま書く。本人の到着は Touchaku[i]、直前の人の終了は Shuryou[i−1]（「直前の人」は添字 i−1）。最大値の引数に順序はないので、カ＝1（Shuryou[i−1]）、キ＝2（Touchaku[i]）のどちらが入っても正解。</li>
+      <li>ク（(09)行目）：終了＝開始＋体験時間 → Kaishi[i] + taiken ＝ 選択肢5。選択肢3の Kaishi[i] + Shuryou[i] は、いま求めようとしている Shuryou[i] 自身を含むのであり得ない、と消去できる。</li>
+      <li>ケ・コ（(10)行目）：表示するのは待ち時間＝開始−到着。開始は Kaishi の選択肢群から Kaishi[i]（ケ＝2）、到着は Touchaku・Shuryou の選択肢群から Touchaku[i]（コ＝2）。<b>どちらも番号は2だが、属する選択肢群が違う</b>ので注意。</li>
+      <li>プログラム全体を1行ずつ追って検算する（トレース）。</li>
+    </ol>
+    <table>
+      <tr><th>i</th><th class="l">Kaishi[i] の計算（(08)行目）</th><th class="l">Shuryou[i]（(09)行目）</th><th class="l">待ち時間（(10)行目）</th></tr>
+      <tr><td>2</td><td class="l">最大値(Touchaku[2]＝3, Shuryou[1]＝3) ＝ 3</td><td class="l">3＋3 ＝ 6</td><td class="l">3 − 3 ＝ 0</td></tr>
+      <tr><td>3</td><td class="l">最大値(Touchaku[3]＝4, Shuryou[2]＝6) ＝ 6</td><td class="l">6＋3 ＝ 9</td><td class="l">6 − 4 ＝ 2</td></tr>
+      <tr><td>4</td><td class="l">最大値(Touchaku[4]＝10, Shuryou[3]＝9) ＝ 10</td><td class="l">10＋3 ＝ 13</td><td class="l">10 − 10 ＝ 0</td></tr>
+      <tr><td>5</td><td class="l">最大値(Touchaku[5]＝11, Shuryou[4]＝13) ＝ 13</td><td class="l">13＋3 ＝ 16</td><td class="l">13 − 11 ＝ 2</td></tr>
+      <tr><td>6</td><td class="l">最大値(Touchaku[6]＝12, Shuryou[5]＝16) ＝ 16</td><td class="l">16＋3 ＝ 19</td><td class="l">16 − 12 ＝ 4</td></tr>
+    </table>
+    <p>問1のトレース表（開始・終了・待ち）と全て一致すれば正解。</p>
+    <div class="kekka">正解　カ ＝ <b>1（Shuryou[i−1]）</b>　／　キ ＝ <b>2（Touchaku[i]）</b>（カ・キは順序不問）　／　ク ＝ <b>5（Kaishi[i] + taiken）</b>　／　ケ ＝ <b>2（Kaishi[i]）</b>　／　コ ＝ <b>2（Touchaku[i]）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：プログラムの空所は、問1で手でやった手順の「写し」。カ・キで Touchaku[i−1]（直前の人の<b>到着</b>）を選ぶミスが多い。使うのは直前の人の<b>終了</b> Shuryou[i−1]。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q3-2">分かった</label></div>
+</div>
+
+<div class="card" id="q3-3">
+  <h3>問3　最長待ち時間が10分未満になる体験時間を調べる <span class="pts">サ・シ・ス・セ・ソ 各2点</span></h3>
+  <div class="qbox">
+    <p>体験時間 taiken を1分から15分まで変えて、最長待ち時間（最も長く待たされる人の待ち時間）が10分未満になる体験時間を表示するプログラム。</p>
+<pre class="code">(01) Touchaku = [0, 3, 4, 10, 11, 12]
+(02) kyakusu = 要素数(Touchaku)
+(03) taiken を 1 から 15 まで 1 ずつ増やしながら繰り返す:
+(04)   Kaishi = [0, 0, 0, 0, 0, 0]
+(05)   Shuryou = [0, 0, 0, 0, 0, 0]
+(06)   Shuryou[1] = taiken
+(07)   i を 2 から kyakusu まで 1 ずつ増やしながら繰り返す:
+(08)     Kaishi[i] = 最大値( カ , キ )
+(09)     Shuryou[i] = ク
+(10)   saichou = 0
+(11)   i を 1 から kyakusu まで 1 ずつ増やしながら繰り返す:
+(12)     saichou = 最大値( サ , ケ − コ )
+(13)   もし シ ならば:
+(14)     表示する("体験時間", taiken, "分間：", "最長待ち時間", saichou, "分間")</pre>
+    <p>さらに、「最長待ち時間が10分以上になった時点で処理を止める」ように書き換える。(03)行目を「(taiken &lt;= 15) and ( シ ) の間繰り返す:」に変更し、「taiken = 1」と「saichou = 0」を図の <b>ス</b> の位置に、「taiken = taiken + 1」を <b>セ</b> の位置に挿入する。書き換え後のプログラムで、配列 Kaishi の初期化（(04)行目）の実行回数は <b>ソ</b> 回になる。</p>
+    <div class="choices">
+      <div>サの選択肢： <span class="num">0</span>Touchaku[i]　<span class="num">1</span>Kaishi[i]　<span class="num">2</span>Shuryou[i]　<span class="num">3</span>saichou</div>
+      <div>シの選択肢： <span class="num">0</span>saichou &gt; 10　<span class="num">1</span>taiken &gt; 10　<span class="num">2</span>saichou &lt; 10　<span class="num">3</span>taiken &lt; 10</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>サ（(12)行目）：(10)〜(12)行目は「最大値を更新し続ける」定番の形。saichou を0で初期化し、全員について「今までの saichou」と「その人の待ち時間（ケ−コ＝Kaishi[i] − Touchaku[i]、問2で決めた式の再利用）」の大きい方で上書きしていく。だからサには saichou 自身が入る → サ＝3。</li>
+      <li>シ（(13)行目）：表示するのは「最長待ち時間が10分<b>未満</b>」の体験時間だけ。条件は saichou &lt; 10 → シ＝2。不等号の向きに注意。「10分<b>以上</b>になったら止める」という後半の説明と混同して saichou &gt; 10 を選ばないこと。裏表の関係で、繰り返しを続ける条件は &lt; 10 の方。</li>
+      <li>まず taiken ごとの最長待ち時間を、問1・問2の式で計算して表にする。</li>
+    </ol>
+    <table>
+      <tr><th>体験時間 taiken</th><th class="l">各人の待ち時間（1人目〜6人目）</th><th>最長待ち時間</th><th>表示されるか</th></tr>
+      <tr><td>1</td><td class="l">0, 0, 0, 0, 0, 0</td><td>0</td><td>される</td></tr>
+      <tr><td>2</td><td class="l">0, 0, 1, 0, 1, 2</td><td>2</td><td>される</td></tr>
+      <tr><td>3</td><td class="l">0, 0, 2, 0, 2, 4</td><td>4</td><td>される</td></tr>
+      <tr><td>4</td><td class="l">0, 1, 4, 2, 5, 8</td><td>8</td><td>される</td></tr>
+      <tr><td>5</td><td class="l">0, 2, 6, 5, 9, 13</td><td class="hl">13</td><td>されない</td></tr>
+    </table>
+    <ol start="4">
+      <li>実行結果に表示されるのは taiken＝1・2・3・4 の4行（最長待ち時間 0・2・4・8）。ここまでは書き換え前のプログラムの話。</li>
+      <li>ス・セ（挿入位置）：書き換えは「回数で繰り返す」から「条件の間繰り返す（while型）」への変換。初期化「taiken = 1」と「saichou = 0」は、条件判定が始まる前、つまり繰り返しの<b>直前</b>に1回だけ必要 → ス＝0。特に saichou = 0 を繰り返しの中に入れると、taiken が変わるたびにリセットされて早期終了の判定が働かなくなる。「taiken = taiken + 1」は本体の<b>最後</b>（表示処理の後）に置いて、次の体験時間へ進める → セ＝2。</li>
+      <li>ソ（初期化の実行回数）：書き換え後の繰り返しは、各回の<b>先頭</b>で条件「(taiken &lt;= 15) and (saichou &lt; 10)」を判定する。taiken＝5 の回は、前の回までの saichou がまだ10未満（8）なので本体に入り、(04)行目の初期化も実行される。その回の計算で saichou が13になり、次の先頭の判定で初めて止まる。よって初期化の実行回数は、表示される4回分＋taiken＝5の1回分 ＝ <b>5回</b>。</li>
+    </ol>
+    <div class="kekka">正解　サ ＝ <b>3（saichou）</b>　／　シ ＝ <b>2（saichou &lt; 10）</b>　／　ス ＝ <b>0</b>　／　セ ＝ <b>2</b>　／　ソ ＝ <b>5</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：①「最大値の更新」は 初期化0 → 最大値（今までの値, 新しい値） の繰り返し。②初期化は繰り返しの直前、増分は本体の最後。③ソの数え方は「表示された行数（4）」ではなく「実行された回数（5）」。結果が出ない回も、本体に入っていれば数える。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q3-3">分かった</label></div>
+</div>
+
+<!-- ================= 第4問 ================= -->
+<h2 class="sec" id="q4">第4問　データの活用（25点）</h2>
+<p class="secmeta">目標時間：15分。気象庁のオープンデータで桜の開花日を分析する問題です。計算らしい計算は「日付の差」と「回帰式への代入」だけ。勝負は図表の読み取りの正確さです。</p>
+
+<div class="card" id="q4-1a">
+  <h3>問1a　オープンデータの知識 <span class="pts">ア 2点</span></h3>
+  <div class="qbox">
+    <p>オープンデータについての2つの文の正誤の組合せを選ぶ。</p>
+    <div class="choices">
+      <div>文A：オープンデータは、誰でも入手可能である。</div>
+      <div>文B：オープンデータを加工・編集する場合には、利用申請が必須である。</div>
+      <div>組合せの選択肢： <span class="num">0</span>A正・B正　<span class="num">1</span>A正・B誤　<span class="num">2</span>A誤・B正　<span class="num">3</span>A誤・B誤</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>オープンデータ</b>は、国や自治体などが公開する、誰でも自由に入手して利用・加工・再配布できるデータのこと。この問題で使う気象庁の開花日のデータもオープンデータである。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>文A「誰でも入手可能である」→ オープンデータの定義そのもの → 正。</li>
+      <li>文B「加工・編集する場合には、利用申請が必須である」→ オープンデータは原則として申請なしで利用・加工できる（出典を表示するなどのルールはあるが、それは「許可をもらう申請」ではない）→ 誤。</li>
+      <li>（A正・B誤）の組合せは選択肢1。</li>
+    </ol>
+    <div class="kekka">正解　ア ＝ <b>1（Aは正、Bは誤）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：「出典表示のルールがある」ことと「利用申請が必須」は別。「必須」という強い言葉が誤りのサインになることが多い。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-1a">分かった</label></div>
+</div>
+
+<div class="card" id="q4-1b">
+  <h3>問1b　欠損値の扱いとグラフの軸 <span class="pts">イ 1点・ウ 2点</span></h3>
+  <div class="qbox">
+    <p>開花日の表（観測点×年）で、2021年の南大東島の欄には「…」が入力されていた。これは南大東島にはその年の開花日の記録がないことを表す。表の「…」は <b>イ</b> を意味するので、イ が含まれる行を除外したデータを用いる。</p>
+    <p>次に、「3月31日より早く開花した観測点の数が、年ごとにどのように変化しているか」を見るために、<b>ウ</b> とした折れ線グラフで可視化する。</p>
+    <div class="choices">
+      <div>イの選択肢： <span class="num">0</span>補数　<span class="num">1</span>乱数　<span class="num">2</span>代表値　<span class="num">3</span>欠損値</div>
+      <div>ウの選択肢： <span class="num">0</span>横軸を月、縦軸を2023年の各月に開花した観測点の数　<span class="num">1</span>横軸を月、縦軸を10年間分の各月に開花した観測点の総数　<span class="num">2</span>横軸を年、縦軸を各年の3月末までに開花した観測点の数　<span class="num">3</span>横軸を年、縦軸を各年の3月に開花した観測点の数</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>欠損値</b>は、本来データがあるはずなのに、記録がない・測れなかったなどの理由で値が欠けているもの。「0」という値とは全く違う。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>イ：「…」は「値が0」でも「入力し忘れ」でもなく、その年に記録自体が存在しないこと、つまり欠損値を意味する → イ＝3（欠損値）。</li>
+      <li>欠損値への対処として、南大東島の「行」（観測点の行）を除外する。除外するのは「2021年の列」ではないので、行と列を取り違えないこと。欠損値を0として計算に混ぜると、間違った結果になる。</li>
+      <li>ウ：目的は「年ごとの変化」を見ること。だから横軸は「年」→ 選択肢は2か3に絞られる。</li>
+      <li>「3月31日より早く開花した数」は、言い換えると「3月末の時点で、すでに開花した観測点の数の累積」。選択肢2の「3月末までに開花した観測点の数」がこれに当たる。選択肢3の「3月に開花した観測点の数」は3月だけの数で、2月以前に開花した分が入らない → ウ＝2。</li>
+    </ol>
+    <div class="kekka">正解　イ ＝ <b>3（欠損値）</b>　／　ウ ＝ <b>2</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：可視化の問題は、文章の目的（「年ごとに」「〜までに」）をグラフの軸に翻訳できるかが勝負。「までに」は累積の合図。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-1b">分かった</label></div>
+</div>
+
+<div class="card" id="q4-2">
+  <h3>問2　400度・600度の法則と開花差 <span class="pts">エ・オで2点／カ 2点</span></h3>
+  <div class="qbox">
+    <p>2つの仮説を検証する。仮説1（400度の法則）：2月1日からの各日の平均気温の和が400を超えると開花する。仮説2（600度の法則）：2月1日からの各日の最高気温の和が600を超えると開花する。各観測点で、和が初めて400を超えた日を「400度開花推定日」、600を超えた日を「600度開花推定日」とし、実際の開花日との差（開花差）を計算した。開花差は、推定日が実際より早ければ負、遅ければ正、一致すれば0とする。</p>
+    <table>
+      <tr><th>観測点</th><th>400度開花推定日</th><th>600度開花推定日</th><th>実際の開花日</th></tr>
+      <tr><td>稚内</td><td>5月31日</td><td>5月21日</td><td>5月8日</td></tr>
+      <tr><td>旭川</td><td>5月26日</td><td>5月7日</td><td>4月29日</td></tr>
+      <tr><td>新潟</td><td>？</td><td>？</td><td>？</td></tr>
+      <tr><td>名古屋</td><td>3月19日</td><td>3月16日</td><td>3月17日</td></tr>
+      <tr><td>甲府</td><td>3月20日</td><td>3月14日</td><td>3月18日</td></tr>
+      <tr><td>奈良</td><td>？</td><td>？</td><td>？</td></tr>
+    </table>
+    <div class="figcap">表2　開花推定日（一部は「？」で隠されている）</div>
+    <table>
+      <tr><th>観測点</th><th>400度開花差</th><th>600度開花差</th></tr>
+      <tr><td>稚内</td><td>23</td><td>13</td></tr>
+      <tr><td>旭川</td><td>27</td><td>8</td></tr>
+      <tr><td>新潟</td><td>4</td><td>−1</td></tr>
+      <tr><td>名古屋</td><td><b>エ</b></td><td><b>オ</b></td></tr>
+      <tr><td>甲府</td><td>2</td><td>−4</td></tr>
+      <tr><td>奈良</td><td>−1</td><td>−5</td></tr>
+    </table>
+    <div class="figcap">表3　開花差</div>
+    <p>エ・オ：名古屋の開花差（エ・オの選択肢は 0〜4 と −1〜−4）。カ：新潟と奈良について、どちらの推定日が実際の開花日に近いか（表3だけを用いて判断する）。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <h4>考え方</h4>
+    <ol>
+      <li>定義を式にする。開花差 ＝ 開花推定日 − 実際の開花日。「近さ」は符号ではなく<b>絶対値</b>の大小で比べる（問題文にも明記されている）。</li>
+      <li>エ・オ（名古屋）：表2から 400度推定日＝3月19日、600度推定日＝3月16日、実際＝3月17日。
+        <br>400度開花差 ＝ 19 − 17 ＝ <b>＋2</b>（推定が2日遅い）→ エ＝2。
+        <br>600度開花差 ＝ 16 − 17 ＝ <b>−1</b>（推定が1日早い）→ オ＝5（選択肢の −1 の番号）。
+      </li>
+      <li>カ：表2では新潟・奈良の推定日が「？」で隠されているが、判断に使うのは表3（開花差そのもの）の方。
+        <br>新潟：|400度開花差| ＝ 4、|600度開花差| ＝ |−1| ＝ 1 → 600度推定日の方が近い。
+        <br>奈良：|400度開花差| ＝ |−1| ＝ 1、|600度開花差| ＝ |−5| ＝ 5 → 400度推定日の方が近い。
+        <br>よって「新潟は600度、奈良は400度」の選択肢3。
+      </li>
+      <li>「推定日が隠されているから判断できない」（選択肢4）に流れないこと。開花差が表3に載っている以上、推定日そのものが分からなくても比較はできる。どの表を使えば判断できるか自体が問われている。</li>
+    </ol>
+    <div class="kekka">正解　エ ＝ <b>2（＋2）</b>　／　オ ＝ <b>5（−1）</b>　／　カ ＝ <b>3（新潟は600度開花推定日の方が近く、奈良は400度開花推定日の方が近い）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：符号の向き（早い＝負、遅い＝正）と「近さは絶対値」を徹底する。月をまたぐ日数計算にも注意。例えば旭川の400度開花差は、4月29日→5月26日で27日。日付の数字だけの引き算（26−29）では出ないので、カレンダー上の日数で数える。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-2">分かった</label></div>
+</div>
+
+<div class="card" id="q4-3a">
+  <h3>問3a　緯度と開花差の散布図 <span class="pts">キ・ク 各2点（順序不問）</span></h3>
+  <div class="qbox">
+    <p>横軸に緯度、縦軸に開花差をとった散布図（図1）を作った。相関係数は、緯度と400度開花差が <b>0.92</b>、緯度と600度開花差が <b>0.74</b>。図1と相関係数から読み取れることとして正しいものを2つ選ぶ。</p>
+    <div class="choices">
+      <div><span class="num">0</span>400度開花差よりも600度開花差の方が、散布図の点の集まりが直線に近い。</div>
+      <div><span class="num">1</span>開花推定日と実際の開花日が一致する観測点の数は、400度開花推定日よりも600度開花推定日の方が多い。</div>
+      <div><span class="num">2</span>緯度が最も高い観測点で、それぞれの開花差の値が最大となっている。</div>
+      <div><span class="num">3</span>任意の二つの観測点を比較して、緯度が高い観測点の方が、400度開花差の値か600度開花差の値の少なくとも一方が必ず大きい。</div>
+      <div><span class="num">4</span>緯度の値が40以上のすべての観測点で、400度開花推定日は600度開花推定日から一週間以上遅い。</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>散布図</b>は、2つの量の関係を点の集まりで表した図。<b>相関係数</b>は関係の強さを −1〜1 で表す数で、1に近いほど「片方が大きいと他方も大きい」傾向が強く、点が直線の近くに集まる。ただし相関は「関係がある」ことを示すだけで、「原因である」ことまでは示さない。</div>
+    <h4>考え方（選択肢を1つずつ検証する）</h4>
+    <ol>
+      <li>選択肢0：点の集まりの直線への近さは、相関係数の大きさ（絶対値）に対応する。0.92（400度）＞ 0.74（600度）なので、直線に近いのは400度の方 → 0は誤り。</li>
+      <li>選択肢1：「一致する観測点」は開花差がちょうど0の点のこと。図1（拡大図）で、縦軸0の線の上に乗っている点を400度系列（○）と600度系列（×）で数え比べると、600度系列の方が多い → 1は正しい。</li>
+      <li>選択肢2：緯度が最も高い（図の右端の）観測点を見る。その点の開花差は、両系列とも全体の最大値にはなっていない → 誤り。</li>
+      <li>選択肢3：「任意の二つで必ず」という主張は、相関が強くても反例のペアが1組あれば崩れる。図の中に、緯度が高いのに開花差が小さい点の組合せがある → 誤り。「必ず」「すべて」という強い表現は、反例を1つ探す姿勢で検証する。</li>
+      <li>選択肢4：ここが工夫のしどころ。「400度推定日 − 600度推定日」は、（実際の開花日＋400度開花差）−（実際の開花日＋600度開花差）＝ 400度開花差 − 600度開花差、と書き換えられる。つまり同じ観測点の2系列の点の「縦の開き」が、そのまま推定日どうしの差になる。緯度40以上の範囲でこの開きを読むと、すべて7以上ある → 4は正しい。</li>
+    </ol>
+    <div class="kekka">正解　キ・ク ＝ <b>1 と 4</b>（順序は問わない）</div>
+    <div class="point"><b class="head">ここがポイント</b>：使う道具は「相関係数の大小」「開花差＝0の線」「緯度40以上の範囲」の3つ。選択肢4は、推定日の日付を直接比べるのではなく、開花差どうしの差に置き換えて図から読む。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-3a">分かった</label></div>
+</div>
+
+<div class="card" id="q4-3b">
+  <h3>問3b　箱ひげ図とグループ比較 <span class="pts">ケ 2点・コ 2点・サ 3点</span></h3>
+  <div class="qbox">
+    <p>2月1日以降に平均気温が氷点下だった日がある観測点（氷点下観測点）のグループをG1、それ以外のグループをG2として、400度開花差の箱ひげ図（図2）を作った。外れ値はない。読み取れる値はおよそ次の通り。</p>
+    <table>
+      <tr><th>グループ</th><th>最小値</th><th>中央値</th><th>最大値</th></tr>
+      <tr><td>G1（氷点下観測点）</td><td>およそ 7</td><td>およそ 16</td><td>およそ 29</td></tr>
+      <tr><td>G2（それ以外）</td><td>およそ −11</td><td>およそ 0</td><td>およそ 4</td></tr>
+    </table>
+    <p>ケ：開花差の絶対値が ケ 以上となる観測点は、G1では半数以上あるが、G2では1か所もない。ケの選択肢は 0:5／1:10／2:15／3:20。</p>
+    <p>コ・サ：400度開花推定日と実際の開花日が一致している観測点（一致観測点）について、 コ 一致観測点の数が分かり、 サ G2に存在することが分かった。コ・サの選択肢は 0:図1（散布図）だけで／1:図2（箱ひげ図）だけで／2:図1もしくは図2のいずれからも／3:図1と図2の両方を組み合わせることで。</p>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>箱ひげ図</b>は、データの散らばりを「最小値・第1四分位数・中央値・第3四分位数・最大値」で要約した図。箱の左端と右端が四分位数、箱の中の線が中央値、ひげの両端が最小値と最大値。<b>中央値</b>はデータを順に並べたときの真ん中の値で、「半数以上」を判定する物差しになる。</div>
+    <h4>考え方</h4>
+    <ol>
+      <li>ケで使う物差しは2つ。「半数以上ある」は<b>中央値</b>で判定する（中央値がその値以上なら、少なくとも半数はその値以上）。「1か所もない」は<b>最大値と最小値</b>（範囲）で判定する（範囲全体がその値の内側に収まっていれば、該当する点は0個）。</li>
+      <li>候補を1つずつ当てはめる。閾値10だと、G2の最小値がおよそ−11で、絶対値が10以上になる点がG2にも存在してしまい「1か所もない」が成り立たない。閾値20だと、G1の中央値（およそ16）が20未満で「半数以上」が成り立たない。閾値15なら、G1は中央値がおよそ16（15以上）なので少なくとも半数は15以上、G2は範囲が−11〜4に収まり絶対値15以上は0か所。両方を満たすのは15 → ケ＝2。</li>
+      <li>コ：一致観測点の「数」は、図1（散布図）で開花差＝0の点を1つずつ数えれば得られる。図2（箱ひげ図）は分布の要約しか示さないので、個々の点の個数は原理的に分からない → コ＝0（図1だけで）。</li>
+      <li>サ：一致観測点が「G2に存在するか」は、図1だけでは点がどちらのグループか分からず、図2だけでは「ちょうど0の点があるか」が断定できない。両方を組み合わせて初めて分かる → サ＝3。</li>
+    </ol>
+    <div class="kekka">正解　ケ ＝ <b>2（15）</b>　／　コ ＝ <b>0（図1だけで）</b>　／　サ ＝ <b>3（図1と図2の両方を組み合わせることで）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：箱ひげ図で「半数」は中央値、「1つもない」は範囲で判定する。コ・サは「どの図から何が読み取れるか」という図の役割分担の問題。散布図は個々の点、箱ひげ図はグループの要約しか示さない。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-3b">分かった</label></div>
+</div>
+
+<div class="card" id="q4-4">
+  <h3>問4　回帰直線による開花推定日の補正 <span class="pts">シ 3点・ス 2点</span></h3>
+  <div class="qbox">
+    <p>氷点下観測点について、2月1日以降に平均気温が氷点下だった日数（氷点下日数）と400度開花差の散布図と回帰直線（図3）を作った。回帰直線の方程式は、（開花差の予測値）＝ 0.55 ×（氷点下日数）＋ 5.48。</p>
+    <p>補正方法：開花差の予測値の小数第1位を四捨五入した値（補正日数）だけ、400度開花推定日からさかのぼった日を「400度補正日」とする。推定日よりも補正日の方が実際の開花日に近くなることを「うまく補正できる」とする。</p>
+    <p>シ：図3から分かること。　ス：別の年の観測点X（400度開花推定日は4月23日、氷点下日数は18日）の400度補正日。ス の選択肢は 0:4月5日／1:4月8日／2:4月12日／3:4月15日。</p>
+    <div class="choices">
+      <div>シの選択肢： <span class="num">0</span>すべての氷点下観測点でうまく補正できる　<span class="num">1</span>散布図上にある点Aで示した氷点下観測点を除いたすべての氷点下観測点でうまく補正できる　<span class="num">2</span>氷点下日数が1日である氷点下観測点の一部を除いたすべての氷点下観測点でうまく補正できる　<span class="num">3</span>回帰直線上または回帰直線よりも上側に点がある氷点下観測点だけうまく補正できる　<span class="num">4</span>回帰直線上または回帰直線よりも下側に点がある氷点下観測点だけうまく補正できる</div>
+    </div>
+  </div>
+  <button class="tgl" onclick="tgl(this)">考え方と答えを見る</button>
+  <div class="ans">
+    <div class="term"><b>用語チェック</b>　<b>回帰直線</b>は、散布図の点の集まりの傾向を1本の直線で表したもの。x（ここでは氷点下日数）を代入すると、y（ここでは開花差）の予測値が得られる。あくまで「平均的な傾向」の予測で、個々の点は直線からずれる。</div>
+    <h4>考え方（シ）</h4>
+    <ol>
+      <li>補正の発想を確認する。氷点下観測点では400度推定日が実際の開花日より遅れがち（開花差が正に大きい）。だから推定日から補正日数だけ「さかのぼって（早めて）」実際の開花日に寄せる。</li>
+      <li>条件を式にすると分かりやすい。実際の開花差を d、補正日数を c とすると、補正後の開花差は d − c。うまく補正できるのは |d − c| ＜ |d| のとき。d ＞ 0 の点では、これは 0 ＜ c ＜ 2d と同じ意味になる。</li>
+      <li>c は回帰直線の上にある予測値なので、点が直線の付近にあれば c ≒ d でちょうどよく補正できる。直線より上に点がある観測点（実際の d が予測より大きい）では c ＜ d となり、必ず改善する。</li>
+      <li>困るのは、直線より下の点で d が小さい場合。c の方が大きすぎて行き過ぎ（補正後の絶対値が元の d 以上）になることがある。図3でこれが起きるのは、氷点下日数が1日の点の一部だけ（氷点下日数1日では c は約6日分になるのに、d が2や3しかない点がある）。</li>
+      <li>点A（氷点下日数が40日あまり、開花差が20の点）は直線より下にあるが、d＝20 に対して c は約29で、|20 − 29| ＝ 9 ＜ 20 と改善するので、Aも補正できる（「点Aを除く」という選択肢1は誤り）。よってシは選択肢2。</li>
+    </ol>
+    <h4>考え方（ス）</h4>
+    <ol>
+      <li>観測点Xの氷点下日数18日を回帰式に代入する。予測値 ＝ 0.55 × 18 ＋ 5.48 ＝ 9.9 ＋ 5.48 ＝ 15.38。</li>
+      <li>小数第1位を四捨五入して、補正日数 c ＝ 15（日分）。</li>
+      <li>補正日 ＝ 400度開花推定日（4月23日）から15日さかのぼる → <b>4月8日</b> → ス＝1。</li>
+      <li>検算：実際の開花日は4月12日。補正前はずれが |23 − 12| ＝ 11日、補正後は |8 − 12| ＝ 4日で、確かに近づいている（うまく補正できた）。</li>
+    </ol>
+    <div class="kekka">正解　シ ＝ <b>2</b>　／　ス ＝ <b>1（4月8日）</b></div>
+    <div class="point"><b class="head">ここがポイント</b>：補正の向きは「さかのぼる（早める）」。「補正日数15日」と「補正日が15日」を混同しないこと（選択肢3の4月15日はその罠）。回帰直線は平均像なので、下側の点では補正が裏目に出ることがある、というのがシの読みどころ。</div>
+  </div>
+  <div class="done"><label><input type="checkbox" class="dchk" data-k="q4-4">分かった</label></div>
+</div>
+
+<!-- ================= まとめ ================= -->
+<h2 class="sec" id="matome">正解一覧と自己採点</h2>
+<p class="secmeta">全小問の正解です。解き終わったら、大問ごとに自分の得点を入れてください（合計が自動で計算されます）。</p>
+
+<div class="card summary">
+  <h3>正解一覧</h3>
+  <table>
+    <tr><th style="width:16%">大問</th><th class="l">正解</th><th style="width:12%">配点</th></tr>
+    <tr><td>第1問<br>問1a</td><td class="l">ア＝0（低速）／ イ＝3（容量が大きく、長期的な保存）</td><td>2</td></tr>
+    <tr><td>問1b</td><td class="l">ウ＝3</td><td>2</td></tr>
+    <tr><td>問2</td><td class="l">エ＝e（E）／ オ＝4 ／ カ＝9、キ＝6、ク＝6、ケ＝9</td><td>6</td></tr>
+    <tr><td>問3</td><td class="l">コ＝0（中央値）／ サ＝3（どの月にしても変わらない）</td><td>4</td></tr>
+    <tr><td>問4</td><td class="l">シ＝5 ／ ス＝2 ／ セ＝2 ／ ソ＝0（DNS）</td><td>6</td></tr>
+    <tr><td>第2問<br>A問1</td><td class="l">ア＝2 ／ イ＝4（順序不問）</td><td>3</td></tr>
+    <tr><td>A問2</td><td class="l">ウ＝4 ／ エ＝8 ／ オ＝1 ／ カ＝2</td><td>5</td></tr>
+    <tr><td>A問3</td><td class="l">キ＝1 ／ ク＝5 ／ ケ＝2</td><td>7</td></tr>
+    <tr><td>B問1</td><td class="l">コ＝7（1111）／ サ＝3（0110）</td><td>2</td></tr>
+    <tr><td>B問2</td><td class="l">シ＝0（AND演算）</td><td>3</td></tr>
+    <tr><td>B問3</td><td class="l">ス＝2</td><td>3</td></tr>
+    <tr><td>B問4</td><td class="l">セ＝3 ／ ソ＝5 ／ タ＝0（AND演算）／ チ＝0</td><td>7</td></tr>
+    <tr><td>第3問<br>問1</td><td class="l">ア＝9 ／ イ＝2 ／ ウ＝4 ／ エ＝3 ／ オ＝0</td><td>5</td></tr>
+    <tr><td>問2</td><td class="l">カ＝1 ／ キ＝2（カ・キは順序不問）／ ク＝5 ／ ケ＝2 ／ コ＝2</td><td>10</td></tr>
+    <tr><td>問3</td><td class="l">サ＝3 ／ シ＝2 ／ ス＝0 ／ セ＝2 ／ ソ＝5</td><td>10</td></tr>
+    <tr><td>第4問<br>問1</td><td class="l">ア＝1（A正・B誤）／ イ＝3（欠損値）／ ウ＝2</td><td>5</td></tr>
+    <tr><td>問2</td><td class="l">エ＝2（＋2）／ オ＝5（−1）／ カ＝3</td><td>4</td></tr>
+    <tr><td>問3</td><td class="l">キ・ク＝1 と 4（順序不問）／ ケ＝2（15）／ コ＝0 ／ サ＝3</td><td>11</td></tr>
+    <tr><td>問4</td><td class="l">シ＝2 ／ ス＝1（4月8日）</td><td>5</td></tr>
+  </table>
+
+  <h3>自己採点</h3>
+  <table>
+    <tr><th class="l">大問</th><th>自分の得点</th><th>配点</th><th>目標時間</th></tr>
+    <tr><td class="l">第1問　小問集合</td><td><input class="score" id="sc1" type="number" min="0" max="20" step="1"> 点</td><td>20点</td><td>12分</td></tr>
+    <tr><td class="l">第2問　情報システム＋画像と論理演算</td><td><input class="score" id="sc2" type="number" min="0" max="30" step="1"> 点</td><td>30点</td><td>18分</td></tr>
+    <tr><td class="l">第3問　プログラミング</td><td><input class="score" id="sc3" type="number" min="0" max="25" step="1"> 点</td><td>25点</td><td>15分</td></tr>
+    <tr><td class="l">第4問　データの活用</td><td><input class="score" id="sc4" type="number" min="0" max="25" step="1"> 点</td><td>25点</td><td>15分</td></tr>
+  </table>
+  <p class="total">合計： <span id="totalScore">―</span> / 100点</p>
+  <p class="small">間違えた小問は、そのカードに戻ってもう一度「考え方」を読み、どこでずれたかを確認してから次に進みましょう。</p>
+</div>
+
+</div>
+
+<script>
+function tgl(btn) {
+  var ans = btn.nextElementSibling;
+  var open = ans.classList.toggle('open');
+  btn.textContent = open ? '閉じる' : '考え方と答えを見る';
+}
+(function () {
+  var KEY = 'done:' + document.title + ':';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.dchk'));
+  function refresh() {
+    var n = boxes.filter(function (b) { return b.checked; }).length;
+    document.getElementById('doneCount').textContent = n;
+    document.getElementById('allCount').textContent = boxes.length;
+  }
+  boxes.forEach(function (b) {
+    var k = KEY + b.getAttribute('data-k');
+    try { b.checked = localStorage.getItem(k) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem(k, b.checked ? '1' : '0'); } catch (e) {}
+      refresh();
+    });
+  });
+  refresh();
+
+  var ids = ['sc1', 'sc2', 'sc3', 'sc4'];
+  var maxs = [20, 30, 25, 25];
+  function calc() {
+    var total = 0, any = false;
+    ids.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      var v = parseFloat(el.value);
+      if (!isNaN(v)) {
+        any = true;
+        v = Math.max(0, Math.min(maxs[i], v));
+        total += v;
+      }
+    });
+    document.getElementById('totalScore').textContent = any ? total : '―';
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    var k = KEY + id;
+    try { var saved = localStorage.getItem(k); if (saved !== null) el.value = saved; } catch (e) {}
+    el.addEventListener('input', function () {
+      try { localStorage.setItem(k, el.value); } catch (e) {}
+      calc();
+    });
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
