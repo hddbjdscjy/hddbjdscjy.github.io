@@ -445,19 +445,35 @@
     <div class="term"><b>用語チェック</b>　<b>AND演算（論理積）</b>は「両方1のときだけ1、それ以外は0」。<b>NOT演算（否定）</b>は0と1を反転させる。</div>
     <h4>考え方</h4>
     <ol>
-      <li>完成図で必要な振る舞いを2つに分ける。(a) マスクが黒だった場所（背景を出す場所）→ 背景画像の値を出したい。(b) マスクが白だった場所（キャラを出す場所）→ キャラクター画像の値を出したい。</li>
-      <li>ANDの真理値表から性質を引き出す：「<b>1111 AND x ＝ x</b>（白とのANDは相手がそのまま）」「<b>0000 AND x ＝ 0000</b>」。</li>
-      <li>ORで作った画像とキャラクター画像をANDした場合を、場所ごとに検証する。
+      <li>まず作戦の確認。合成は2段階だった。1段階目（B問1）で、背景画像にマスクをORして「キャラの場所だけ白く潰れた背景画像」を作った。2段階目（この問題）は、そこへキャラクター画像を重ねて、潰れた場所にキャラを埋め込む。</li>
+      <li>場所を2種類に分けて、「完成形では何が出てほしいか」を先に決める。値は具体例で見る。
         <table>
-          <tr><th>場所</th><th>ORで作った画像</th><th>キャラクター画像</th><th>AND結果</th><th>判定</th></tr>
-          <tr><td>背景の場所</td><td>背景の値</td><td>白背景＝1111</td><td>背景の値のまま</td><td>(a) 達成</td></tr>
-          <tr><td>キャラの場所</td><td>1111</td><td>キャラの値</td><td>キャラの値</td><td>(b) 達成</td></tr>
+          <tr><th>場所</th><th>ORで作った画像（1段階目の結果）</th><th>キャラクター画像</th><th>完成形で出したいもの</th></tr>
+          <tr><td>背景の場所</td><td>背景の値（例 <span class="bit">1010</span>）</td><td>白背景＝<span class="bit">1111</span></td><td>背景の値 <span class="bit">1010</span></td></tr>
+          <tr><td>キャラの場所</td><td><span class="bit">1111</span>（白く潰れている）</td><td>キャラの値（例 <span class="bit">0101</span>）</td><td>キャラの値 <span class="bit">0101</span></td></tr>
         </table>
+        どちらの場所でも、「<span class="bit">1111</span> と重なった側は消えて、もう片方の値がそのまま出る」ことが必要だと分かる。背景の場所ではキャラ画像側の白が消え、キャラの場所ではOR画像側の白が消える、という対称な要求である。
       </li>
-      <li>両方を同時に満たすのはANDだけ。ORを選ぶと、背景の場所でキャラ画像側の白背景1111が勝って背景まで真っ白に潰れる（B問1の一般則がそのまま消去法になる）。NOT付きの選択肢は色が反転してしまうので完成図と合わない。</li>
+      <li>ANDで実際に計算してみる。ANDは「両方1のときだけ1」だから、相手が全部1（<span class="bit">1111</span>）の桁では、自分の値がそのまま出る。
+        <table>
+          <tr><th>背景の場所</th><th>桁1（左端）</th><th>桁2</th><th>桁3</th><th>桁4</th></tr>
+          <tr><td>ORで作った画像</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>キャラクター画像</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>AND結果</td><td class="hl">1</td><td class="hl">0</td><td class="hl">1</td><td class="hl">0</td></tr>
+        </table>
+        背景の値 <span class="bit">1010</span> がそのまま出た。
+        <table>
+          <tr><th>キャラの場所</th><th>桁1（左端）</th><th>桁2</th><th>桁3</th><th>桁4</th></tr>
+          <tr><td>ORで作った画像</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>キャラクター画像</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>AND結果</td><td class="hl">0</td><td class="hl">1</td><td class="hl">0</td><td class="hl">1</td></tr>
+        </table>
+        キャラの値 <span class="bit">0101</span> がそのまま出た。両方の場所で完成形どおりになる。
+      </li>
+      <li>念のためORも試す。背景の場所で <span class="bit">1010</span> OR <span class="bit">1111</span> ＝ <span class="bit">1111</span>。キャラ画像側の白背景が勝って、背景まで真っ白に潰れてしまう（B問1の「1111とのORは必ず1111」）。NOT付きの選択肢は、せっかく合った値が全部反転してしまう。だから残るのはANDだけ。</li>
     </ol>
     <div class="kekka">正解　シ ＝ <b>0（AND演算）</b></div>
-    <div class="point"><b class="head">ここがポイント</b>：「1111とのANDは相手がそのまま、0000とのANDは黒に潰れる」。演算の候補は、場所ごとに分けて検証すると決まる。</div>
+    <div class="point"><b class="head">ここがポイント</b>：ANDの合言葉は「<b>1111とのANDは相手がそのまま</b>」。白い部分は「相手を通す窓」になる。B問1のORが「白で塗りつぶす」演算だったのと、ちょうど対になっている。</div>
   </div>
   <div class="done"><label><input type="checkbox" class="dchk" data-k="q2-b2">分かった</label></div>
 </div>
