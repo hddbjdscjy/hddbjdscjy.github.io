@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ライフデザイン・ゲーム | 進路研究</title>
+<style>
+* { box-sizing: border-box; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); gap: 11px; }
+.slot .val.empty { font-weight: 400; }
+table.ref, table.score { width: 100%; border-collapse: collapse; }
+.rank { margin-top: 12px; display: flex; gap: 7px; flex-wrap: wrap; }
+
+body { font-family:"Hiragino Sans","Noto Sans CJK JP",sans-serif; margin:0; color:#17324f;
+  background-color:#7ecfff;
+  background-image: radial-gradient(rgba(255,255,255,.45) 3px, transparent 3.6px), linear-gradient(180deg,#3db2ff,#a8e4ff);
+  background-size: 26px 26px, auto; }
+header { padding:16px 12px 0; }
+.hwrap { max-width:980px; margin:0 auto; padding:18px 22px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  background:#ffffff; border:3px solid #17324f; border-radius:24px;
+  box-shadow:0 10px 0 rgba(23,50,79,.18); }
+.logo { width:56px;height:56px;background:#ffb020;border:3px solid #17324f;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px; box-shadow:0 4px 0 rgba(23,50,79,.25); }
+h1 { font-size:29px; margin:0; color:#17324f; text-shadow:2px 2px 0 #ffffff; letter-spacing:.04em; }
+.tag { font-size:12.5px; color:#0b5fa5; font-weight:700; }
+.progwrap { flex:1 1 240px; min-width:220px; }
+.proglabel { display:flex; justify-content:space-between; font-size:12.5px; font-weight:900; color:#0b5fa5; letter-spacing:.06em; margin-bottom:6px; }
+.progbar { height:16px; border-radius:99px; background:#ffffff; border:2px solid #17324f; overflow:hidden; box-shadow:inset 0 2px 4px rgba(23,50,79,.18); }
+.progbar > i { display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,#ff8a00,#ffb020); box-shadow:none; transition:width .6s ease; }
+.wrap { max-width:980px; margin:0 auto; padding:18px 14px 30px; }
+.modes { display:flex; gap:10px; margin-bottom:16px; }
+.modes button { flex:1; padding:12px; font-size:16px; font-weight:800; border-radius:999px; border:3px solid #17324f; background:#ffffff; color:#17324f; cursor:pointer; }
+.modes button.on { background:#ff8a00; border-color:#17324f; color:#ffffff; box-shadow:0 4px 0 rgba(23,50,79,.35); }
+section { background:#ffffff; border:3px solid #17324f; border-radius:22px; box-shadow:8px 8px 0 rgba(23,50,79,.15); padding:20px; margin-bottom:22px; }
+h2 { font-size:19px; margin:0 0 14px; display:flex; align-items:center; gap:9px; color:#17324f; }
+h2 .no { background:#ff4f9a; color:#ffffff; border:2.5px solid #17324f; min-width:28px;height:28px;border-radius:50%; display:inline-flex;align-items:center;justify-content:center; font-size:14px; box-shadow:none; }
+h2 .no.wide { width:auto; padding:0 7px; border-radius:999px; font-size:12px; }
+  h2 .no.n1 { background:#ff4f9a; } h2 .no.n2 { background:#ff8a00; } h2 .no.n3 { background:#3db2ff; }
+  h2 .no.n4 { background:#ff8a00; } h2 .no.n5 { background:#ff4f9a; } h2 .no.n6 { background:#3db2ff; }
+/* S9fix2：一括引きボタン廃止に伴い .bigbtn は削除 */
+.evbtn { width:100%; padding:16px; font-size:18px; font-weight:900; background:#ff4f9a; color:#ffffff; border:3px solid #17324f; border-radius:999px; cursor:pointer; box-shadow:0 5px 0 #17324f; margin-bottom:14px; }
+.evbtn:active { transform:translateY(2px); box-shadow:0 2px 0 #17324f; }
+.slot { border:3px solid #17324f; border-top:10px solid var(--acc); border-radius:16px; padding:12px; min-height:118px; display:flex; flex-direction:column; background:#eaf7ff; }
+.slot .cat { font-size:12px; font-weight:900; color:var(--acc); letter-spacing:.08em; filter:none; }
+.slot .val { font-size:18px; font-weight:900; line-height:1.45; margin:7px 0; flex:1; }
+.slot .val.empty { color:#7d99b4; }
+.slot button { padding:8px; font-size:13px; font-weight:700; border:2px solid #17324f; background:#ffd93d; color:#17324f; border-radius:999px; cursor:pointer; box-shadow:0 3px 0 rgba(23,50,79,.35); }
+.evbox { border:3px dashed #ff4f9a; border-radius:18px; padding:22px 14px; text-align:center; background:#fff0f6; }
+.evbox .ev { font-size:30px; font-weight:900; color:#e8357f; min-height:40px; text-shadow:none; }
+.evbox .evsub { font-size:12px; color:#a34d6d; margin-top:7px; font-weight:700; }
+.evbox .evq { font-size:15px; font-weight:700; color:#17324f; margin-top:10px; line-height:1.7; min-height:25px; }
+table.ref { font-size:14.5px; } table.ref td { padding:8px 6px; border-bottom:2px dotted #8fc3ea; }
+table.ref td.t { font-weight:900; white-space:nowrap; width:34%; }
+table.score { font-size:14.5px; } table.score th, table.score td { padding:8px 6px; border-bottom:2px dotted #8fc3ea; text-align:left; }
+table.score th { font-size:12px; color:#0b5fa5; } td.pts { text-align:right; white-space:nowrap; font-weight:800; }
+.rank span { font-size:13.5px; font-weight:900; border-radius:999px; padding:6px 14px; background:#eaf7ff; border:2px solid #17324f; color:#17324f; }
+.rank span.s { background:#ffd93d; color:#17324f; border-color:#17324f; }
+footer { text-align:center; font-size:12px; color:#0b5fa5; font-weight:700; padding-bottom:10px; }
+
+  .jobprompt { font-size:17px; font-weight:900; margin-bottom:11px; color:#17324f; }
+  .types { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:13px; }
+  .types button { padding:10px 15px; font-size:14.5px; font-weight:800; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .types button:hover, .jobs button:hover, .pt button:hover { filter:brightness(1.18); }
+  .types button.on { background:#3db2ff; border-color:#17324f; color:#ffffff; box-shadow:none; }
+  .jobs { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:9px; margin-bottom:13px; }
+  .jobs button { padding:12px 10px; font-size:15px; font-weight:700; border:2.5px solid #8fc3ea; background:#f2faff; color:#17324f; border-radius:13px; cursor:pointer; }
+  .decided { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#ffd93d; border:3px solid #17324f; border-radius:14px; padding:13px 16px; box-shadow:4px 4px 0 rgba(23,50,79,.25); color:#17324f; }
+  .decided .dlabel { font-size:12.5px; font-weight:900; background:#17324f; color:#ffd93d; border-radius:999px; padding:4px 11px; }
+  .decided .djob { font-size:21px; font-weight:900; }
+  .decided button { margin-left:auto; padding:8px 13px; font-size:13px; font-weight:800; border:2px solid #17324f; background:#fff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .mission { margin-top:14px; border:2.5px dashed #ff8a00; background:#fff8ec; border-radius:13px; padding:12px 15px; display:flex; gap:11px; align-items:center; flex-wrap:wrap; }
+  .mission .mlabel { font-size:12px; font-weight:900; background:#ff4f9a; color:#fff; border-radius:999px; padding:4px 11px; white-space:nowrap; }
+  .mission #missionEx { font-size:16.5px; font-weight:800; }
+
+  .sitem { border:2.5px solid #8fc3ea; border-radius:14px; padding:12px 14px; margin-bottom:11px; background:#f7fcff; }
+  .sitem .sname { font-size:15.5px; font-weight:900; margin-bottom:9px; color:#17324f; }
+  .ptsrow { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; }
+  .pt { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .pt button { width:100%; padding:11px 0; font-size:17px; font-weight:900; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:12px; cursor:pointer; }
+  .pt button.on { background:#ff8a00; border-color:#17324f; color:#ffffff; box-shadow:none; }
+  .pt .cap { font-size:10.5px; color:#5b7d99; font-weight:700; min-height:14px; text-align:center; }
+  .totalbar { display:flex; align-items:center; gap:13px; flex-wrap:wrap; background:#ffd93d; border:3px solid #17324f; border-radius:14px; padding:13px 16px; box-shadow:4px 4px 0 rgba(23,50,79,.25); margin-top:4px; color:#17324f; }
+  .totalbar .tlabel { font-size:12.5px; font-weight:900; background:#17324f; color:#ffd93d; border-radius:999px; padding:4px 11px; }
+  .totalbar .ttotal { font-size:23px; font-weight:900; }
+  .totalbar .trank { font-size:23px; font-weight:900; background:#fff; border:2.5px solid #17324f; border-radius:10px; padding:2px 14px; color:#17324f; }
+  .totalbar button { margin-left:auto; padding:8px 13px; font-size:13px; font-weight:800; border:2px solid #17324f; background:#fff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .ranklegend { margin-top:10px; font-size:12.5px; color:#5b7d99; font-weight:700; text-align:center; }
+
+  .mform { font-size:17px; font-weight:800; margin-bottom:12px; }
+  .mform b { color:#ff4f9a; }
+  .misnote { font-size:12px; color:#5b7d99; font-weight:700; margin-top:8px; }
+  .cyclebtn { padding:9px 15px; font-size:13.5px; font-weight:800; border:2.5px solid #17324f; background:#ffd93d; color:#17324f; border-radius:999px; cursor:pointer; box-shadow:0 3px 0 rgba(23,50,79,.35); }
+  .cyclebtn.wide { width:100%; margin-top:12px; padding:12px; font-size:15px; }
+  .mission .cyclebtn { margin-left:auto; }
+  .planwho { font-size:15px; font-weight:900; margin-bottom:11px; color:#17324f; }
+  .planrow { display:flex; gap:11px; border:2.5px solid #8fc3ea; border-radius:13px; padding:10px 13px; margin-bottom:9px; background:#f7fcff; align-items:flex-start; }
+  .planrow .dec { background:#3db2ff; color:#ffffff; font-weight:900; font-size:13px; border-radius:999px; padding:4px 11px; white-space:nowrap; margin-top:2px; }
+  .planrow .planbody { font-size:14.5px; line-height:1.55; }
+  .step { border:2.5px solid #8fc3ea; border-radius:13px; padding:11px 14px; background:#f7fcff; font-size:15px; font-weight:700; }
+  .step .slabel { font-size:11.5px; font-weight:900; color:#e8357f; display:block; margin-bottom:2px; }
+  .arrow { text-align:center; font-size:15px; font-weight:900; color:#ff8a00; line-height:1.25; }
+
+  .bubble { position:relative; background:#fff3c4; border:2.5px solid #17324f; border-radius:15px; padding:11px 14px; font-size:15px; font-weight:800; line-height:1.55; margin-bottom:12px; }
+  .bubble strong { background:#ffd93d; color:#17324f; padding:0 5px; border-radius:5px; }
+  .jobslabel { background:#ff8a00; color:#fff; font-size:12.5px; font-weight:900; border-radius:999px; padding:2px 10px; margin-bottom:7px; }
+  .slimfree { display:flex; align-items:center; gap:8px; flex-wrap:wrap; border-top:2px dashed #8fc3ea; padding-top:11px; }
+  .slimfree span { font-size:14px; font-weight:900; }
+  .slimfree input { flex:1; min-width:160px; font-size:15px; padding:9px 11px; border:2.5px solid #17324f; border-radius:11px; font-weight:700; background:#ffffff; color:#17324f; }
+  .slimfree input::placeholder { color:#7d99b4; }
+  .slimfree button { background:#ffd93d; border:2.5px solid #17324f; border-radius:11px; font-size:14.5px; font-weight:900; padding:9px 15px; cursor:pointer; color:#17324f; }
+
+@media (max-width: 480px) { h1 { font-size:22px; } .logo { width:46px; height:46px; font-size:23px; } .hwrap { padding:14px 16px; } }
+@media print {
+  body { background:#fff !important; background-image:none !important; color:#17324f !important; }
+  header { padding:0; }
+  .hwrap, section, .slot, .sitem, .planrow, .step, .bubble, .mission, .evbox, .chara-wrap, .chara-note { background:#fff !important; box-shadow:none !important; border-color:#17324f !important; }
+  h1, h2, .tag, .jobprompt, .planwho, .sitem .sname, .chara-head { color:#17324f !important; text-shadow:none !important; }
+  .slot .val, .planrow, .step, .bubble, .evbox .evq, table.ref, table.score { color:#17324f !important; }
+  .evbox .ev { color:#e0344f !important; text-shadow:none !important; }
+  .progwrap, .modes, .fxbar, .titlebox, .classtools { display:none !important; }
+  body.printcards header, body.printcards .wrap { display:none !important; }
+  body.printcards #printSheet { display:block !important; }
+  .ps-flex { break-inside:avoid; page-break-inside:avoid; }
+  .chara-wrap, .slot, .planrow, .step { break-inside:avoid; page-break-inside:avoid; }
+}
+
+/*==CSS:hero==*/
+  .chara-wrap { margin-top:18px; border:3px solid #17324f; border-radius:16px; overflow:hidden; background:#ffffff; box-shadow:6px 6px 0 rgba(23,50,79,.15); }
+  .chara-head { background:#3db2ff; color:#ffffff; border-bottom:3px solid #17324f; font-weight:900; font-size:14.5px; padding:8px 14px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .chara-head .prog { color:#fff; font-size:12.5px; }
+  .chara-note { font-size:12px; color:#0b5fa5; font-weight:700; padding:8px 14px 10px; background:#eaf7ff; }
+  #charaStage { max-width:420px; margin:12px auto; padding:0 12px; }
+  .hairbar { display:flex; gap:8px; justify-content:center; align-items:center; padding:0 12px 14px; color:#0b5fa5; font-weight:800; font-size:13px; }
+  .hairbar button { width:44px; height:36px; border-radius:999px; border:2.5px solid #17324f; background:#ffffff; color:#17324f; font-weight:900; font-size:15px; cursor:pointer; }
+  .hairbar button.on { background:#ff8a00; color:#ffffff; }
+  svg.hero { display:block; width:100%; height:auto; border-radius:14px; }
+  /* S9fix2：カード0枚のときはキャラを出さず案内を出す（.sil のグレー化は廃止） */
+  .chara-empty { max-width:420px; margin:12px auto; padding:36px 18px; text-align:center; background:#eaf7ff; border:3px dashed #8fc3ea; border-radius:14px; color:#0b5fa5; font-weight:800; font-size:15.5px; line-height:1.7; }
+  body.big .chara-empty { max-width:660px; }
+  .hero .L.pop { animation:heroPop .45s cubic-bezier(.3,1.6,.5,1); transform-box:fill-box; transform-origin:center; }
+  .hero .L-body, .hero .L-outfit { animation:heroBreathe 3.6s ease-in-out infinite; }
+  .hero .L-eyes { animation:heroBlink 4.6s infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes heroPop { 0% { transform:scale(.82); opacity:.25; } 100% { transform:scale(1); opacity:1; } }
+  @keyframes heroBreathe { 0%,100% { transform:translateY(0); } 50% { transform:translateY(3px); } }
+  @keyframes heroBlink { 0%,93%,100% { transform:scaleY(1); } 96% { transform:scaleY(.1); } }
+  /* S7：演出（カードめくり・ルーレット・称号・設定バー） */
+  .slot { perspective:700px; }
+  .slot-in { display:flex; flex-direction:column; flex:1; transform-origin:center; }
+  .slot.flip .slot-in { animation:slotFlip .55s ease both; }
+  @keyframes slotFlip { 0% { transform:rotateY(88deg); opacity:.25; } 55% { transform:rotateY(-10deg); opacity:1; } 100% { transform:rotateY(0deg); } }
+  .evbox .ev.spin { animation:evBlink .12s steps(2) infinite; }
+  .evbox.land { animation:evLand .5s ease; }
+  @keyframes evBlink { 50% { opacity:.35; } }
+  @keyframes evLand { 0% { transform:scale(1.07); } 100% { transform:scale(1); } }
+  .titlebox { display:none; margin-top:14px; padding:12px 16px; border:3px solid #17324f; border-radius:14px; background:#ffd93d; box-shadow:4px 4px 0 rgba(23,50,79,.25); text-align:center; }
+  .titlebox.show { display:block; animation:titleIn .6s cubic-bezier(.3,1.5,.5,1); }
+  .titlebox .tk { font-size:12px; font-weight:900; letter-spacing:.15em; }
+  .titlebox .tt { font-size:23px; font-weight:900; margin-top:2px; }
+  .titlebox .td { font-size:13px; font-weight:700; margin-top:3px; }
+  @keyframes titleIn { 0% { transform:scale(.8); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+  .fxbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px; font-size:13px; font-weight:800; color:#0b5fa5; }
+  .fxbar button { padding:7px 13px; font-size:13px; font-weight:800; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .fxbar button.on { background:#ff8a00; color:#ffffff; }
+  .fxbar .fxstat { padding:7px 13px; font-size:13px; font-weight:800; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:999px; }
+  .fxbar .fxstat.on { background:#ff8a00; color:#ffffff; }
+  /* S14：アニメーションは常時ONのため、停止用の noanim / prefers-reduced-motion 上書きは廃止 */
+  /* S8：授業ツールバー（班コード・大画面・印刷用カード） */
+  .classtools { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:16px; background:#ffffff; border:3px solid #17324f; border-radius:16px; padding:10px 14px; box-shadow:4px 4px 0 rgba(23,50,79,.15); font-size:13.5px; font-weight:800; color:#0b5fa5; }
+  .classtools .ct-label { background:#17324f; color:#ffd93d; border-radius:999px; padding:4px 11px; font-size:12.5px; font-weight:900; }
+  .classtools input { font-size:14.5px; font-weight:700; padding:7px 10px; border:2.5px solid #17324f; border-radius:10px; width:130px; color:#17324f; background:#ffffff; }
+  .classtools button { padding:8px 14px; font-size:13.5px; font-weight:800; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .classtools button.on { background:#ff8a00; color:#ffffff; }
+  /* S8：大画面モード（プロジェクター投影用） */
+  body.big .wrap, body.big .hwrap { max-width:1440px; }
+  body.big { font-size:17px; }
+  body.big h1 { font-size:36px; }
+  body.big #charaStage, body.big #myStage { max-width:660px; }
+  body.big .slot .val { font-size:23px; }
+  body.big .evbox .ev { font-size:42px; }
+  body.big .grid { grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); }
+  /* S8：第2回自分アバター */
+  #myStage { max-width:420px; margin:12px auto; padding:0 12px; }
+  .avrow { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+  .avrow .avlabel { font-size:12.5px; font-weight:900; color:#ffffff; background:#0b5fa5; border-radius:999px; padding:4px 11px; white-space:nowrap; }
+  .avrow button { padding:7px 12px; font-size:13.5px; font-weight:700; border:2.5px solid #17324f; background:#ffffff; color:#17324f; border-radius:999px; cursor:pointer; }
+  .avrow button.on { background:#3db2ff; color:#ffffff; }
+  /* S8：印刷用カード（画面では非表示。印刷時の体裁は @media print 側で指定） */
+  #printSheet { display:none; }
+  .ps-title { font-size:21px; font-weight:900; border-bottom:3px solid #17324f; padding-bottom:6px; margin-bottom:8px; }
+  .ps-meta { display:flex; gap:26px; flex-wrap:wrap; font-size:13px; font-weight:700; margin-bottom:6px; }
+  .ps-sec { font-size:15.5px; font-weight:900; margin:16px 0 8px; border:2px solid #17324f; border-radius:6px; padding:4px 10px; color:#17324f; }
+  .ps-flex { display:flex; gap:16px; align-items:flex-start; }
+  .ps-chara { width:225px; flex:none; }
+  .ps-chara svg { width:100%; height:auto; display:block; }
+  .ps-main { flex:1; }
+  .ps-table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  .ps-table th, .ps-table td { border:1.5px solid #17324f; padding:5px 9px; text-align:left; }
+  .ps-table th { width:32%; }
+  .ps-ev { margin-top:9px; font-size:13.5px; font-weight:700; }
+  .ps-note { font-size:12.5px; font-weight:700; margin-top:10px; }
+  .ps-lines div { border-bottom:1.5px solid #8fc3ea; height:32px; }
+  /* S6：色の濃さ調整（全カードを引いた状態でもキャラと付属物が読めるように） */
+  svg.hero .L-bgSky, svg.hero .L-bgFar, svg.hero .L-bgNear { filter:saturate(.78) brightness(.94); }
+  svg.hero .L-bubble { filter:drop-shadow(0 0 7px rgba(255,255,255,.6)); }
+  svg.hero .L-item { filter:drop-shadow(0 3px 4px rgba(26,12,0,.35)); }
+  svg.hero .L-debuff { filter:drop-shadow(0 3px 5px rgba(26,12,0,.45)); }
+/*==END:CSS:hero==*/
+
+/*==CSS:gallery==*/
+  #gallery { display:none; }
+  body.devmode { background:#dff6ff; background-image:none; color:#17324f; }
+  body.devmode header, body.devmode .wrap, body.devmode footer { display:none; }
+  body.devmode #gallery { display:block; max-width:1100px; margin:0 auto; padding:20px 16px 60px; }
+  #gallery h1 { color:#ff8a00; text-shadow:none; font-size:22px; margin:0 0 4px; }
+  #gallery h2 { display:block; font-size:17px; color:#ff8a00; border-bottom:2px solid #17324f; padding-bottom:6px; margin:30px 0 14px; }
+  #gallery h3 { font-size:14px; color:#0b5fa5; margin:18px 0 8px; }
+  #gallery p, #gallery li { font-size:13.5px; line-height:1.7; color:#33526e; }
+  #gallery .stat { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin:10px 0; }
+  #gallery .bar { flex:1; min-width:200px; height:16px; border-radius:99px; background:#ffffff; overflow:hidden; border:2px solid #ff8a00; }
+  #gallery .bar > i { display:block; height:100%; background:#ff8a00; }
+  #gallery table { border-collapse:collapse; width:100%; font-size:13px; }
+  #gallery th, #gallery td { border-bottom:1px solid #8fc3ea; padding:6px 8px; text-align:left; color:#17324f; }
+  #gallery th { color:#0b5fa5; font-size:12px; }
+  #gallery .row { display:flex; flex-wrap:wrap; gap:14px; align-items:flex-start; }
+  #gallery .fig { width:230px; text-align:center; font-size:12px; color:#0b5fa5; }
+  #gallery .fig svg.hero { border-radius:12px; border:2px solid #ff8a00; background:#bfe9ff; }
+  #gallery .fig.big { width:300px; }
+  #gallery .thumbs { display:flex; flex-wrap:wrap; gap:12px; }
+  #gallery .th { width:150px; text-align:center; font-size:11.5px; color:#0b5fa5; word-break:break-all; }
+  #gallery .th svg { width:150px; height:auto; display:block; border-radius:10px; border:2px solid #8fc3ea; background:#bfe9ff; margin-bottom:4px; }
+  #gallery .faces { display:flex; flex-wrap:wrap; gap:14px; }
+  #gallery .pcard { width:262px; font-size:12px; color:#0b5fa5; line-height:1.6; }
+  #gallery .pcard b { color:#ff8a00; font-size:13px; }
+  #gallery .pair { display:flex; gap:6px; margin-bottom:4px; }
+  #gallery .pair svg.hero, #gallery .pcard > svg.hero { width:100%; border-radius:12px; border:2px solid #8fc3ea; background:#bfe9ff; }
+  #gallery .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  #gallery .chip { font-size:11.5px; padding:3px 9px; border-radius:99px; border:1.5px dashed #8fc3ea; color:#0b5fa5; }
+  #gallery .ok { color:#ff8a00; font-weight:700; }
+  #gallery code { background:#ffedb3; padding:1px 6px; border-radius:6px; color:#8a5a00; }
+/*==END:CSS:gallery==*/
+
+  .plantable { width:100%; border-collapse:separate; border-spacing:0; background:#ffffff; border:2px solid #17324f; border-radius:12px; overflow:hidden; font-size:13.5px; }
+  .plantable th, .plantable td { border-bottom:1.5px solid #bcd8ee; padding:7px 9px; text-align:left; vertical-align:top; line-height:1.5; color:#17324f; }
+  .plantable tr:first-child th { background:#dff2ff; font-size:12.5px; }
+  .plantable th.dec { background:#eaf7ff; white-space:nowrap; font-weight:900; color:#0b5fa5; width:88px; }
+  .plantable tr:last-child th, .plantable tr:last-child td { border-bottom:none; }
+  .avgroup { border:2px solid #17324f; border-radius:14px; padding:10px 12px 4px; margin-bottom:12px; background:rgba(255,255,255,.6); }
+  .avgroup-title { font-size:13px; font-weight:900; color:#17324f; margin-bottom:8px; }
+  .avgroup .avrow:last-child { margin-bottom:6px; }
+</style>
+
+<style>
+/* S17：小窓（キャラが見えなくなったら右下に出るミニ表示） */
+#miniChara { position:fixed; right:12px; bottom:12px; width:134px; z-index:999; background:#fff; border:3px solid #17324f; border-radius:14px; box-shadow:4px 4px 0 rgba(23,50,79,.18); padding:6px 6px 4px; display:none; cursor:pointer; }
+#miniChara.show { display:block; }
+#miniChara .mini-head { font-size:11px; font-weight:800; color:#17324f; text-align:center; line-height:1.35; padding-bottom:2px; }
+#miniChara .mini-head small { display:block; font-size:9.5px; font-weight:700; color:#5b7b99; }
+#miniStage svg { width:100%; height:auto; display:block; }
+@media print { #miniChara { display:none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="logo">🃏</div>
+    <div>
+      <h1>ライフデザイン・ゲーム</h1>
+      <div class="tag">進路研究 ― 人生設計カードゲーム</div>
+    </div>
+    <div class="progwrap">
+      <div class="proglabel"><span>主人公カードの完成度</span><span id="gameProgText">0 / 7</span></div>
+      <div class="progbar"><i id="gameProgFill"></i></div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="modes">
+    <button id="mode1" class="on" onclick="setMode(1)">第1回　他者編</button>
+    <button id="mode2" onclick="setMode(2)">第2回　自分編</button>
+  </div>
+
+  <div class="classtools">
+    <span class="ct-label">授業ツール</span>
+    <label>班コード <input id="teamCode" type="text" placeholder="例：3班" maxlength="12"></label>
+    <button id="bigBtn" onclick="toggleBig()">大画面：OFF</button>
+    <button onclick="printCards()">🖨 印刷用カード</button>
+    <span>班コードは印刷用カードに入ります</span>
+  </div>
+
+  <section id="sec-hero">
+    <h2><span class="no n1" id="no-hero">1</span>主人公カード</h2>
+    <div class="grid" id="slots"></div>
+    <div class="chara-wrap">
+      <div class="chara-head"><span>主人公キャラクター</span><span class="prog" id="charaProg">カードを引くと姿が現れるよ</span></div>
+      <div id="charaStage"></div>
+      <div id="charaEmpty" class="chara-empty">カードを引くと、ここにキャラクターができていくよ</div>
+      <div class="hairbar" id="hairBar"></div>
+      <div class="chara-note">性別＝体と髪／性格＝表情と小物／価値観＝服の色と胸のマーク／夢＝右上の吹き出し／強み＝右手の持ち物／弱み＝左下のサイン／スタート環境＝背景（ほかのカードの見た目は順次追加）</div>
+    </div>
+    <div class="fxbar" id="fxBar"></div>
+    <div class="titlebox" id="titleBox"></div>
+  </section>
+
+  <section id="sec-job">
+    <h2><span class="no n2" id="no-job">2</span>仕事のタイプ</h2>
+    <div class="jobprompt">好きな仕事タイプを選ぼう</div>
+    <div class="bubble">💡 下に出てくる職業は、あくまで<strong>例</strong>だよ。ここにない職業でも、自分で決めてOK！</div>
+    <div class="types" id="types"></div>
+    <div><span class="jobslabel" id="jobslabel" style="display:none">職業の例</span></div>
+    <div class="jobs" id="jobs"></div>
+    <div class="slimfree"><span>ほかの職業にしたい人は →</span><input id="customJob" type="text" placeholder="職業を自由に入力"><button onclick="setCustomJob()">決める</button></div>
+    <div class="decided" id="decided" style="display:none"><span class="dlabel">決めた仕事</span><span class="djob" id="decidedJob"></span><button onclick="clearJob()">選び直す</button></div>
+  </section>
+
+  <section id="sec-mission">
+    <h2><span class="no n3" id="no-mission">3</span>ミッション</h2>
+    <div class="mform">「<b>30・40代</b>までに、<b>○○</b>している」の形で書く</div>
+    <div class="mission" style="margin-top:0"><span class="mlabel">ミッション例</span><span id="missionEx"></span><button class="cyclebtn" onclick="nextMission()">別の例を見る ↻</button></div>
+    <div class="misnote" id="missionNote"></div>
+  </section>
+
+  <section id="sec-avatar" style="display:none">
+    <h2><span class="no n1" id="no-avatar">1</span>自分のキャラクター</h2>
+    <div class="bubble">第2回は、自分のことを選んで<strong>自分のキャラクター</strong>を完成させよう。仕事タイプは「<span id="avJobRef">2</span> 仕事のタイプ」と連動していて、選ぶと制服が付くよ。</div>
+    <div class="chara-wrap">
+      <div class="chara-head"><span>自分のキャラクター</span><span class="prog" id="myProg">まだ選んでいないよ</span></div>
+      <div id="myStage"></div>
+      <div id="myEmpty" class="chara-empty">項目を選ぶと、ここに自分のキャラクターができていくよ</div>
+      <div class="chara-note">性別・性格・価値観・夢・強み・弱み・スタート環境・仕事タイプの8項目を全部選ぶと完成。完成するとエフェクトが付くよ。</div>
+    </div>
+    <div id="myControls" style="margin-top:14px"></div>
+    <div class="avrow" id="myFxRow" style="display:none"><span class="avlabel">完成エフェクト</span></div>
+    <div class="titlebox" id="myDone"></div>
+  </section>
+
+  <section id="sec-plan">
+    <h2><span class="no n4" id="no-plan">4</span>人生設計の例</h2>
+    <div class="planwho" id="planWho"></div>
+    <div id="planRows"></div>
+    <button class="cyclebtn wide" onclick="nextPlan()">別の例を見る ↻</button>
+  </section>
+
+  <section id="sec-event">
+    <h2><span class="no n5" id="no-event">5</span>イベントカード</h2>
+    <button class="evbtn" id="evBtn" onclick="drawEvent()">イベントを引く</button>
+    <div class="evbox">
+      <div class="ev" id="evval">―</div>
+      <div class="evq" id="evq"></div>
+      <div class="evsub">20代で起こるイベント。当てはまらないイベントは1回だけ引き直し可</div>
+    </div>
+  </section>
+
+  <section id="sec-reverse">
+    <h2><span class="no n6" id="no-reverse">6</span>逆算の例</h2>
+    <div class="planwho" id="chainWho"></div>
+    <div id="chainSteps"></div>
+    <button class="cyclebtn wide" onclick="nextChain()">別の例を見る ↻</button>
+  </section>
+
+  
+  <footer>入力内容は保存されません</footer>
+</div>
+<div id="printSheet"></div>
+
+<script>
+const DATA = {"cards": {"性別": ["男性", "女性"], "性格": ["行動派（思い立ったらすぐ動く）", "慎重派（よく考えてから動く）", "好奇心旺盛", "計画的できっちりしている", "マイペース", "負けず嫌い", "楽観的", "完璧主義", "世話好きで面倒見がいい", "人見知り", "こだわりが強い", "空気を読むのが上手い"], "強み": ["粘り強い", "段取りがいい", "説明がわかりやすい", "最後までやり切る", "人の話をよく聞く", "行動が早い", "正確で丁寧", "発想が面白い", "責任感がある", "周りをよく見ている", "コツコツ続けられる", "場を和ませる"], "弱み": ["熱しやすく冷めやすい", "計画を立てるのが苦手", "人に頼るのが苦手", "緊張しやすい", "お金の管理が苦手", "朝が弱い", "決断が遅い", "細かい作業が苦手", "プレッシャーに弱い", "体力がない", "忘れ物・うっかりが多い", "一人の時間がないと疲れる"], "夢・憧れ": ["海外で働く", "自分の店・会社を持つ", "地元に貢献する", "家族と穏やかに暮らす", "プロ・一流を目指す", "研究者・専門家になる", "人の役に立つ仕事に就く", "好きなことで生きていく", "経済的に豊かになる", "世界中を旅する", "ものづくりの職人になる", "有名になる"], "価値観": ["お金・収入", "家族", "自由な時間", "安定", "挑戦・冒険", "人の役に立つこと", "周りからの評価", "健康", "仲間", "自分らしく生きること"], "スタート環境": ["高校卒業後は地元に残る", "都市に出たい", "大学進学を考えている", "専門学校で資格を取りたい", "卒業したらすぐ働きたい", "奨学金を使う予定", "家族の仕事を継ぐかもしれない", "部活で大きな実績がある", "アルバイト経験が豊富", "海外に行きたい"]}, "events": ["病気で入院", "パートナーの転勤", "子育て", "親の介護", "住宅購入", "奨学金の完済", "海外赴任の打診", "会社の業績悪化", "Uターン", "起業", "宝くじで3億当選", "リストラ"]};
+const COLORS = {'性別':'#0284c7','性格':'#9333ea','強み':'#16a34a','弱み':'#ea580c','夢・憧れ':'#db2777','価値観':'#6d28d9','スタート環境':'#0891b2'};
+const LABEL_COLORS = {'性別':'#0369a1','性格':'#7e22ce','強み':'#15803d','弱み':'#c2410c','夢・憧れ':'#be185d','価値観':'#5b21b6','スタート環境':'#0e7490'};
+const cats = Object.keys(DATA.cards);
+const current = {};
+function pick(arr, avoid) {
+  if (arr.length === 1) return arr[0];
+  let v;
+  do { v = arr[Math.floor(Math.random() * arr.length)]; } while (v === avoid);
+  return v;
+}
+let prevVals = {};
+function render() {
+  const box = document.getElementById('slots');
+  box.innerHTML = '';
+  cats.forEach(cat => {
+    const d = document.createElement('div');
+    d.className = 'slot';
+    d.style.setProperty('--acc', COLORS[cat]);
+    const v = current[cat];
+    d.innerHTML = '<div class="slot-in"><span class="cat" style="color:' + LABEL_COLORS[cat] + '">' + cat + '</span>' +
+      '<div class="val' + (v ? '' : ' empty') + '">' + (v || '―') + '</div>' +
+      '<button onclick="drawOne(\'' + cat + '\')">' + (v ? '↻ 引き直す' : '引く') + '</button></div>';
+    if (fxOn() && v && prevVals[cat] !== v) {
+      d.classList.add('flip');
+      d.querySelector('.slot-in').style.animationDelay = (cats.indexOf(cat) * 0.06) + 's';
+    }
+    box.appendChild(d);
+    prevVals[cat] = v;
+  });
+  updateMission();
+  updateHero();
+}
+function drawOne(cat) { current[cat] = pick(DATA.cards[cat], current[cat]); render(); sfxPlay('draw'); }
+const EVQ = {
+'病気で入院': '仕事と収入はどうなる？ 備えていたこと、助けてくれる人はいる？',
+'パートナーの転勤': 'ついていく？ それぞれの場所で暮らす？ 主人公の仕事はどうする？',
+'子育て': '仕事のペースは変わる？ お金と時間の使い方をどう変える？',
+'親の介護': '仕事との両立はできる？ 誰かに頼れる？ プランの何を先送りする？',
+'住宅購入': '買うならいくらの家？ ローンが始まると毎月の余裕はどう変わる？',
+'奨学金の完済': '月々の返済がなくなったら、その分を何に回す？',
+'海外赴任の打診': '行く？ 行かない？ キャリアと家族にどう影響する？',
+'会社の業績悪化': '給料や仕事が減ったら、プランのどこが苦しくなる？ どう立て直す？',
+'Uターン': '地元から離れて暮らしていた場合、地元に帰ると仕事と暮らしはどう変わる？ 何を失って、何を得る？',
+'起業': '起業する？ リスクと、うまくいったときのリターンは？',
+'宝くじで3億当選': '急に大金が入ったら、主人公のプランはどう変わる？ 仕事や夢はそのまま続ける？',
+'リストラ': '仕事を失ったら、まず何をする？ プランのどこを作り直す？'
+};
+let curEv = null;
+let evTimer = null, evFinish = null;
+function drawEvent() {
+  if (evFinish) evFinish();
+  const el = document.getElementById('evval');
+  const q = document.getElementById('evq');
+  const box = el.closest('.evbox');
+  const target = pick(DATA.events, curEv);
+  const finish = () => {
+    if (evTimer) { clearInterval(evTimer); evTimer = null; }
+    evFinish = null;
+    curEv = target;
+    el.textContent = target;
+    q.textContent = EVQ[target] || '';
+    el.classList.remove('spin');
+    if (box) { box.classList.remove('land'); void box.getBoundingClientRect(); box.classList.add('land'); }
+    sfxPlay('land');
+  };
+  evFinish = finish;
+  if (!fxOn()) { finish(); return; }
+  q.textContent = '';
+  el.classList.add('spin');
+  let steps = 0;
+  evTimer = setInterval(() => {
+    el.textContent = DATA.events[Math.floor(Math.random() * DATA.events.length)];
+    steps++;
+    if (steps >= 9) finish();
+  }, 110);
+}
+// ==== S7：演出設定・効果音・称号 ====
+// S14：アニメーションと効果音は常時ON（トグルなし。OSの視差効果設定でも止めない）
+let sfxOn = true;
+let animOn = true;
+function fxOn() { return animOn; }
+let actx = null;
+function sfxTone(freq, t0, dur, type, vol) {
+  if (!actx) return;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = type || 'sine'; o.frequency.value = freq;
+  const t = actx.currentTime + t0;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(actx.destination);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+function sfxPlay(kind) {
+  if (!sfxOn) return;
+  try {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    if (kind === 'draw') { sfxTone(660, 0, 0.12, 'triangle', 0.10); sfxTone(880, 0.07, 0.14, 'triangle', 0.10); }
+    else if (kind === 'land') { sfxTone(523, 0, 0.12, 'sine', 0.12); sfxTone(784, 0.08, 0.18, 'sine', 0.12); }
+    else if (kind === 'fanfare') { [523, 659, 784, 1047].forEach((f, i) => sfxTone(f, i * 0.09, 0.22, 'triangle', 0.11)); }
+  } catch (e) { /* 音が出ない環境では無音のまま続行 */ }
+}
+function buildFxBar() {
+  const bar = document.getElementById('fxBar'); if (!bar) return;
+  bar.innerHTML = '<span>演出設定</span>' +
+    '<span class="fxstat on">アニメーション：ON</span>' +
+    '<span class="fxstat on">効果音：ON</span>' +
+    '<span>（常時ON）</span>';
+  syncFxBar();
+}
+function syncFxBar() {
+  // S14：常時ON。noanim クラスは付けない（アニメーションを止めない）
+  document.body.classList.remove('noanim');
+}
+// 演出中はタップでスキップ（ルーレットは結果を即表示、めくりは即終了）
+document.addEventListener('pointerdown', () => {
+  if (evFinish) evFinish();
+  document.querySelectorAll('.slot.flip').forEach(d => d.classList.remove('flip'));
+});
+// 称号：主人公カードが7枚そろったときだけ表示。夢カードを軸に、決まった組み合わせで決める（表示のみ）
+const TITLES = [
+  { dream:'海外で働く', title:'世界をめざす冒険者', desc:'舞台は世界。言葉と文化の壁をこえるたび、主人公の可能性が広がっていく。' },
+  { dream:'自分の店・会社を持つ', title:'夢を形にする社長', desc:'自分の名前で勝負する覚悟が、毎日をちょっと特別にしていく。' },
+  { dream:'地元に貢献する', title:'地元の頼れる柱', desc:'「あの人がいれば安心」と言われる存在に。ふるさとが主人公を育て、主人公がふるさとを支える。' },
+  { dream:'家族と穏やかに暮らす', title:'笑顔を守る暮らしの達人', desc:'何気ない毎日を大切にできる人。穏やかな時間こそ、主人公の宝物。' },
+  { dream:'プロ・一流を目指す', title:'頂点をねらう挑戦者', desc:'目指すのは一番上。厳しい練習の先にある景色を、主人公は見にいく。' },
+  { dream:'研究者・専門家になる', title:'知を究める探究者', desc:'「なぜ？」を追い続ける力で、誰も知らない答えに近づいていく。' },
+  { dream:'人の役に立つ仕事に就く', title:'誰かの力になる支え手', desc:'「ありがとう」の言葉が原動力。人の笑顔が、主人公のやりがいになる。' },
+  { dream:'好きなことで生きていく', title:'好きを仕事にした自由人', desc:'ワクワクを仕事に変えた人。毎日が、自分で選んだ道になっていく。' },
+  { dream:'経済的に豊かになる', title:'未来を築く資産家', desc:'お金はゴールじゃなくて道具。選べる未来を、自分の手で増やしていく。' },
+  { dream:'世界中を旅する', title:'地球を歩く旅人', desc:'地図の空白を埋めるのが生きがい。次の目的地は、いつも心の中にある。' },
+  { dream:'ものづくりの職人になる', title:'技を磨く職人', desc:'手先と心を込めた仕事が、誰かの毎日を支えていく。' },
+  { dream:'有名になる', title:'輝くステージの主役', desc:'多くの人の目に留まる存在に。努力の積み重ねが、スポットライトになる。' }
+];
+function titleFor() {
+  if (current['性格'] === '完璧主義' && current['強み'] === '最後までやり切る') return { title:'妥協しない完走者', desc:'納得できるまで手を抜かない。最後まで走り切る姿が、周りの信頼を集めていく。' };
+  for (const t of TITLES) { if (t.dream === current['夢・憧れ']) return t; }
+  return { title:'未来を描く主人公', desc:'7枚のカードがそろった。ここから主人公だけの人生設計が始まる。' };
+}
+let titleShown = false;
+function checkTitle() {
+  const box = document.getElementById('titleBox'); if (!box) return;
+  const n = cats.filter(c => current[c]).length;
+  if (n === cats.length) {
+    const t = titleFor();
+    box.innerHTML = '<div class="tk">― 称号 ―</div><div class="tt">' + t.title + '</div><div class="td">' + t.desc + '</div>';
+    if (!box.classList.contains('show')) { box.classList.add('show'); if (!titleShown) sfxPlay('fanfare'); }
+    titleShown = true;
+  } else { box.classList.remove('show'); box.innerHTML = ''; titleShown = false; }
+}
+let curMode = 1;
+function setMode(m) {
+  curMode = m;
+  document.getElementById('mode1').classList.toggle('on', m === 1);
+  document.getElementById('mode2').classList.toggle('on', m === 2);
+  document.getElementById('sec-hero').style.display = (m === 1) ? '' : 'none';
+  const av = document.getElementById('sec-avatar');
+  if (av) av.style.display = (m === 2) ? '' : 'none';
+  const nums = (m === 1)
+    ? { hero: '1', job: '2', mission: '3', plan: '4', event: '5', reverse: '6' }
+    : { avatar: '1〜2', job: '1〜2', mission: '1〜2', plan: '3', event: '4', reverse: '5' };
+  const cols = (m === 1)
+    ? { hero: 'n1', job: 'n2', mission: 'n3', plan: 'n4', event: 'n5', reverse: 'n6' }
+    : { avatar: 'n1', job: 'n1', mission: 'n1', plan: 'n3', event: 'n4', reverse: 'n5' };
+  Object.keys(nums).forEach(k => { const el = document.getElementById('no-' + k); if (el) { el.textContent = nums[k]; el.classList.toggle('wide', nums[k].length > 1); ['n1','n2','n3','n4','n5','n6'].forEach(c => el.classList.remove(c)); if (cols[k]) el.classList.add(cols[k]); } });
+  const jr = document.getElementById('avJobRef'); if (jr) jr.textContent = nums.job;
+  const job = document.getElementById('sec-job');
+  if (m === 2) { job.parentNode.insertBefore(av, job); }
+  else { const plan = document.getElementById('sec-plan'); plan.parentNode.insertBefore(av, plan); }
+}
+const TYPES = {
+'人と関わる・接客': ['販売員','ホテルスタッフ','美容師','営業','ツアーコンダクター'],
+'人を助ける・支える': ['看護師','保育士','教師','介護士','カウンセラー','消防士'],
+'ものを作る': ['大工','調理師','自動車整備士','職人','農業','工場の技術者'],
+'数字・データを扱う': ['経理・事務','銀行員','会計士','測量士','データ分析'],
+'体を動かす': ['スポーツインストラクター','配送・運送','警察官','自衛官','林業'],
+'表現する': ['デザイナー','動画クリエイター','イラストレーター','音楽家','作家'],
+'調べる・考える': ['研究者','エンジニア','プログラマー','記者','公務員（企画）']
+};
+const MISSIONS = {
+'海外で働く': '30・40代までに、海外の職場で働いている',
+'自分の店・会社を持つ': '30・40代までに、自分の店を開いている',
+'地元に貢献する': '30・40代までに、地元の人たちに頼られる存在になっている',
+'家族と穏やかに暮らす': '30・40代までに、家族と笑って過ごせる暮らしをしている',
+'プロ・一流を目指す': '30・40代までに、全国レベルの大会や舞台に出ている',
+'研究者・専門家になる': '30・40代までに、専門の資格や学位を取っている',
+'人の役に立つ仕事に就く': '30・40代までに、人を支える仕事に就いている',
+'好きなことで生きていく': '30・40代までに、好きなことで収入を得ている',
+'経済的に豊かになる': '30・40代までに、経済的に余裕のある暮らしをしている',
+'世界中を旅する': '30・40代までに、10か国以上を旅している',
+'ものづくりの職人になる': '30・40代までに、一人前の職人として仕事を任されている',
+'有名になる': '30・40代までに、メディアやSNSで名前を知られている'
+};
+let selType = null, selJob = null;
+function renderTypes() {
+  const box = document.getElementById('types');
+  box.innerHTML = '';
+  Object.keys(TYPES).forEach(t => {
+    const b = document.createElement('button');
+    b.textContent = t;
+    if (t === selType) b.className = 'on';
+    b.onclick = () => selectType(t);
+    box.appendChild(b);
+  });
+}
+function selectType(t) {
+  selType = t;
+  renderTypes();
+  if (typeof syncMyJob === 'function') syncMyJob(t);
+  const en = document.getElementById('exnote'); if (en) en.style.display = 'block';
+  const jl = document.getElementById('jobslabel'); if (jl) jl.style.display = 'inline-block';
+  const box = document.getElementById('jobs');
+  box.innerHTML = '';
+  TYPES[t].forEach(j => {
+    const b = document.createElement('button');
+    b.textContent = j;
+    b.onclick = () => selectJob(j);
+    box.appendChild(b);
+  });
+}
+function selectJob(j) {
+  selJob = j;
+  document.getElementById('decidedJob').textContent = j;
+  document.getElementById('decided').style.display = 'flex';
+}
+function clearJob() {
+  selJob = null;
+  document.getElementById('decided').style.display = 'none';
+}
+function setCustomJob() {
+  const inp = document.getElementById('customJob');
+  const v = (inp.value || '').trim();
+  if (!v) { inp.focus(); return; }
+  selectJob(v);
+}
+
+const MIS_POOL = Object.entries(MISSIONS);
+let misIdx = 0;
+function showMission() {
+  document.getElementById('missionEx').textContent = MIS_POOL[misIdx][1];
+  document.getElementById('missionNote').textContent = '夢「' + MIS_POOL[misIdx][0] + '」の例です。「別の例を見る」で、いろいろな例が出てきます';
+}
+function nextMission() { misIdx = (misIdx + 1) % MIS_POOL.length; showMission(); }
+function updateMission() {
+  const yume = current['夢・憧れ'];
+  if (yume && MISSIONS[yume]) {
+    misIdx = MIS_POOL.findIndex(e => e[0] === yume);
+    showMission();
+  }
+}
+showMission();
+renderTypes();
+
+
+const PLANS = [
+  { who: '主人公：強み「説明がわかりやすい」× 夢「人の役に立つ仕事」→ 教師', rows: [
+    ['18〜22歳', '大学で教員免許を取り、教育実習に行く', '実家や一人暮らしで学生生活を送る', '教員採用試験の勉強を始める'],
+    ['20代', '教員採用試験に合格し、地元の高校教員になる', '一人暮らしを始め、月3万円ずつ貯金', '担任や部活指導に慣れる'],
+    ['30・40代', '担任と進路指導を任され、後進の先生を育てる立場になる', '結婚し、家を購入する。子どもの教育費を準備する', '進路指導の専門性を高める'],
+    ['老後', '非常勤講師や地域の学習支援で教え続ける', '年金と貯金で、夫婦で穏やかに暮らす', '健康を保ち、趣味と地域活動を楽しむ']]},
+  { who: '主人公：強み「コツコツ続けられる」× 夢「自分の店・会社を持つ」→ カフェ経営', rows: [
+    ['18〜22歳', '調理の専門学校やカフェのアルバイトで基礎を学ぶ', '実家から通い、開店資金の貯金を始める', '調理師免許を取る'],
+    ['20代', 'カフェで修行しながら調理と接客を学ぶ', '開店資金のために月5万円ずつ貯金', '常連客に顔を覚えてもらう'],
+    ['30・40代', '小さなカフェを開店し、若いスタッフを育てる', '常連客が増えて経営が安定。2店舗目を出すか検討する', '店の味と雰囲気を守り続ける'],
+    ['老後', '店を信頼できるスタッフに引き継ぐ', '夫婦で店に顔を出しながら、ゆっくり暮らす', '引き継ぎと老後の資金準備をする']]},
+  { who: '主人公：強み「発想が面白い」× 夢「プロ・一流を目指す」→ スポーツ選手', rows: [
+    ['18〜22歳', '大学や実業団で競技を続け、全国大会を目指す', '寮生活や遠征が中心の生活になる', '基礎体力とケガ予防の習慣を作る'],
+    ['20代', '実業団に入り、全国大会で入賞する', '契約金と給料で収入が安定する', '指導者資格の勉強を始める'],
+    ['30・40代', 'トップリーグでレギュラーとして活躍し、引退後はコーチとして後進を育てる', 'スポーツ教室を開く', '指導者資格を取り、引退後のキャリアを作る'],
+    ['老後', '地域のスポーツ教室で子どもたちを指導する', '健康づくりを続けながら穏やかに暮らす', '経験を地域に返していく']]}
+];
+let planIdx = 0;
+function renderPlan() {
+  const p = PLANS[planIdx];
+  document.getElementById('planWho').textContent = p.who;
+  let h = '<table class="plantable"><tr><th></th><th>仕事</th><th>暮らし・お金</th><th>ポイント</th></tr>';
+  p.rows.forEach(r => { h += '<tr><th class="dec">' + r[0] + '</th><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; });
+  document.getElementById('planRows').innerHTML = h + '</table>';
+}
+function nextPlan() { planIdx = (planIdx + 1) % PLANS.length; chainIdx = planIdx % CHAINS.length; renderPlan(); renderChain(); }
+renderPlan();
+
+const CHAINS = [
+  { who: '目標：30・40代までに、後進の先生を育てる立場になっている', steps: [
+    ['30・40代の姿', '担任と進路指導を任され、後進の先生を育てる立場になっている'],
+    ['20代で必要なこと', '教員採用試験に合格し、高校教員として経験を積む'],
+    ['18〜22歳で必要なこと', '大学で教員免許を取り、教育実習で現場を体験する'],
+    ['高校1年生の今できること', '人に教える経験を積み、志望する学校を調べる']]},
+  { who: '目標：30・40代までに、自分の店を続けている', steps: [
+    ['30・40代の姿', '自分の店を続けながら、若いスタッフを育てている'],
+    ['20代で必要なこと', 'カフェで修行し、開店資金を貯める'],
+    ['18〜22歳で必要なこと', '調理や接客を学べる学校に進み、アルバイトで経験を積む'],
+    ['高校1年生の今できること', '接客のアルバイトで経験を積む']]},
+  { who: '目標：30・40代までに、コーチとして後進を育てている', steps: [
+    ['30・40代の姿', 'コーチとして後進を育て、スポーツ教室を開いている'],
+    ['20代で必要なこと', '実業団で全国大会入賞を目指し、指導者資格の勉強も始める'],
+    ['18〜22歳で必要なこと', '進学先でも競技を続け、実績を作る'],
+    ['高校1年生の今できること', '部活で練習を積み、結果を出す']]}
+];
+let chainIdx = 0;
+function renderChain() {
+  const c = CHAINS[chainIdx];
+  document.getElementById('chainWho').textContent = c.who;
+  const box = document.getElementById('chainSteps');
+  box.innerHTML = '';
+  c.steps.forEach((st, i) => {
+    if (i > 0) {
+      const a = document.createElement('div');
+      a.className = 'arrow';
+      a.textContent = '↓';
+      box.appendChild(a);
+    }
+    const d = document.createElement('div');
+    d.className = 'step';
+    d.innerHTML = '<span class="slabel">' + st[0] + '</span>' + st[1];
+    box.appendChild(d);
+  });
+}
+function nextChain() { chainIdx = (chainIdx + 1) % CHAINS.length; planIdx = chainIdx % PLANS.length; renderChain(); renderPlan(); }
+renderChain();
+</script>
+<div id="gallery"></div>
+<script>
+/* ================================================================
+   ライフデザイン・ゲーム  S7  キャラ部品システム（表情・髪・価値観・夢・強み・弱み・背景）＋UIスキン＋演出
+   編集の目安：下の /*==NAME==*\/ ～ /*==END:NAME==*\/ のブロック単位で差し替える
+   ================================================================ */
+
+/*==CFG==*/
+const DEV_GALLERY = /[?&]dev=gallery/.test(location.search);
+const PAL = {
+  line:'#3a2418', skin:'#ffd2a8', skinShade:'#f0b182', blush:'#ff9aa2',
+  iris:'#6b3f22', pupil:'#2a1a12',
+  shirt:'#2f8f78', shirtShade:'#23705e'
+};
+// 座標の固定値（viewBox 0 0 400 480）。部品はこの位置に合わせて描く
+const ANCHOR = {
+  head:{ cx:200, cy:190, rx:92, ry:98 }, eyeY:198, eyeX:[160,240], browY:165, mouth:[200,248],
+  neck:{ x:178, y:270, w:44, h:50 }, bubble:{ cx:318, cy:92, r:64 },
+  item:{ x:240, y:340, w:150, h:130 }, debuff:{ cx:70, cy:410, r:38 }
+};
+/*==END:CFG==*/
+
+/*==SPEC==*/
+// 全部品の一覧（ID は「種類.キー」）。未実装は確認ページで「未了」と表示される
+const SPEC = {
+  body:['男性','女性'],
+  hair:['M1','M2','M3','F1','F2','F3'],
+  head:['base'],
+  eyes:['E1','E2','E3','E4','E5','E6'],
+  brows:['B1','B2','B3','B4','B5','B6'],
+  mouth:['M1','M2','M3','M4','M5','M6','M7'],
+  extra:['glasses_round','glasses_square','blush','sweat','sparkle','motion','flame'],
+  outfit:['男性','女性'],
+  emblem:['お金・収入','家族','自由な時間','安定','挑戦・冒険','人の役に立つこと','周りからの評価','健康','仲間','自分らしく生きること'],
+  jobOutfit:['人と関わる・接客','人を助ける・支える','ものを作る','数字・データを扱う','体を動かす','表現する','調べる・考える'],
+  item:['粘り強い','段取りがいい','説明がわかりやすい','最後までやり切る','人の話をよく聞く','行動が早い','正確で丁寧','発想が面白い','責任感がある','周りをよく見ている','コツコツ続けられる','場を和ませる'],
+  debuff:['熱しやすく冷めやすい','計画を立てるのが苦手','人に頼るのが苦手','緊張しやすい','お金の管理が苦手','朝が弱い','決断が遅い','細かい作業が苦手','プレッシャーに弱い','体力がない','忘れ物・うっかりが多い','一人の時間がないと疲れる'],
+  bubble:['海外で働く','自分の店・会社を持つ','地元に貢献する','家族と穏やかに暮らす','プロ・一流を目指す','研究者・専門家になる','人の役に立つ仕事に就く','好きなことで生きていく','経済的に豊かになる','世界中を旅する','ものづくりの職人になる','有名になる'],
+  bg:['default','高校卒業後は地元に残る','都市に出たい','大学進学を考えている','専門学校で資格を取りたい','卒業したらすぐ働きたい','奨学金を使う予定','家族の仕事を継ぐかもしれない','部活で大きな実績がある','アルバイト経験が豊富','海外に行きたい'],
+  fx:['sparkle','frame','glow']
+};
+const KIND_LABEL = { body:'体', hair:'髪（前髪＋後ろ髪のセット）', head:'顔の輪郭', eyes:'目', brows:'眉', mouth:'口', extra:'顔の小物',
+  outfit:'服の形', emblem:'胸エンブレム（価値観）', jobOutfit:'職業衣装', item:'強み（持ち物）', debuff:'弱みのサイン',
+  bubble:'夢の吹き出しアイコン', bg:'背景（スタート環境）', fx:'完成エフェクト' };
+/*==END:SPEC==*/
+
+/*==PARTS:helpers==*/
+function P(d, fill, sw, stroke, ex) {
+  return '<path d="' + d + '" fill="' + (fill || 'none') + '"' +
+    (sw === 0 ? '' : ' stroke="' + (stroke || PAL.line) + '" stroke-width="' + (sw || 4) + '" stroke-linejoin="round" stroke-linecap="round"') +
+    (ex || '') + '/>';
+}
+function E(cx, cy, rx, ry, fill, sw, stroke) {
+  return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + fill + '"' +
+    (sw ? ' stroke="' + (stroke || PAL.line) + '" stroke-width="' + sw + '"' : '') + '/>';
+}
+function C(cx, cy, r, fill, ex) { return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '"' + (ex || '') + '/>'; }
+// 未実装部品の目印（確認ページ専用。生徒用の画面には出さない）
+function placeholder(cx, cy, r, color) {
+  return C(cx, cy, r, '#ffffff', ' fill-opacity=".18" stroke="' + color + '" stroke-width="3" stroke-dasharray="8 6"') +
+    P('M' + (cx - 9) + ' ' + (cy - 8) + ' Q' + (cx - 9) + ' ' + (cy - 21) + ' ' + cx + ' ' + (cy - 21) + ' Q' + (cx + 10) + ' ' + (cy - 21) + ' ' + (cx + 10) + ' ' + (cy - 9) +
+      ' Q' + (cx + 10) + ' ' + (cy - 1) + ' ' + cx + ' ' + (cy + 1) + ' L' + cx + ' ' + (cy + 6), null, 4.5, color) + C(cx, cy + 17, 3.2, color);
+}
+const PARTS = { body:{}, hair:{}, head:{}, eyes:{}, brows:{}, mouth:{}, extra:{}, outfit:{}, emblem:{}, jobOutfit:{}, item:{}, debuff:{}, bubble:{}, bg:{}, fx:{} };
+/*==END:PARTS:helpers==*/
+
+/*==PARTS:body==*/
+// 体：首＋肩まわり（服の下の肌）。輪郭線は服が担当するので塗りだけ
+PARTS.body['男性'] = () =>
+  P('M80 480 L80 372 Q80 330 128 320 L170 309 L230 309 L272 320 Q320 330 320 372 L320 480 Z', PAL.skin, 0) +
+  P('M178 262 L222 262 L222 318 L178 318 Z', PAL.skin, 0) +
+  P('M178 262 L178 318', null, 4) + P('M222 262 L222 318', null, 4) +
+  P('M178 262 L222 262 L222 290 Q200 306 178 290 Z', PAL.skinShade, 0);
+PARTS.body['女性'] = () =>
+  P('M92 480 L92 378 Q92 334 136 322 L172 310 L228 310 L264 322 Q308 334 308 378 L308 480 Z', PAL.skin, 0) +
+  P('M180 262 L220 262 L220 318 L180 318 Z', PAL.skin, 0) +
+  P('M180 262 L180 318', null, 4) + P('M220 262 L220 318', null, 4) +
+  P('M180 262 L220 262 L220 290 Q200 304 180 290 Z', PAL.skinShade, 0);
+/*==END:PARTS:body==*/
+
+/*==PARTS:outfit==*/
+// 服の形（色は S3 で価値観パレットに差し替える。今は仮の青緑）
+PARTS.outfit['男性'] = () =>
+  P('M80 480 L80 372 Q80 330 128 320 L166 309 Q200 354 234 309 L272 320 Q320 330 320 372 L320 480 Z', PAL.shirt) +
+  P('M272 320 Q320 330 320 372 L320 480 L270 480 Q292 410 272 320 Z', '#000', 0, null, ' opacity=".1"') +
+  P('M170 314 Q200 359 230 314', null, 8, PAL.shirtShade) +
+  P('M166 309 Q200 354 234 309', null, 4);
+PARTS.outfit['女性'] = () =>
+  P('M92 480 L92 378 Q92 334 136 322 L168 310 Q200 354 232 310 L264 322 Q308 334 308 378 L308 480 Z', PAL.shirt) +
+  P('M264 322 Q308 334 308 378 L308 480 L262 480 Q282 414 264 322 Z', '#000', 0, null, ' opacity=".1"') +
+  P('M172 315 Q200 359 228 315', null, 8, PAL.shirtShade) +
+  P('M168 310 Q200 354 232 310', null, 4);
+/*==END:PARTS:outfit==*/
+
+/*==PARTS:emblem==*/
+// 価値観 → 服の色（ベース・影）。ベース色は試作版 game-chara.html の CHARA_CLOTH を継承し、影は同系の濃色
+const VALUE_STYLE = {
+  'お金・収入':        { base:'#eab308', shade:'#bd8f06' },
+  '家族':              { base:'#f97316', shade:'#d95f0e' },
+  '自由な時間':        { base:'#38bdf8', shade:'#1d9bd8' },
+  '安定':              { base:'#22c55e', shade:'#18a04a' },
+  '挑戦・冒険':        { base:'#ef4444', shade:'#cf2f2f' },
+  '人の役に立つこと':  { base:'#ec4899', shade:'#cf2f7d' },
+  '周りからの評価':    { base:'#a855f7', shade:'#8b3ad9' },
+  '健康':              { base:'#14b8a6', shade:'#0d9488' },
+  '仲間':              { base:'#f59e0b', shade:'#d9820a' },
+  '自分らしく生きること': { base:'#6366f1', shade:'#4b4ed6' }
+};
+// 胸エンブレムは服の中央 (200,398) に白っぽい丸バッジ＋アイコン。どの服色でも読めるようにする
+const embBadge = icon => C(200, 398, 27, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="4"') + icon;
+const embHeart = (cx, cy, w, fill) => P('M' + cx + ' ' + (cy + w * 0.92) +
+  ' C' + (cx - w) + ' ' + (cy + w * 0.1) + ' ' + (cx - w) + ' ' + (cy - w * 0.8) + ' ' + (cx - w * 0.45) + ' ' + (cy - w * 0.8) +
+  ' C' + (cx - w * 0.15) + ' ' + (cy - w * 0.8) + ' ' + cx + ' ' + (cy - w * 0.25) + ' ' + cx + ' ' + cy +
+  ' C' + cx + ' ' + (cy - w * 0.25) + ' ' + (cx + w * 0.15) + ' ' + (cy - w * 0.8) + ' ' + (cx + w * 0.45) + ' ' + (cy - w * 0.8) +
+  ' C' + (cx + w) + ' ' + (cy - w * 0.8) + ' ' + (cx + w) + ' ' + (cy + w * 0.1) + ' ' + cx + ' ' + (cy + w * 0.92) + ' Z', fill, 3);
+
+PARTS.emblem['お金・収入'] = () => embBadge(   // 金色のコイン＋￥印（線で描く）
+  C(200, 398, 15, '#ffd23d') +
+  P('M194 389 L200 398 L206 389', null, 3.5) + P('M200 398 L200 407', null, 3.5) + P('M193 393.5 L207 393.5', null, 3) + P('M193 401.5 L207 401.5', null, 3));
+PARTS.emblem['家族'] = () => embBadge(          // 大人と子どもの2人
+  C(191, 389, 5.5, '#e2574c', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  P('M182 413 L182 403 Q182 395 191 395 Q200 395 200 403 L200 413 Z', '#e2574c', 3) +
+  C(210, 393, 4.5, '#4aa8e0', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  P('M202 413 L202 405 Q202 398 210 398 Q218 398 218 405 L218 413 Z', '#4aa8e0', 3));
+PARTS.emblem['自由な時間'] = () => embBadge(    // 時計
+  C(200, 398, 15, '#ffffff') +
+  P('M200 398 L200 388', null, 3.5) + P('M200 398 L207 402', null, 3.5) + C(200, 398, 2.2, PAL.line));
+PARTS.emblem['安定'] = () => embBadge(          // 盾＋チェック
+  P('M200 382 L214 387 L214 398 Q214 410 200 416 Q186 410 186 398 L186 387 Z', '#7fb2e5') +
+  P('M193 398 L198 403 L207 391', null, 3.5, '#ffffff'));
+PARTS.emblem['挑戦・冒険'] = () => embBadge(    // 山＋頂上の旗
+  P('M184 411 L195 391 L201 401 L207 389 L216 411 Z', '#a9805a') +
+  P('M207 389 L207 379', null, 3) + P('M207 379 L216 382 L207 385 Z', '#ef4444', 0));
+PARTS.emblem['人の役に立つこと'] = () => embBadge(  // ハート＋受け止める手の弧
+  embHeart(200, 394, 13, '#ff5d73') +
+  P('M187 406 Q200 415 213 406', null, 3.5));
+PARTS.emblem['周りからの評価'] = () => embBadge(   // メダル（リボン＋丸＋星）
+  P('M193 398 L188 414 L197 410 L200 415 L203 410 L212 414 L207 398 Z', '#ef4444', 0) +
+  C(200, 394, 11, '#ffd23d') +
+  P('M200 387 L202 392 L207 392 L203.5 395 L204.5 400 L200 397 L195.5 400 L196.5 395 L193 392 L198 392 Z', '#fff3c4', 0));
+PARTS.emblem['健康'] = () => embBadge(          // 緑の十字
+  P('M195 384 L205 384 L205 393 L214 393 L214 403 L205 403 L205 412 L195 412 L195 403 L186 403 L186 393 L195 393 Z', '#2fbf71', 3));
+PARTS.emblem['仲間'] = () => embBadge(          // 重なる2つの輪（つながり）
+  C(192, 398, 10, '#4aa8e0', ' fill-opacity=".78" stroke="' + PAL.line + '" stroke-width="3"') +
+  C(208, 398, 10, '#f2762e', ' fill-opacity=".78" stroke="' + PAL.line + '" stroke-width="3"'));
+PARTS.emblem['自分らしく生きること'] = () => embBadge(  // 宝石（自分らしく輝く）
+  P('M200 383 L211 396 L200 413 L189 396 Z', '#b565d8') +
+  P('M189 396 L211 396', null, 2.5, '#ffffff') + P('M200 383 L200 413', null, 2, '#ffffff'));
+/*==END:PARTS:emblem==*/
+
+/*==PARTS:bubble==*/
+// 夢の吹き出し（中心 (318,92)・半径64、仕様どおりの位置）。白い丸＋点のしっぽ＋アイコン
+// 吹き出し本体は仕様位置 (318,92) を維持。しっぽの丸は眉(y≧158)・目に触れないよう、髪の上 (248,118)(230,129) に置く（ずらす場合は ANCHOR.bubble と GUIDE も合わせること）
+const bubBase = icon =>
+  C(230, 129, 6, '#ffffff', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  C(248, 118, 10, '#ffffff', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+  C(318, 92, 64, '#ffffff', ' stroke="' + PAL.line + '" stroke-width="4"') + icon;
+// 夢ごとのオーラ色（aura レイヤーでキャラの後ろに薄く敷く）
+const DREAM_AURA = {
+  '海外で働く': '#7ec8ff', '自分の店・会社を持つ': '#ffb37e', '地元に貢献する': '#ff9d9d',
+  '家族と穏やかに暮らす': '#ffd9a0', 'プロ・一流を目指す': '#ffd23d', '研究者・専門家になる': '#a5e8d0',
+  '人の役に立つ仕事に就く': '#ff9eb5', '好きなことで生きていく': '#d3a6ff', '経済的に豊かになる': '#9fe870',
+  '世界中を旅する': '#8fe3ff', 'ものづくりの職人になる': '#ffc98a', '有名になる': '#ffe14a'
+};
+const bubHeart = (cx, cy, w, fill) => P('M' + cx + ' ' + (cy + w * 0.92) +
+  ' C' + (cx - w) + ' ' + (cy + w * 0.1) + ' ' + (cx - w) + ' ' + (cy - w * 0.8) + ' ' + (cx - w * 0.45) + ' ' + (cy - w * 0.8) +
+  ' C' + (cx - w * 0.15) + ' ' + (cy - w * 0.8) + ' ' + cx + ' ' + (cy - w * 0.25) + ' ' + cx + ' ' + cy +
+  ' C' + cx + ' ' + (cy - w * 0.25) + ' ' + (cx + w * 0.15) + ' ' + (cy - w * 0.8) + ' ' + (cx + w * 0.45) + ' ' + (cy - w * 0.8) +
+  ' C' + (cx + w) + ' ' + (cy - w * 0.8) + ' ' + (cx + w) + ' ' + (cy + w * 0.1) + ' ' + cx + ' ' + (cy + w * 0.92) + ' Z', fill, 3.5);
+
+PARTS.bubble['海外で働く'] = () => bubBase(     // 地球儀
+  C(318, 92, 26, '#aee3ff') +
+  P('M318 66 C307 78 307 106 318 118', null, 3) + P('M318 66 C329 78 329 106 318 118', null, 3) +
+  P('M292 92 L344 92', null, 3) + P('M298 76 Q318 83 338 76', null, 2.5) + P('M298 108 Q318 101 338 108', null, 2.5));
+PARTS.bubble['自分の店・会社を持つ'] = () => bubBase(  // 店（ひさし＋店舗）
+  P('M296 72 L340 72 L344 86 L292 86 Z', '#ef4444') +
+  P('M298 86 L338 86 L338 118 L298 118 Z', '#fff3d6') +
+  P('M312 118 L312 102 L324 102 L324 118 Z', '#b07a3f', 3.5) + P('M292 86 L344 86', null, 3.5));
+PARTS.bubble['地元に貢献する'] = () => bubBase(  // 地図のピン＋ハート
+  P('M318 62 C303 62 294 74 294 87 C294 105 318 124 318 124 C318 124 342 105 342 87 C342 74 333 62 318 62 Z', '#e85454') +
+  C(318, 87, 9, '#ffffff', ' stroke="' + PAL.line + '" stroke-width="3.5"'));
+PARTS.bubble['家族と穏やかに暮らす'] = () => bubBase(  // 家
+  P('M290 94 L318 70 L346 94', null, 5.5) +
+  P('M300 94 L336 94 L336 118 L300 118 Z', '#ffd9a0') +
+  P('M313 118 L313 104 L323 104 L323 118 Z', '#b07a3f', 3.5) + P('M331 76 L331 88', null, 4));
+PARTS.bubble['プロ・一流を目指す'] = () => bubBase(  // トロフィー
+  P('M300 64 L336 64 L336 76 Q336 92 318 92 Q300 92 300 76 Z', '#ffd23d') +
+  P('M300 68 C287 68 287 82 300 84', null, 4) + P('M336 68 C349 68 349 82 336 84', null, 4) +
+  P('M318 92 L318 102', null, 4) + P('M305 110 L331 110 L331 102 L305 102 Z', '#ffd23d', 3.5));
+PARTS.bubble['研究者・専門家になる'] = () => bubBase(  // フラスコ
+  P('M311 62 L325 62', null, 4.5) +
+  P('M314 62 L314 80 L301 110 Q299 117 306 117 L330 117 Q337 117 335 110 L322 80 L322 62', '#d9f4ff', 4) +
+  P('M306 102 L330 102 L335 110 Q337 117 330 117 L306 117 Q299 117 301 110 Z', '#4aa8e0', 0) +
+  C(313, 95, 2.6, '#4aa8e0') + C(323, 90, 2, '#4aa8e0'));
+PARTS.bubble['人の役に立つ仕事に就く'] = () => bubBase(  // ハート＋支える手の弧
+  bubHeart(318, 84, 15, '#ff5d73') +
+  P('M294 106 Q318 121 342 106', null, 4) + P('M300 114 Q318 125 336 114', null, 3));
+PARTS.bubble['好きなことで生きていく'] = () => bubBase(  // 音符
+  E(305, 108, 8, 6, '#8b5cc7', 3.5) + P('M313 108 L313 74', null, 4, '#8b5cc7') +
+  P('M313 74 Q330 78 328 93 Q324 82 313 83 Z', '#8b5cc7', 0) +
+  E(333, 113, 6, 4.5, '#8b5cc7', 3) + P('M339 113 L339 84', null, 3.5, '#8b5cc7'));
+PARTS.bubble['経済的に豊かになる'] = () => bubBase(  // 棒グラフ＋上昇の矢印
+  P('M294 118 L294 70', null, 4) + P('M294 118 L344 118', null, 4) +
+  P('M301 118 L301 102 L309 102 L309 118 Z', '#43b581', 3) + P('M315 118 L315 92 L323 92 L323 118 Z', '#43b581', 3) +
+  P('M329 118 L329 82 L337 82 L337 118 Z', '#43b581', 3) +
+  P('M300 94 L313 82 L322 88 L338 68', null, 4, '#e85454') + P('M330 67 L339 67 L338 76', null, 4, '#e85454'));
+PARTS.bubble['世界中を旅する'] = () => bubBase(  // 飛行機（真上から）
+  P('M318 60 L324 82 L345 98 L345 107 L324 99 L324 111 L331 117 L331 122 L318 120 L305 122 L305 117 L312 111 L312 99 L291 107 L291 98 L312 82 Z', '#4aa8e0', 3.5));
+PARTS.bubble['ものづくりの職人になる'] = () => bubBase(  // 金づち（四角い頭＋持ち手を斜めに）
+  '<g transform="rotate(-35 318 92)">' +
+  P('M314 80 L322 80 L322 121 L314 121 Z', '#b07a3f', 3.5) +
+  P('M298 62 L338 62 L338 82 L298 82 Z', '#9aa7b4', 3.5) + P('M304 68 L332 68', null, 3, '#ffffff') + '</g>');
+PARTS.bubble['有名になる'] = () => bubBase(     // 大きな星＋きらめき
+  P('M318 63 L324.5 80 L342 80 L328 92 L333.5 109 L318 100 L302.5 109 L308 92 L294 80 L311.5 80 Z', '#ffd23d') +
+  P('M296 108 L296 118 M291 113 L301 113', null, 3, '#ffb020') + C(340, 112, 2.6, '#ffb020'));
+/*==END:PARTS:bubble==*/
+
+/*==PARTS:item==*/
+// 強み → 右手の持ち物。領域 x 240〜390・y 340〜470（右手 (310,410) 付近）。
+// 服の中央のエンブレム (200,398) と重ならないよう、x は 248 より右に収める
+PARTS.item['粘り強い'] = () =>   // ダンベル（斜めに構える）
+  '<g transform="rotate(-32 315 408)">' +
+  P('M272 400 L358 400 L358 416 L272 416 Z', '#6b7f94', 3.5) +
+  P('M262 380 L280 380 L280 436 L262 436 Z', '#e2574c', 3.5) +
+  P('M280 389 L292 389 L292 427 L280 427 Z', '#c74336', 3.5) +
+  P('M338 389 L350 389 L350 427 L338 427 Z', '#c74336', 3.5) +
+  P('M350 380 L368 380 L368 436 L350 436 Z', '#e2574c', 3.5) +
+  '</g>';
+PARTS.item['段取りがいい'] = () =>   // クリップボード（チェックリストつき）
+  '<g transform="rotate(-6 317 406)">' +
+  P('M284 356 L350 356 L350 456 L284 456 Z', '#f5e6c8', 4) +
+  P('M302 348 L332 348 L332 364 L302 364 Z', '#9aa7b4', 3.5) +
+  C(317, 356, 3, '#5b7a99') +
+  P('M294 384 L302 392 L312 378', null, 3.5, '#2fbf71') + P('M316 386 L342 386', null, 3.5) +
+  P('M294 408 L302 416 L312 402', null, 3.5, '#2fbf71') + P('M316 410 L342 410', null, 3.5) +
+  P('M294 434 L342 434', null, 3.5) +
+  '</g>';
+PARTS.item['説明がわかりやすい'] = () =>   // マイク
+  P('M314 388 L292 438', null, 11, '#42586e') +
+  P('M306 386 Q324 402 342 386', null, 4) +
+  C(324, 372, 18, '#7d99b4', ' stroke="' + PAL.line + '" stroke-width="4"') +
+  P('M309 364 L339 364', null, 2.5, '#ffffff') +
+  P('M307 373 L341 373', null, 2.5, '#ffffff') +
+  P('M309 382 L339 382', null, 2.5, '#ffffff');
+PARTS.item['最後までやり切る'] = () =>   // ゴールの旗
+  P('M290 350 L290 458', null, 5.5, '#8a5a28') +
+  P('M290 350 L352 363 L290 380 Z', '#ef4444', 3.5) +
+  P('M301 363 L309 370 L321 359', null, 3.5, '#ffffff') +
+  P('M272 458 L308 458', null, 5, '#8a5a28');
+PARTS.item['人の話をよく聞く'] = () =>   // ヘッドホン（右手に持つ。頭には付けない）
+  P('M277 414 Q277 358 315 358 Q353 358 353 414', null, 11, PAL.line) +
+  P('M277 414 Q277 358 315 358 Q353 358 353 414', null, 5.5, '#5b7a99') +
+  P('M270 400 L284 400 Q289 400 289 405 L289 435 Q289 440 284 440 L270 440 Q265 440 265 435 L265 405 Q265 400 270 400 Z', '#e2574c', 3.5) +
+  P('M346 400 L360 400 Q365 400 365 405 L365 435 Q365 440 360 440 L346 440 Q341 440 341 435 L341 405 Q341 400 346 400 Z', '#e2574c', 3.5) +
+  P('M272 410 L282 410 L282 430 L272 430 Z', '#c74336', 0) + P('M348 410 L358 410 L358 430 L348 430 Z', '#c74336', 0);
+PARTS.item['行動が早い'] = () =>   // ストップウォッチ
+  C(315, 376, 7, 'none', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+  P('M306 384 L324 384 L324 394 L306 394 Z', '#9aa7b4', 3) +
+  C(315, 424, 31, '#ffd23d', ' stroke="' + PAL.line + '" stroke-width="4"') +
+  C(315, 424, 23, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+  P('M315 424 L315 408', null, 3.5) + P('M315 424 L328 430', null, 3.5) + C(315, 424, 2.4, PAL.line) +
+  P('M315 403 L315 407 M336 424 L332 424 M315 445 L315 441 M294 424 L298 424', null, 2.5);
+PARTS.item['正確で丁寧'] = () =>   // 虫眼鏡
+  P('M316 408 L350 448', null, 11, '#b07a3f') +
+  C(296, 388, 25, '#d9f4ff', ' fill-opacity=".5" stroke="' + PAL.line + '" stroke-width="4.5"') +
+  P('M282 376 Q287 367 296 364', null, 3.5, '#ffffff');
+PARTS.item['発想が面白い'] = () =>   // 電球（ひらめきの光つき）
+  P('M315 342 L315 354', null, 3.5, '#ffb020') +
+  P('M288 356 L295 364', null, 3.5, '#ffb020') +
+  P('M342 356 L335 364', null, 3.5, '#ffb020') +
+  P('M272 394 L284 394', null, 3.5, '#ffb020') +
+  P('M346 394 L358 394', null, 3.5, '#ffb020') +
+  C(315, 394, 26, '#ffe066', ' stroke="' + PAL.line + '" stroke-width="4"') +
+  P('M307 400 L311 390 L315 398 L319 390 L323 400', null, 2.5, '#e8a020') +
+  P('M304 416 L326 416 L324 424 L306 424 Z', '#9aa7b4', 3) +
+  P('M307 424 L323 424 L321 432 L309 432 Z', '#9aa7b4', 3);
+PARTS.item['責任感がある'] = () =>   // 腕章
+  '<g transform="rotate(-8 316 406)">' +
+  P('M270 384 L362 384 L362 428 L270 428 Z', '#e85454', 4) +
+  C(316, 406, 15, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  P('M316 395 L319.2 402.6 L327.4 402.8 L321 408 L323.4 416 L316 411.6 L308.6 416 L311 408 L304.6 402.8 L312.8 402.6 Z', '#e85454', 0) +
+  '</g>';
+PARTS.item['周りをよく見ている'] = () =>   // 双眼鏡
+  P('M284 368 Q315 344 346 368', null, 3.5) +
+  P('M280 370 L308 370 L304 430 L284 430 Z', '#42586e', 3.5) +
+  P('M322 370 L350 370 L346 430 L326 430 Z', '#42586e', 3.5) +
+  P('M308 382 L322 382 L322 396 L308 396 Z', '#33475c', 3) +
+  C(315, 376, 6, '#9aa7b4', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  E(294, 430, 10, 5.5, '#aee3ff', 2.5) + E(336, 430, 10, 5.5, '#aee3ff', 2.5) +
+  P('M288 380 L288 420', null, 3, '#7d99b4') + P('M342 380 L342 420', null, 3, '#7d99b4');
+PARTS.item['コツコツ続けられる'] = () =>   // 亀のぬいぐるみ
+  E(290, 442, 10, 6, '#95d68f', 3) + E(336, 442, 10, 6, '#95d68f', 3) +
+  C(352, 400, 14, '#95d68f', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+  C(356, 397, 2.4, PAL.line) + P('M362 406 Q366 409 362 412', null, 2.5) +
+  E(312, 414, 36, 28, '#43b581', 4) +
+  E(312, 414, 23, 18, '#7ed492', 3) +
+  P('M312 396 L312 432 M292 404 L332 424 M332 404 L292 424', null, 2.5, '#2f8f5f');
+// ひまわりの花びらは 8方向の楕円を回して並べる
+const sunflowerS4 = () => {
+  let s = P('M315 408 L311 462', null, 5.5, '#2fbf71') +
+    P('M313 440 Q292 430 286 448 Q304 456 313 440 Z', '#43b581', 3);
+  for (let a = 0; a < 360; a += 45) s += '<g transform="rotate(' + a + ' 315 390)">' + E(315, 364, 8.5, 15, '#ffb020', 3) + '</g>';
+  return s + C(315, 390, 16, '#8a5a28', ' stroke="' + PAL.line + '" stroke-width="4"') +
+    C(309, 386, 2, '#5f3d1c') + C(320, 388, 2, '#5f3d1c') + C(314, 395, 2, '#5f3d1c') + C(321, 397, 2, '#5f3d1c');
+};
+PARTS.item['場を和ませる'] = () => sunflowerS4();   // ひまわり
+/*==END:PARTS:item==*/
+
+/*==PARTS:debuff==*/
+// 弱み → 左下のサイン。中心 (70,410)・半径38 の黄みがかったオレンジの丸バッジ。
+// 責める印象にしないよう、アイコンは小さく柔らかく描く（仕様書の配慮どおり）
+const debBadge = icon => C(70, 410, 38, '#ffbe55', ' stroke="' + PAL.line + '" stroke-width="4"') + icon;
+PARTS.debuff['熱しやすく冷めやすい'] = () => debBadge(   // 小さくなる炎＋煙（冷めていく途中）
+  C(84, 387, 3, '#b9c9d6') + C(90, 382, 2.6, '#b9c9d6') +
+  P('M70 396 C61 406 59 414 62 422 C64 429 70 432 70 432 C70 432 77 429 79 421 C81 413 77 405 70 396 Z', '#ff8c42', 3) +
+  P('M70 412 C66 417 65 421 67 425 C68 428 70 429 70 429 C70 429 73 428 74 424 C75 420 73 416 70 412 Z', '#ffd23d', 0));
+PARTS.debuff['計画を立てるのが苦手'] = () => debBadge(   // もつれた糸玉＋ほどけた端
+  P('M78 424 Q90 428 88 438', null, 3, '#d16a92') +
+  C(62, 414, 17, '#f2a7c3', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+  P('M49 408 Q62 400 75 410', null, 2.5) + P('M50 420 Q62 412 76 418', null, 2.5) +
+  P('M56 402 Q58 418 68 428', null, 2.5) + P('M70 400 Q66 416 60 426', null, 2.5));
+PARTS.debuff['人に頼るのが苦手'] = () => debBadge(   // ストップの手のひら（指4本＋親指、×つき）
+  [[62, 403], [70, 399], [78, 400], [86, 405]].map(f => P('M' + f[0] + ' 414 L' + f[0] + ' ' + f[1], null, 11.5, PAL.line)).join('') +
+  P('M58 426 L49 417', null, 11.5, PAL.line) +
+  [[62, 403], [70, 399], [78, 400], [86, 405]].map(f => P('M' + f[0] + ' 414 L' + f[0] + ' ' + f[1], null, 7.5, '#ffd2a8')).join('') +
+  P('M58 426 L49 417', null, 7.5, '#ffd2a8') +
+  P('M57 412 L91 412 L91 428 Q91 437 82 437 L66 437 Q57 437 57 428 Z', '#ffd2a8', 3.5) +
+  P('M67 420 L81 432 M81 420 L67 432', null, 4.5, '#e85454'));
+PARTS.debuff['緊張しやすい'] = () => debBadge(   // 鼓動の波形＋汗しずく
+  P('M88 386 C84 393 82 397 83.5 401 C85 405 91 405 92.5 401 C94 397 92 393 88 386 Z', '#4aa8e0', 2.5) +
+  P('M44 416 L57 416 L63 402 L71 430 L77 416 L96 416', null, 3.5, '#e85454'));
+PARTS.debuff['お金の管理が苦手'] = () => debBadge(   // 羽の生えたコイン（飛んでいく）
+  P('M52 404 Q40 398 42 388 Q52 388 55 398 Z', '#ffffff', 3) +
+  P('M80 402 Q94 394 93 382 Q81 386 79 396 Z', '#ffffff', 3) +
+  C(66, 418, 14, '#ffd23d', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+  P('M60 410 L66 417 L72 410', null, 3) + P('M66 417 L66 425', null, 3) +
+  P('M59.5 413.5 L72.5 413.5', null, 2.5) + P('M59.5 419.5 L72.5 419.5', null, 2.5) +
+  P('M46 434 L56 434 M52 440 L60 440', null, 2.5, '#ffffff'));
+PARTS.debuff['朝が弱い'] = () => debBadge(   // 目覚まし時計（Zzz は小さい丸で代用）
+  C(86, 388, 2, '#8aa5bd') + C(90, 382, 2.6, '#8aa5bd') +
+  C(53, 398, 5.5, '#e85454', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  C(87, 398, 5.5, '#e85454', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  P('M56 402 L62 410 M84 402 L78 410', null, 3.5) +
+  C(70, 418, 17, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="4"') +
+  P('M70 418 L70 407', null, 3) + P('M70 418 L78 422', null, 3) + C(70, 418, 2, PAL.line) +
+  P('M61 432 L57 439 M79 432 L83 439', null, 3.5));
+PARTS.debuff['決断が遅い'] = () => debBadge(   // 砂時計＋分かれ道
+  P('M57 390 L83 390 L83 396 L73 408 L83 420 L83 426 L57 426 L57 420 L67 408 L57 396 Z', '#fffdf5', 3.5) +
+  P('M62 394 L78 394 L70 403 Z', '#ffb020', 0) +
+  P('M63 422 L77 422 L70 413 Z', '#ffb020', 0) +
+  P('M70 430 L70 436 M70 436 L61 442 M70 436 L79 442', null, 3, '#8aa5bd'));
+PARTS.debuff['細かい作業が苦手'] = () => debBadge(   // 針に通らない糸
+  P('M48 392 Q58 384 70 388', null, 3, '#e85454') +
+  P('M70 388 Q78 391 76 399', null, 3, '#e85454') +
+  P('M50 436 L86 398', null, 4.5, '#9aa7b4') +
+  E(84, 400, 3.5, 6, '#ffffff', 2.5));
+PARTS.debuff['プレッシャーに弱い'] = () => debBadge(   // 上からの重り＋つぶれたジグザグ
+  P('M61 400 Q70 390 79 400', null, 4) +
+  P('M50 400 L90 400 L95 430 L45 430 Z', '#5b7a99', 3.5) +
+  P('M55 415 L85 415', null, 3, '#ffffff') +
+  P('M52 438 L60 434 L68 438 L76 434 L84 438', null, 3, '#e85454'));
+PARTS.debuff['体力がない'] = () => debBadge(   // 残量わずかの電池
+  P('M46 400 L84 400 Q90 400 90 406 L90 424 Q90 430 84 430 L46 430 Q40 430 40 424 L40 406 Q40 400 46 400 Z', '#ffffff', 3.5) +
+  P('M90 408 L96 408 L96 422 L90 422 Z', '#9aa7b4', 3) +
+  P('M45 405 L54 405 L54 425 L45 425 Z', '#e85454', 0) +
+  P('M60 405 L60 425 M69 405 L69 425 M78 405 L78 425', null, 2, '#c9d4dd'));
+PARTS.debuff['忘れ物・うっかりが多い'] = () => debBadge(   // 「？」を線で描いた付箋
+  P('M61 382 L79 382 L79 391 L61 391 Z', '#ffffff', 0, null, ' fill-opacity=".75"') +
+  P('M52 388 L88 388 L88 418 L79 429 L52 429 Z', '#ffe066', 3.5) +
+  P('M88 418 L79 418 L79 429 Z', '#f0c93f', 2.5) +
+  P('M64 398 Q64 391 70.5 391 Q77 391 77 398 Q77 403 70.5 405 L70.5 409', null, 3.5) + C(70.5, 415, 2.2, PAL.line));
+PARTS.debuff['一人の時間がないと疲れる'] = () => debBadge(   // 湯気の立つカップ
+  P('M63 400 Q59 393 63 387 Q67 381 63 376', null, 3, '#8aa5bd') +
+  P('M77 400 Q73 393 77 387 Q81 381 77 376', null, 3, '#8aa5bd') +
+  P('M88 410 Q97 415 88 422', null, 3.5) +
+  P('M53 406 L87 406 L84 430 Q83 435 78 435 L62 435 Q57 435 56 430 Z', '#fffdf5', 3.5) +
+  E(70, 406, 17, 3.5, '#b07a3f', 0) +
+  P('M49 441 L91 441', null, 3.5));
+/*==END:PARTS:debuff==*/
+
+/*==PARTS:head==*/
+// 顔の輪郭（男女共通）。目・眉・口は別レイヤー
+const FACE_PATH = 'M108 180 C108 118 150 92 200 92 C250 92 292 118 292 180 C292 240 252 288 200 288 C148 288 108 240 108 180 Z';
+PARTS.head.base = () =>
+  E(108, 202, 14, 19, PAL.skin, 4) + E(292, 202, 14, 19, PAL.skin, 4) +
+  E(109, 204, 6, 10, PAL.skinShade, 0) + E(291, 204, 6, 10, PAL.skinShade, 0) +
+  P(FACE_PATH, PAL.skin) +
+  E(134, 238, 17, 10, PAL.blush, 0).replace('/>', ' opacity=".3"/>') + E(266, 238, 17, 10, PAL.blush, 0).replace('/>', ' opacity=".3"/>') +
+  P('M195 233 Q200 238 205 233', null, 3);
+/*==END:PARTS:head==*/
+
+/*==PARTS:eyes==*/
+(function () {
+  const Y = ANCHOR.eyeY, X = ANCHOR.eyeX;
+  const lash = (cx, w) => P('M' + (cx - 23) + ' 192 Q' + cx + ' 154 ' + (cx + 23) + ' 192', null, w || 5.5);
+  const pair = f => f(X[0], 1) + f(X[1], -1);          // 左右の目（sign=+1 左目 / -1 右目）
+  // 標準形：白目＋黒目＋ハイライト2つ＋まつ毛の弧
+  const open = (cx, dx, o) => {
+    o = o || {};
+    const rx = o.rx || 14, ry = o.ry || 18;
+    return E(cx, Y, 22, 25, '#ffffff', 3.5) + E(cx + dx, 202, rx, ry, PAL.iris, 0) + E(cx + dx, 203, rx * 0.57, ry * 0.61, PAL.pupil, 0) +
+      C(cx + dx - 5, 195, 6, '#ffffff') + C(cx + dx + 5, 210, 3, '#ffffff') + lash(cx);
+  };
+  PARTS.eyes.E1 = () => pair((cx, s) => open(cx, 2 * s));                       // 標準
+  PARTS.eyes.E2 = () => pair((cx, s) => {                                        // きらきら
+    const d = 1 * s;
+    return E(cx, Y, 22, 25, '#ffffff', 3.5) + E(cx + d, 201, 16, 21, PAL.iris, 0) + E(cx + d, 202, 9, 13, PAL.pupil, 0) +
+      C(cx + d - 6, 193, 7.5, '#ffffff') + C(cx + d + 6, 211, 3.8, '#ffffff') + C(cx + d + 8, 197, 2.4, '#ffffff') + lash(cx);
+  });
+  PARTS.eyes.E3 = () => pair((cx, s) =>                                          // 半目（まぶたが半分おりている）
+    E(cx, Y, 22, 25, '#ffffff', 3.5) + E(cx + 1 * s, 206, 13, 16, PAL.iris, 0) + E(cx + 1 * s, 207, 7.5, 9.5, PAL.pupil, 0) + C(cx + 1 * s - 4, 201, 4.5, '#ffffff') +
+    P('M' + (cx - 27) + ' 198 Q' + cx + ' 192 ' + (cx + 27) + ' 198 L' + (cx + 31) + ' 158 L' + (cx - 31) + ' 158 Z', PAL.skin, 0) +
+    P('M' + (cx - 24) + ' 198 Q' + cx + ' 191 ' + (cx + 24) + ' 198', null, 5.5));
+  PARTS.eyes.E4 = () => pair((cx, s) => open(cx, -8 * s, { rx: 12, ry: 17 }));   // 横目（画面の右を見る＝両目とも同じ向き）
+  PARTS.eyes.E5 = () => pair((cx) => P('M' + (cx - 22) + ' 206 Q' + cx + ' 170 ' + (cx + 22) + ' 206', null, 6.5));  // にっこり弧
+  PARTS.eyes.E6 = () => pair((cx, s) =>                                          // つり目
+    '<g transform="rotate(' + (10 * s) + ' ' + cx + ' ' + Y + ')">' +
+    E(cx, Y, 22, 21, '#ffffff', 3.5) + E(cx + 1 * s, 202, 13, 15.5, PAL.iris, 0) + E(cx + 1 * s, 203, 7.5, 9, PAL.pupil, 0) +
+    C(cx + 1 * s - 4, 197, 5, '#ffffff') + C(cx + 1 * s + 4, 208, 2.6, '#ffffff') +
+    P('M' + (cx - 23) + ' 193 Q' + cx + ' 160 ' + (cx + 23) + ' 193', null, 6) + '</g>');
+})();
+/*==END:PARTS:eyes==*/
+
+/*==PARTS:brows==*/
+// 眉は前髪の下（y≧158）に収める。2本セットで左右対称
+PARTS.brows.B1 = () => P('M138 168 Q160 157 182 166', null, 5.5) + P('M218 166 Q240 157 262 168', null, 5.5);        // 標準
+PARTS.brows.B2 = () => P('M138 170 Q160 152 183 168', null, 5.5) + P('M217 168 Q240 152 262 170', null, 5.5);        // 上がり気味（高いアーチ）
+PARTS.brows.B3 = () => P('M137 172 Q160 166 183 158', null, 5.5) + P('M217 158 Q240 166 263 172', null, 5.5);        // 困り眉（内側が高い）
+PARTS.brows.B4 = () => P('M139 166 Q161 163 183 166', null, 5.5) + P('M217 166 Q239 163 261 166', null, 5.5);        // 水平
+PARTS.brows.B5 = () => P('M137 162 Q160 164 183 175', null, 6) + P('M217 175 Q240 164 263 162', null, 6);           // つり眉（内側が低い）
+PARTS.brows.B6 = () => P('M140 168 Q161 158 182 167', null, 8) + P('M218 167 Q239 158 260 168', null, 8);           // ふわっと弧（太め）
+/*==END:PARTS:brows==*/
+
+/*==PARTS:mouth==*/
+(function () {
+  const IN = '#7a2b2b', TONGUE = '#ff8a8a';
+  PARTS.mouth.M1 = () => P('M184 243 Q200 264 216 243', null, 4.5);                                  // 小さく笑う
+  PARTS.mouth.M2 = () =>                                                                              // 大きく開く
+    P('M177 240 Q200 235 223 240 Q221 275 200 275 Q179 275 177 240 Z', IN, 4.5) +
+    P('M188 266 Q200 254 212 266 Q206 273 200 273 Q194 273 188 266 Z', TONGUE, 0) +
+    P('M180 241 Q200 237 220 241 L219 250 Q200 246 181 250 Z', '#ffffff', 0);
+  PARTS.mouth.M3 = () => E(200, 254, 9, 12, IN, 4.5) + E(200, 259, 5, 4, TONGUE, 0);                  // 「お」の口
+  PARTS.mouth.M4 = () => P('M185 257 Q200 242 215 257', null, 4.5);                                    // への字
+  PARTS.mouth.M5 = () =>                                                                              // 歯を見せる
+    P('M179 242 Q200 273 221 242 Q200 248 179 242 Z', '#ffffff', 4.5) +
+    P('M190 247 L190 258', null, 2.5) + P('M200 248 L200 261', null, 2.5) + P('M210 247 L210 258', null, 2.5);
+  PARTS.mouth.M6 = () => P('M181 251 Q190.5 242 200 251 Q209.5 260 219 251', null, 4.5);             // 波線
+  PARTS.mouth.M7 = () => P('M186 245 Q200 258 214 245', null, 4.5) + P('M182 242 Q184 246 183 250', null, 3) + P('M218 242 Q216 246 217 250', null, 3);  // ふんわり微笑
+})();
+/*==END:PARTS:mouth==*/
+
+/*==PARTS:extra==*/
+// 顔の小物（目・眉・口の上、前髪の下の層）
+(function () {
+  const star = (cx, cy, r, fill) => P('M' + cx + ' ' + (cy - r) + ' Q' + cx + ' ' + cy + ' ' + (cx + r) + ' ' + cy + ' Q' + cx + ' ' + cy + ' ' + cx + ' ' + (cy + r) +
+    ' Q' + cx + ' ' + cy + ' ' + (cx - r) + ' ' + cy + ' Q' + cx + ' ' + cy + ' ' + cx + ' ' + (cy - r) + ' Z', fill || '#ffe14a', 3);
+  const bridge = (a, b) => P('M' + a + ' 197 Q200 190 ' + b + ' 197', null, 4.5);
+  PARTS.extra.glasses_round = () =>
+    C(160, 199, 29, '#ffffff', ' fill-opacity=".14" stroke="' + PAL.line + '" stroke-width="4.5"') + C(240, 199, 29, '#ffffff', ' fill-opacity=".14" stroke="' + PAL.line + '" stroke-width="4.5"') +
+    bridge(189, 211) + P('M131 194 L108 188', null, 4.5) + P('M269 194 L292 188', null, 4.5) +
+    P('M142 184 Q148 178 156 177', null, 3, '#ffffff') + P('M222 184 Q228 178 236 177', null, 3, '#ffffff');
+  PARTS.extra.glasses_square = () =>
+    '<rect x="131" y="173" width="58" height="48" rx="13" fill="#ffffff" fill-opacity=".14" stroke="' + PAL.line + '" stroke-width="4.5"/>' +
+    '<rect x="211" y="173" width="58" height="48" rx="13" fill="#ffffff" fill-opacity=".14" stroke="' + PAL.line + '" stroke-width="4.5"/>' +
+    bridge(189, 211) + P('M131 192 L108 187', null, 4.5) + P('M269 192 L292 187', null, 4.5) +
+    P('M141 183 L150 180', null, 3, '#ffffff') + P('M221 183 L230 180', null, 3, '#ffffff');
+  PARTS.extra.blush = () =>
+    E(132, 239, 20, 12, '#ff6f86', 0).replace('/>', ' opacity=".5"/>') + E(268, 239, 20, 12, '#ff6f86', 0).replace('/>', ' opacity=".5"/>') +
+    P('M124 237 L128 244', null, 2.5, '#ff4f6a') + P('M133 236 L137 243', null, 2.5, '#ff4f6a') + P('M263 243 L267 236', null, 2.5, '#ff4f6a') + P('M272 244 L276 237', null, 2.5, '#ff4f6a');
+  PARTS.extra.sweat = () =>
+    P('M278 166 Q265 187 270 196 Q278 206 287 197 Q292 188 278 166 Z', '#9fe9ff', 3.5) + P('M274 192 Q273 197 277 199', null, 2.5, '#ffffff');
+  PARTS.extra.sparkle = () => star(78, 152, 17) + star(58, 200, 10) + star(322, 214, 12) + star(300, 262, 7);
+  PARTS.extra.motion = () =>
+    P('M38 178 L96 178', null, 5, '#ffffff', ' opacity=".85"') + P('M26 204 L92 204', null, 5, '#ffffff', ' opacity=".85"') + P('M44 230 L96 230', null, 5, '#ffffff', ' opacity=".85"') +
+    P('M360 178 L304 178', null, 5, '#ffffff', ' opacity=".85"') + P('M372 204 L308 204', null, 5, '#ffffff', ' opacity=".85"');
+  PARTS.extra.flame = () =>
+    P('M86 92 Q106 118 102 134 Q98 150 84 150 Q68 150 68 134 Q68 120 78 112 Q78 126 85 128 Q80 110 86 92 Z', '#ff7a2a', 3.5) +
+    P('M86 124 Q96 134 92 143 Q88 148 82 144 Q78 137 86 124 Z', '#ffd23d', 0);
+})();
+/*==END:PARTS:extra==*/
+
+/*==PARTS:hair==*/
+// 髪は「前髪(front)」と「後ろ髪(back)」のセット。M=男性系統 / F=女性系統。1〜3が見た目チェンジ
+// 前髪の下端は眉（y≧158）より上に収めること
+const HC = {
+  M1:{ main:'#4b2e1a', hi:'#7a5232' }, M2:{ main:'#2f2d3a', hi:'#5d5b74' }, M3:{ main:'#6b3a1c', hi:'#a2652f' },
+  F1:{ main:'#8a4b2a', hi:'#b8703f' }, F2:{ main:'#2f221f', hi:'#6b4c40' }, F3:{ main:'#c2693a', hi:'#e6975c' }
+};
+const hairShade = (d) => P(d, '#000', 0, null, ' opacity=".09"');
+const ribbon = (cx, cy) =>
+  P('M' + cx + ' ' + cy + ' L' + (cx - 22) + ' ' + (cy - 14) + ' L' + (cx - 22) + ' ' + (cy + 14) + ' Z', '#ff5d73') +
+  P('M' + cx + ' ' + cy + ' L' + (cx + 22) + ' ' + (cy - 14) + ' L' + (cx + 22) + ' ' + (cy + 14) + ' Z', '#ff5d73') + C(cx, cy, 7, '#ffb3bf', ' stroke="' + PAL.line + '" stroke-width="3.5"');
+
+PARTS.hair.M1 = {   // ツンツン小前髪（アホ毛つき）
+  back: () => '',
+  front: () => {
+    const c = HC.M1;
+    return P('M106 196 C96 120 140 76 200 76 C262 76 306 120 294 196 L286 168 Q282 142 262 146 Q252 128 232 144 Q218 120 200 142 Q184 120 166 144 Q150 132 138 148 Q122 148 114 172 Z', c.main) +
+      P('M150 104 Q175 88 205 90', null, 6, c.hi) +
+      P('M196 78 C188 54 214 46 228 60 C214 60 210 72 216 82 Z', c.main);
+  }
+};
+PARTS.hair.M2 = {   // さわやか流し前髪（右へ流す）
+  back: () => '',
+  front: () => {
+    const c = HC.M2;
+    return P('M106 198 C94 124 140 78 200 78 C262 78 306 124 294 198 L288 168 Q277 156 262 164 Q226 160 198 142 Q172 134 150 150 Q124 156 114 178 Z', c.main) +
+      P('M148 104 Q178 88 216 92', null, 6, c.hi) + P('M170 134 Q190 118 212 124', null, 3.5, c.hi);
+  }
+};
+PARTS.hair.M3 = {   // ツンツンスパイク
+  back: () => '',
+  front: () => {
+    const c = HC.M3;
+    return P('M104 200 C92 132 116 96 148 88 L142 62 L172 80 L192 54 L212 80 L240 60 L240 88 C280 98 308 134 296 200 L290 158 L272 172 L262 138 L246 150 L228 130 L212 162 L198 128 L182 152 L164 130 L150 152 L134 140 L122 176 Z', c.main) +
+      P('M150 100 Q178 90 206 94', null, 5, c.hi);
+  }
+};
+PARTS.hair.F1 = {   // ロング（ストレート）
+  back: () => {
+    const c = HC.F1;
+    return P('M200 70 C120 70 90 140 94 220 C96 280 86 322 106 348 L150 338 L250 338 L294 348 C314 322 304 280 306 220 C310 140 280 70 200 70 Z', c.main) +
+      hairShade('M94 220 C96 280 86 322 106 348 L132 343 C112 300 106 262 108 222 Z');
+  },
+  front: () => {
+    const c = HC.F1;
+    return P('M104 214 C90 120 140 76 200 76 C262 76 310 120 296 214 L290 196 C288 166 272 148 246 148 Q224 160 200 142 Q176 154 152 156 Q128 160 118 192 Z', c.main) +
+      P('M146 100 Q176 84 212 88', null, 6, c.hi);
+  }
+};
+PARTS.hair.F2 = {   // ボブ（ぱっつん前髪）
+  back: () => {
+    const c = HC.F2;
+    return P('M200 70 C124 70 92 136 96 214 C98 262 96 282 110 292 L150 286 L250 286 L290 292 C304 282 302 262 304 214 C308 136 276 70 200 70 Z', c.main) +
+      hairShade('M96 214 C98 262 96 282 110 292 L132 288 C116 262 110 240 110 214 Z');
+  },
+  front: () => {
+    const c = HC.F2;
+    return P('M104 220 C90 122 140 78 200 78 C262 78 310 122 296 220 L292 204 C290 170 270 150 244 150 Q200 158 156 150 C130 150 110 170 108 204 Z', c.main) +
+      P('M148 100 Q178 86 214 90', null, 6, c.hi);
+  }
+};
+PARTS.hair.F3 = {   // ツインテール（リボン）
+  back: () => {
+    const c = HC.F3;
+    return P('M200 72 C130 72 100 130 102 190 L130 204 L270 204 L298 190 C300 130 270 72 200 72 Z', c.main) +
+      P('M112 150 C66 160 44 230 56 318 C62 346 96 350 104 322 C110 280 112 236 132 196 Z', c.main) +
+      P('M288 150 C334 160 356 230 344 318 C338 346 304 350 296 322 C290 280 288 236 268 196 Z', c.main) +
+      hairShade('M56 318 C62 346 96 350 104 322 C100 330 70 330 60 300 Z') + hairShade('M344 318 C338 346 304 350 296 322 C300 330 330 330 340 300 Z');
+  },
+  front: () => {
+    const c = HC.F3;
+    return P('M104 214 C90 120 140 76 200 76 C262 76 310 120 296 214 L290 196 C288 168 272 150 250 150 Q224 160 200 148 Q176 160 150 150 C128 150 112 168 110 196 Z', c.main) +
+      P('M146 100 Q176 84 212 88', null, 6, c.hi) + ribbon(106, 152) + ribbon(294, 152);
+  }
+};
+/*==END:PARTS:hair==*/
+
+/*==PARTS:bg==*/
+// 背景は sky / far / near の3層。キーはスタート環境カード名そのまま（SPEC.bg）。
+// 主な絵はキャラ（x 80〜320・y 92〜480）の後ろに隠れない余白（左右の端・上部・足元）に置く。
+// 吹き出し（右上）の裏は淡く保ち、輪郭線は #3a2418（遠景は細め・淡い色）
+const bgR = (x, y, w, h, fill, ex) => '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '"' + (ex || '') + '/>';
+PARTS.bg.default = {
+  sky: () => '<rect width="400" height="480" fill="#0e6a7a"/>' + C(110, 130, 230, '#1a8f94', ' opacity=".55"') + C(360, 430, 210, '#0a4a5e', ' opacity=".6"') +
+    C(330, 60, 34, '#fff', ' opacity=".07"') + C(60, 300, 22, '#fff', ' opacity=".08"') + C(250, 40, 16, '#fff', ' opacity=".07"') + C(40, 80, 14, '#fff', ' opacity=".06"'),
+  far: () => '', near: () => ''
+};
+PARTS.bg['高校卒業後は地元に残る'] = {   // 里山：低い山と田畑と小さな家
+  sky: () => bgR(0, 0, 400, 480, '#bfe3ef') +
+    C(56, 60, 42, '#ffd76e', ' opacity=".25"') + C(56, 60, 26, '#ffd76e') +
+    C(108, 48, 15, '#ffffff', ' opacity=".85"') + C(130, 43, 19, '#ffffff', ' opacity=".85"') + C(153, 49, 13, '#ffffff', ' opacity=".85"') +
+    C(196, 30, 11, '#ffffff', ' opacity=".6"') + C(214, 27, 14, '#ffffff', ' opacity=".6"'),
+  far: () =>
+    P('M0 270 L70 224 L132 258 L206 212 L286 256 L346 230 L400 262 L400 344 L0 344 Z', '#8fc7a0', 0) +
+    P('M22 306 L22 262', null, 6, '#8a5a28') + C(24, 244, 24, '#6fbf7f', ' opacity=".95"') + C(44, 256, 17, '#6fbf7f', ' opacity=".95"') +
+    bgR(326, 276, 50, 32, '#f5efe2', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    P('M318 278 L351 254 L384 278 Z', '#b0573f', 3) + bgR(344, 288, 13, 20, '#8a5a28', 0) +
+    bgR(0, 344, 400, 34, '#a9d97e') + bgR(0, 378, 400, 34, '#97cc68') + bgR(0, 412, 400, 34, '#a9d97e') + bgR(0, 446, 400, 34, '#97cc68') +
+    P('M0 378 L400 378 M0 412 L400 412 M0 446 L400 446', null, 2, '#7fb85c'),
+  near: () =>
+    P('M6 480 L10 452 L16 478 L22 448 L28 476 L34 454 L40 480', null, 3.5, '#4e9a51') +
+    P('M360 480 L364 454 L370 478 L376 450 L382 476 L388 456 L394 480', null, 3.5, '#4e9a51') +
+    C(52, 464, 3.2, '#ff9eb5') + C(350, 466, 3.2, '#ffffff') + C(64, 472, 2.6, '#ffffff')
+};
+PARTS.bg['都市に出たい'] = {   // ビル群の夜明け
+  sky: () => bgR(0, 0, 400, 480, '#3d4670') +
+    C(30, 36, 2.2, '#ffffff', ' opacity=".55"') + C(84, 76, 1.7, '#ffffff', ' opacity=".4"') + C(142, 26, 1.9, '#ffffff', ' opacity=".5"') +
+    C(24, 150, 1.6, '#ffffff', ' opacity=".35"') + C(196, 52, 1.5, '#ffffff', ' opacity=".3"') +
+    C(64, 330, 125, '#ff9e64', ' opacity=".26"') + C(64, 330, 31, '#ffb37e'),
+  far: () => {
+    const win = (x, y) => bgR(x, y, 6, 9, '#ffd76e', ' opacity=".85"');
+    return bgR(0, 150, 64, 330, '#2e3554') + bgR(56, 215, 62, 265, '#2e3554') + bgR(112, 255, 58, 225, '#2e3554') +
+      bgR(284, 235, 58, 245, '#2e3554') + bgR(336, 165, 64, 315, '#2e3554') +
+      win(12, 182) + win(30, 182) + win(12, 218) + win(44, 254) + win(12, 292) + win(30, 330) + win(44, 368) +
+      win(68, 248) + win(88, 284) + win(68, 322) + win(96, 356) +
+      win(296, 268) + win(316, 304) + win(296, 342) +
+      win(348, 198) + win(368, 198) + win(348, 236) + win(380, 272) + win(348, 312) + win(368, 350) + win(348, 392);
+  },
+  near: () =>
+    bgR(0, 452, 400, 28, '#262c47') +
+    C(22, 322, 21, '#ffe9a8', ' opacity=".22"') +
+    P('M22 336 L22 452', null, 5, '#1f2438') + C(22, 324, 9, '#ffe9a8', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    E(382, 470, 26, 10, '#232942', 0) + E(16, 472, 22, 9, '#232942', 0)
+};
+PARTS.bg['大学進学を考えている'] = {   // 時計塔のあるキャンパスと銀杏
+  sky: () => bgR(0, 0, 400, 480, '#aedcf5') +
+    C(112, 52, 14, '#ffffff', ' opacity=".9"') + C(133, 47, 18, '#ffffff', ' opacity=".9"') + C(155, 53, 12, '#ffffff', ' opacity=".9"') +
+    C(196, 32, 10, '#ffffff', ' opacity=".65"') + C(212, 29, 13, '#ffffff', ' opacity=".65"'),
+  far: () =>
+    bgR(86, 268, 314, 88, '#dfa26f', ' stroke="' + PAL.line + '" stroke-width="3.5"') + bgR(78, 250, 322, 20, '#a85f3f') +
+    bgR(330, 288, 15, 22, '#eaf6ff', ' stroke="' + PAL.line + '" stroke-width="2.5"') + bgR(356, 288, 15, 22, '#eaf6ff', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    bgR(330, 320, 15, 22, '#eaf6ff', ' stroke="' + PAL.line + '" stroke-width="2.5"') + bgR(96, 288, 14, 22, '#eaf6ff', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    bgR(28, 118, 50, 224, '#d98d6b', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M18 122 L53 82 L88 122 Z', '#8a4b3a', 3.5) +
+    C(53, 154, 17, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M53 154 L53 143', null, 3) + P('M53 154 L61 158', null, 3) + C(53, 154, 2.2, PAL.line) +
+    bgR(44, 196, 18, 24, '#eaf6ff', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    P('M362 356 L362 272', null, 7, '#8a5a28') +
+    C(362, 216, 24, '#f2c14e') + C(334, 240, 23, '#f2c14e') + C(388, 238, 21, '#f2c14e') + C(362, 244, 30, '#f2c14e') +
+    C(348, 226, 8, '#dfa92e', ' opacity=".8"') + C(378, 248, 7, '#dfa92e', ' opacity=".8"'),
+  near: () =>
+    bgR(0, 458, 400, 22, '#e9dcbc') +
+    E(20, 452, 7, 4, '#f2c14e', 0) + E(46, 466, 6, 3.5, '#f2c14e', 0) + E(370, 450, 7, 4, '#f2c14e', 0) + E(392, 464, 6, 3.5, '#dfa92e', 0) + E(340, 468, 5, 3, '#f2c14e', 0)
+};
+PARTS.bg['専門学校で資格を取りたい'] = {   // 工房の窓と資格証の額
+  sky: () => bgR(0, 0, 400, 480, '#f2e3c2') + bgR(0, 392, 400, 88, '#e2cda2'),
+  far: () =>
+    bgR(16, 54, 108, 164, '#bfe0ee', ' stroke="#8a5a28" stroke-width="4"') +
+    P('M70 54 L70 218 M16 136 L124 136', null, 3.5, '#8a5a28') +
+    C(44, 92, 11, '#ffffff', ' opacity=".75"') + P('M16 218 L16 186 Q60 168 124 190 L124 218 Z', '#9ed08a', 0) +
+    bgR(22, 240, 90, 78, '#fffdf5', ' stroke="#8a5a28" stroke-width="4"') +
+    P('M34 262 L100 262 M34 276 L100 276 M34 290 L78 290', null, 2.5, '#9db8c8') +
+    C(90, 296, 9, '#e2574c') + P('M84 303 L81 314 M96 303 L99 314', null, 2.5, '#e2574c') +
+    bgR(292, 156, 102, 13, '#8a5a28', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(300, 172, 15, 11, '#7d8fa3', ' stroke="' + PAL.line + '" stroke-width="3"') + bgR(305, 183, 6, 30, '#8a5a28', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    C(343, 183, 9, 'none', ' stroke="#7d8fa3" stroke-width="5"') + bgR(339, 190, 8, 32, '#7d8fa3', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    bgR(364, 176, 9, 26, '#e2574c', ' stroke="' + PAL.line + '" stroke-width="2.5"') + P('M368 202 L368 224', null, 4, '#9aa7b4'),
+  near: () =>
+    bgR(0, 428, 400, 52, '#a06a35') + bgR(0, 420, 400, 13, '#8a5a28') +
+    C(30, 456, 13, 'none', ' stroke="#9aa7b4" stroke-width="5"') + C(30, 456, 3.5, '#9aa7b4') +
+    P('M30 443 L30 469 M17 456 L43 456', null, 3, '#9aa7b4') +
+    bgR(344, 442, 50, 30, '#e2574c', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M356 442 Q369 428 382 442', null, 3.5)
+};
+PARTS.bg['卒業したらすぐ働きたい'] = {   // 朝の通勤路と社屋の入口
+  sky: () => bgR(0, 0, 400, 480, '#cfe9f4') +
+    C(52, 64, 40, '#ffd76e', ' opacity=".25"') + C(52, 64, 23, '#ffd76e') +
+    C(150, 42, 12, '#ffffff', ' opacity=".9"') + C(169, 38, 15, '#ffffff', ' opacity=".9"') + C(188, 43, 10, '#ffffff', ' opacity=".9"') +
+    C(238, 66, 9, '#ffffff', ' opacity=".6"') + C(252, 63, 11, '#ffffff', ' opacity=".6"'),
+  far: () =>
+    bgR(296, 138, 102, 232, '#a9c2d4', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    bgR(312, 158, 16, 20, '#eaf6ff') + bgR(338, 158, 16, 20, '#eaf6ff') + bgR(364, 158, 16, 20, '#eaf6ff') +
+    bgR(312, 192, 16, 20, '#eaf6ff') + bgR(338, 192, 16, 20, '#eaf6ff') + bgR(364, 192, 16, 20, '#eaf6ff') +
+    bgR(312, 226, 16, 20, '#eaf6ff') + bgR(338, 226, 16, 20, '#eaf6ff') + bgR(364, 226, 16, 20, '#eaf6ff') +
+    bgR(312, 260, 16, 20, '#eaf6ff') + bgR(338, 260, 16, 20, '#eaf6ff') + bgR(364, 260, 16, 20, '#eaf6ff') +
+    bgR(300, 330, 94, 14, '#5b7a99', ' stroke="' + PAL.line + '" stroke-width="3"') + bgR(332, 344, 30, 48, '#5b7a99', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(0, 238, 58, 154, '#c3d5e2', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(12, 258, 14, 18, '#eaf6ff') + bgR(32, 258, 14, 18, '#eaf6ff') + bgR(12, 292, 14, 18, '#eaf6ff') + bgR(32, 292, 14, 18, '#eaf6ff') +
+    bgR(0, 392, 400, 88, '#93a1ad') +
+    bgR(6, 430, 36, 7, '#ffffff', ' opacity=".75"') + bgR(330, 430, 36, 7, '#ffffff', ' opacity=".75"') + bgR(372, 430, 26, 7, '#ffffff', ' opacity=".75"'),
+  near: () =>
+    P('M17 392 L17 306', null, 6, '#8a5a28') + C(18, 282, 27, '#7cb668') + C(40, 296, 18, '#7cb668') + C(4, 298, 15, '#93cc77') +
+    bgR(0, 460, 38, 9, '#ffffff', ' opacity=".8"') + bgR(52, 460, 38, 9, '#ffffff', ' opacity=".8"') +
+    bgR(312, 460, 38, 9, '#ffffff', ' opacity=".8"') + bgR(362, 460, 38, 9, '#ffffff', ' opacity=".8"')
+};
+PARTS.bg['奨学金を使う予定'] = {   // 窓辺の本と封筒とコイン（中立的・前向きに）
+  sky: () => bgR(0, 0, 400, 480, '#f3e9d2'),
+  far: () =>
+    bgR(18, 48, 104, 158, '#d8f0f7', ' stroke="#a8793f" stroke-width="4"') +
+    P('M70 48 L70 206 M18 127 L122 127', null, 3.5, '#a8793f') +
+    C(44, 76, 12, '#ffd76e', ' opacity=".85"') + C(96, 100, 10, '#ffffff', ' opacity=".8"') +
+    P('M104 48 L122 48 L122 206 L104 206 Q114 127 104 48 Z', '#ffb37e', 0, null, ' opacity=".55"') +
+    bgR(12, 206, 116, 12, '#a8793f') +
+    bgR(0, 352, 400, 128, '#c99a63') + bgR(0, 352, 400, 12, '#b5854e') +
+    bgR(24, 272, 52, 24, '#43b581', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    bgR(20, 296, 60, 26, '#4aa8e0', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    bgR(16, 322, 68, 30, '#e2574c', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    '<g transform="rotate(-6 341 318)">' +
+    bgR(298, 292, 86, 52, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M298 294 L341 322 L384 294', null, 3) + C(341, 330, 8, '#e2574c') + '</g>' +
+    C(320, 376, 12, '#ffd23d', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M315 369 L320 375 L325 369', null, 2.5) + P('M320 375 L320 381', null, 2.5) + P('M314.5 372 L325.5 372', null, 2),
+  near: () =>
+    bgR(96, 184, 24, 22, '#c96f4a', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    C(108, 172, 9, '#43b581') + C(98, 178, 6, '#43b581') + C(118, 178, 6, '#43b581') +
+    bgR(0, 462, 400, 18, '#e5d3ac')
+};
+PARTS.bg['家族の仕事を継ぐかもしれない'] = {   // のれんの商店と畑
+  sky: () => bgR(0, 0, 400, 480, '#fdeed3') +
+    C(48, 56, 38, '#ffd76e', ' opacity=".25"') + C(48, 56, 22, '#ffd76e') +
+    C(150, 38, 11, '#ffffff', ' opacity=".8"') + C(167, 34, 14, '#ffffff', ' opacity=".8"') + C(185, 39, 9, '#ffffff', ' opacity=".8"'),
+  far: () =>
+    bgR(196, 318, 204, 54, '#a9d97e') + bgR(196, 372, 204, 54, '#8fce6a') + bgR(196, 426, 204, 54, '#a9d97e') +
+    C(232, 344, 4, '#5da244', ' opacity=".8"') + C(274, 344, 4, '#5da244', ' opacity=".8"') + C(318, 344, 4, '#5da244', ' opacity=".8"') + C(358, 344, 4, '#5da244', ' opacity=".8"') +
+    C(252, 398, 4, '#4e9a51', ' opacity=".8"') + C(300, 398, 4, '#4e9a51', ' opacity=".8"') + C(348, 398, 4, '#4e9a51', ' opacity=".8"') +
+    C(234, 452, 4, '#5da244', ' opacity=".8"') + C(292, 452, 4, '#5da244', ' opacity=".8"') + C(350, 452, 4, '#5da244', ' opacity=".8"') +
+    bgR(6, 216, 190, 152, '#ecd9b0', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M0 222 L34 184 L166 184 L200 222 Z', '#8a5a28', 3.5) +
+    bgR(28, 292, 154, 76, '#6b4a2f') +
+    bgR(28, 228, 46, 58, '#3f6d8e', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(82, 228, 46, 58, '#3f6d8e', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(136, 228, 46, 58, '#3f6d8e', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    P('M22 226 L188 226', null, 4, '#8a5a28'),
+  near: () =>
+    bgR(8, 438, 50, 38, '#b07a3f', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M8 457 L58 457 M33 438 L33 476', null, 2.5, '#8a5a28') +
+    P('M352 480 L356 454 L362 478 L368 450 L374 476 L380 456 L386 480', null, 3.5, '#4e9a51')
+};
+PARTS.bg['部活で大きな実績がある'] = {   // グラウンドとトロフィー
+  sky: () => bgR(0, 0, 400, 480, '#bfe0f2') +
+    C(118, 46, 13, '#ffffff', ' opacity=".9"') + C(138, 41, 17, '#ffffff', ' opacity=".9"') + C(158, 47, 11, '#ffffff', ' opacity=".9"') +
+    C(206, 28, 9, '#ffffff', ' opacity=".6"') + C(220, 25, 11, '#ffffff', ' opacity=".6"'),
+  far: () =>
+    bgR(0, 238, 400, 92, '#d7dee3') + bgR(0, 224, 400, 16, '#8fa3b0') +
+    bgR(16, 258, 16, 22, '#9fb8c8') + bgR(44, 258, 16, 22, '#9fb8c8') + bgR(330, 258, 16, 22, '#9fb8c8') + bgR(358, 258, 16, 22, '#9fb8c8') +
+    bgR(16, 292, 16, 22, '#9fb8c8') + bgR(358, 292, 16, 22, '#9fb8c8') +
+    bgR(0, 330, 400, 150, '#d98a68') +
+    P('M0 374 L400 374 M0 416 L400 416 M0 454 L400 454', null, 2.5, '#ffffff', ' opacity=".8"') +
+    P('M22 298 L22 310 M16 304 L28 304', null, 3, '#ffb020') + P('M94 290 L94 300 M89 295 L99 295', null, 3, '#ffb020') +
+    P('M40 320 L74 320 L74 342 Q74 360 57 360 Q40 360 40 342 Z', '#ffd23d', 3.5) +
+    P('M40 326 Q25 328 31 342 Q35 351 43 348', null, 3.5, '#e8a020') + P('M74 326 Q89 328 83 342 Q79 351 71 348', null, 3.5, '#e8a020') +
+    bgR(52, 360, 10, 16, '#e8a020') +
+    bgR(34, 376, 46, 16, '#c7ccd4', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(22, 392, 70, 38, '#c7ccd4', ' stroke="' + PAL.line + '" stroke-width="3.5"'),
+  near: () =>
+    bgR(0, 466, 400, 14, '#ffffff', ' opacity=".85"') +
+    P('M372 428 L386 428 L379 402 Z', '#ff8c42', 3) + bgR(368, 428, 22, 7, '#e8743a', ' stroke="' + PAL.line + '" stroke-width="2.5"')
+};
+PARTS.bg['アルバイト経験が豊富'] = {   // 店のカウンターと名札
+  sky: () => bgR(0, 0, 400, 480, '#f6e7ce'),
+  far: () =>
+    bgR(14, 34, 72, 70, '#5b4632', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M26 56 L74 56 M26 72 L74 72 M26 88 L60 88', null, 3, '#f6e7ce') +
+    bgR(96, 34, 54, 58, '#5b4632', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    C(123, 56, 10, 'none', ' stroke="#f6e7ce" stroke-width="3"') + P('M108 78 L138 78', null, 3, '#f6e7ce') +
+    P('M210 0 L210 30', null, 3.5, '#8a5a28') +
+    C(210, 66, 15, '#ffe9a8', ' opacity=".45"') +
+    P('M190 56 L230 56 L218 30 L202 30 Z', '#e2574c', 3.5) +
+    P('M52 112 L52 146', null, 4, '#e2574c') + C(52, 110, 4.5, '#9aa7b4') +
+    bgR(25, 146, 54, 60, '#fffdf5', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    C(52, 164, 10, '#ffd2a8', ' stroke="' + PAL.line + '" stroke-width="2.5"') +
+    P('M36 186 L68 186 M36 196 L62 196', null, 2.5, '#9aa7b4') +
+    bgR(0, 336, 400, 144, '#b57e4a') + bgR(0, 326, 400, 16, '#8a5a28', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    bgR(24, 268, 40, 20, '#33475c', ' stroke="' + PAL.line + '" stroke-width="3"') + bgR(29, 272, 30, 12, '#aee3ff') +
+    bgR(14, 288, 60, 40, '#5b7a99', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    C(27, 307, 3, '#fffdf5') + C(41, 307, 3, '#fffdf5') + C(55, 307, 3, '#fffdf5') +
+    P('M338 276 L370 276 L366 300 L342 300 Z', '#fffdf5', 3) +
+    P('M332 300 L376 300 L370 326 L338 326 Z', '#fffdf5', 3) +
+    E(354, 331, 30, 6, '#fffdf5', 2.5),
+  near: () =>
+    bgR(0, 452, 400, 28, '#a5713d') +
+    bgR(368, 428, 26, 24, '#c96f4a', ' stroke="' + PAL.line + '" stroke-width="3"') +
+    C(381, 414, 10, '#43b581') + C(369, 421, 7, '#43b581') + C(393, 421, 7, '#43b581')
+};
+PARTS.bg['海外に行きたい'] = {   // 空と地球儀と滑走路（海外への出発）
+  sky: () => bgR(0, 0, 400, 480, '#a8dcff') +
+    C(54, 52, 21, '#ffd93d', ' opacity=".85"') +
+    P('M54 18 L54 26 M54 78 L54 86 M20 52 L28 52 M80 52 L88 52 M30 28 L36 34 M72 70 L78 76 M78 28 L72 34 M36 70 L30 76', null, 3, '#ffd93d') +
+    C(150, 46, 15, '#ffffff', ' opacity=".8"') + C(170, 40, 20, '#ffffff', ' opacity=".8"') + C(192, 47, 14, '#ffffff', ' opacity=".8"') +
+    C(292, 118, 12, '#ffffff', ' opacity=".55"') + C(308, 112, 16, '#ffffff', ' opacity=".55"') + C(326, 119, 11, '#ffffff', ' opacity=".55"'),
+  far: () =>
+    C(64, 128, 37, '#8fd0ff', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    E(64, 128, 15, 37, 'none', 0, ' stroke="#4a90c4" stroke-width="2.5" fill="none"') +
+    P('M27 128 L101 128 M34 103 L94 103 M34 153 L94 153', null, 2.5, '#4a90c4') +
+    C(50, 110, 8, '#43b581') + C(80, 142, 9, '#43b581') + C(58, 150, 5, '#43b581') + C(76, 106, 5, '#43b581') +
+    P('M118 96 Q 210 30 322 74', null, 3, '#ffffff', ' stroke-dasharray="7 7" fill="none" opacity=".9"') +
+    P('M322 74 L300 66 L306 84 Z', '#ffffff', 2.5) +
+    bgR(0, 388, 400, 92, '#9aa7b4') + bgR(0, 388, 400, 10, '#7e8fa1') +
+    P('M6 434 L60 434 M86 434 L140 434 M166 434 L220 434 M246 434 L300 434 M326 434 L380 434', null, 5, '#ffffff'),
+  near: () =>
+    bgR(24, 420, 44, 34, '#e2574c', ' stroke="' + PAL.line + '" stroke-width="3.5"') +
+    P('M36 420 L36 408 L56 408 L56 420', null, 3.5) +
+    P('M24 434 L68 434', null, 2.5, '#ffffff') +
+    C(34, 458, 4.5, PAL.line) + C(58, 458, 4.5, PAL.line) +
+    P('M352 452 L352 396', null, 3.5, '#8a5a28') +
+    P('M352 396 L388 404 L352 414 Z', '#ff8a00', 3)
+};
+/*==END:PARTS:bg==*/
+/*==PARTS:jobOutfit==*/
+// 職業衣装（仕事タイプ7種）→ 服の上に重ねる制服・ユニフォーム。男女どちらの体にも合うよう、女性側の輪郭（x 92〜308）に寄せて描く
+// 胸エンブレムは制服の下に隠れる（制服を着た姿にする）。帽子など頭に付く物は置かず、首から下と小物で職種を表す
+const JO_PATH = 'M92 480 L92 378 Q92 334 136 322 L168 310 Q200 354 232 310 L264 322 Q308 334 308 378 L308 480 Z';
+const JO_SHADE = 'M264 322 Q308 334 308 378 L308 480 L262 480 Q282 414 264 322 Z';
+const joBase = fill => P(JO_PATH, fill) + P(JO_SHADE, '#000', 0, null, ' opacity=".1"');
+
+PARTS.jobOutfit['人と関わる・接客'] = () =>   // 紺のジャケット＋白シャツ＋赤ネクタイ＋名札
+  joBase('#2b4a7f') +
+  P('M176 312 L200 352 L224 312 L224 344 L200 376 L176 344 Z', '#ffffff', 3) +
+  P('M195 346 L205 346 L205 356 L195 356 Z', '#e0344f', 3) +
+  P('M200 356 L194 366 L197 396 L200 402 L203 396 L206 366 Z', '#e0344f', 3) +
+  P('M200 376 L200 480', null, 3) +
+  C(200, 428, 3.5, '#ffd23d') +
+  P('M234 374 L268 374 Q273 374 273 379 L273 390 Q273 395 268 395 L234 395 Q229 395 229 390 L229 379 Q229 374 234 374 Z', '#fffdf5', 3) +
+  P('M237 382 L265 382', null, 2.5, '#5b7d99') + P('M237 389 L257 389', null, 2.5, '#5b7d99');
+PARTS.jobOutfit['人を助ける・支える'] = () =>   // 白衣＋聴診器＋赤十字のバッジ（内側に価値観の服色が見える）
+  joBase('#fdfdf8') +
+  P('M190 336 L200 358 L210 336 L206 480 L194 480 Z', PAL.shirt, 0) +
+  P('M176 312 L200 358 L190 480', null, 3.5) + P('M224 312 L200 358 L210 480', null, 3.5) +
+  P('M176 306 Q200 350 224 306', null, 5, '#3a4a5a') +
+  P('M224 308 Q234 338 226 364', null, 5, '#3a4a5a') +
+  C(224, 372, 8.5, '#8fc3ea', ' stroke="' + PAL.line + '" stroke-width="3.5"') + C(224, 372, 3, '#3a4a5a') +
+  C(138, 384, 13, '#ffffff', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  P('M135 376 L141 376 L141 381 L146 381 L146 387 L141 387 L141 392 L135 392 L135 387 L130 387 L130 381 L135 381 Z', '#e0344f', 0) +
+  P('M240 424 L274 424 L274 452 L240 452 Z', null, 3);
+PARTS.jobOutfit['ものを作る'] = () =>   // 作業エプロン＋道具ポケット＋ドライバー＋タオル
+  P('M158 332 L172 308', null, 7, '#8a653f') + P('M242 332 L228 308', null, 7, '#8a653f') +
+  P('M150 330 L250 330 L262 480 L138 480 Z', '#a9805a') +
+  P('M250 330 L262 480 L238 480 Q248 405 250 330 Z', '#000', 0, null, ' opacity=".1"') +
+  P('M141 402 L259 402', null, 4, '#8a653f') +
+  P('M168 420 L232 420 L232 464 L168 464 Z', '#96703f', 3.5) +
+  P('M200 420 L200 464', null, 3, '#8a653f') +
+  P('M213 420 L219 398', null, 8, '#e0344f') + P('M219 398 L223 388', null, 4.5, '#9aa7b4') +
+  P('M112 424 L136 424 L140 466 L116 466 Z', '#7ec8f7', 3) +
+  P('M114 440 L138 440', null, 3, '#ffffff');
+PARTS.jobOutfit['数字・データを扱う'] = () =>   // ベスト＋胸ポケットのペン＋電卓
+  P('M92 480 L92 378 Q92 334 136 322 L168 310 L197 358 L189 480 Z', '#5b7d99') +
+  P('M308 480 L308 378 Q308 334 264 322 L232 310 L203 358 L211 480 Z', '#5b7d99') +
+  P('M264 322 Q308 334 308 378 L308 480 L262 480 Q282 414 264 322 Z', '#000', 0, null, ' opacity=".1"') +
+  C(208, 386, 3.2, '#ffd23d') + C(210, 416, 3.2, '#ffd23d') + C(212, 446, 3.2, '#ffd23d') +
+  P('M238 352 L272 352 L272 378 L238 378 Z', '#4f7089', 3) +
+  P('M247 352 L247 341', null, 4.5, '#e0344f') + P('M259 352 L259 341', null, 4.5, '#2f8f78') +
+  P('M124 418 L156 418 L156 460 L124 460 Z', '#33526e', 3) +
+  P('M129 424 L151 424 L151 433 L129 433 Z', '#bfe9ff', 0) +
+  [[132, 441], [140, 441], [148, 441], [132, 451], [140, 451], [148, 451]].map(p => C(p[0], p[1], 1.9, '#ffffff')).join('');
+PARTS.jobOutfit['体を動かす'] = () =>   // ジャージ＋白ライン＋ファスナー＋ホイッスル
+  joBase('#d9382b') +
+  P('M172 306 L228 306 L223 330 Q200 341 177 330 Z', '#a8231a', 3.5) +
+  P('M116 344 Q108 404 114 480', null, 6, '#ffffff') + P('M284 344 Q292 404 286 480', null, 6, '#ffffff') +
+  P('M200 338 L200 480', null, 3.5, '#ffd23d') +
+  P('M183 332 Q200 374 217 332', null, 3.5) +
+  P('M191 372 L213 372 L213 385 L205 385 L200 380 L191 380 Z', '#ffd23d', 3);
+PARTS.jobOutfit['表現する'] = () =>   // スモック＋オレンジのスカーフ＋絵の具の飛び散り
+  joBase('#a89a83') +
+  P('M170 306 Q200 332 230 306 L234 328 Q200 352 166 328 Z', '#ff8a00') +
+  C(200, 340, 7.5, '#ff8a00', ' stroke="' + PAL.line + '" stroke-width="3"') +
+  C(148, 402, 7, '#ff5d73') + C(167, 434, 5, '#3db2ff') + C(248, 406, 6, '#ffd23d') +
+  C(230, 448, 5, '#2fbf71') + C(264, 442, 4, '#ff5d73') + C(132, 452, 4.5, '#ffd23d') +
+  C(200, 408, 3, '#3a2418') + C(200, 440, 3, '#3a2418') +
+  P('M146 452 L194 452', null, 3);
+PARTS.jobOutfit['調べる・考える'] = () =>   // グレーのジャケット＋IDカード＋胸ポケットのペン
+  joBase('#6e6259') +
+  P('M174 312 L200 356 L190 402 L170 332 Z', '#5b5049', 3) +
+  P('M226 312 L200 356 L210 402 L230 332 Z', '#5b5049', 3) +
+  P('M185 314 L200 352 L215 314', null, 3.5, '#2b4a7f') +
+  P('M188 352 L212 352 L212 384 L188 384 Z', '#fffdf5', 3) +
+  P('M193 358 L202 358 L202 369 L193 369 Z', '#8fc3ea', 0) +
+  P('M205 360 L209 360', null, 2, '#5b7d99') + P('M193 375 L207 375', null, 2, '#5b7d99') + P('M193 380 L204 380', null, 2, '#5b7d99') +
+  P('M234 368 L266 368', null, 3) +
+  P('M250 368 L250 354', null, 4.5, '#2470c2');
+/*==END:PARTS:jobOutfit==*/
+
+/*==PARTS:fx==*/
+// 完成エフェクト（3種）→ キャラ完成時に最前面へ重ねる。全面に薄くかけるので色は淡く、単体でも形が分かるものにする
+const star4 = (cx, cy, r, fill) => P('M' + cx + ' ' + (cy - r) +
+  ' Q' + (cx + r * 0.16) + ' ' + (cy - r * 0.16) + ' ' + (cx + r) + ' ' + cy +
+  ' Q' + (cx + r * 0.16) + ' ' + (cy + r * 0.16) + ' ' + cx + ' ' + (cy + r) +
+  ' Q' + (cx - r * 0.16) + ' ' + (cy + r * 0.16) + ' ' + (cx - r) + ' ' + cy +
+  ' Q' + (cx - r * 0.16) + ' ' + (cy - r * 0.16) + ' ' + cx + ' ' + (cy - r) + ' Z', fill, 0);
+PARTS.fx['sparkle'] = () =>   // キラキラ（4点星＋小さい丸）
+  star4(88, 118, 30, '#ffd23d') + star4(88, 118, 13, '#fff3c4') +
+  star4(336, 208, 20, '#ffd23d') + star4(64, 252, 14, '#ffffff') +
+  star4(352, 330, 13, '#fff3c4') + star4(120, 330, 10, '#ffd23d') +
+  C(300, 160, 4, '#ffd23d') + C(56, 176, 3.5, '#fff3c4') + C(140, 60, 3.5, '#ffd23d');
+PARTS.fx['frame'] = () =>   // 金色の二重わく＋四隅の星
+  P('M30 12 L370 12 Q388 12 388 30 L388 450 Q388 468 370 468 L30 468 Q12 468 12 450 L12 30 Q12 12 30 12 Z', 'none', 5, '#ffd23d') +
+  P('M32 24 L368 24 Q376 24 376 32 L376 448 Q376 456 368 456 L32 456 Q24 456 24 448 L24 32 Q24 24 32 24 Z', 'none', 2, '#ffb020') +
+  star4(30, 30, 11, '#ffd23d') + star4(370, 30, 11, '#ffd23d') + star4(30, 450, 11, '#ffd23d') + star4(370, 450, 11, '#ffd23d');
+PARTS.fx['glow'] = () =>   // 淡い光（重ねた楕円＋小さい星）
+  E(200, 246, 188, 222, '#ffd23d', 0).replace('/>', ' opacity=".10"/>') +
+  E(200, 246, 148, 178, '#fff3c4', 0).replace('/>', ' opacity=".12"/>') +
+  star4(80, 96, 12, '#ffffff') + star4(330, 250, 10, '#ffffff');
+/*==END:PARTS:fx==*/
+
+/*==ENGINE==*/
+// 性格 → [目, 眉, 口, 顔の小物]（仕様書 2-6）。小物がないときは ''
+const FACE_MAP = {
+  '行動派（思い立ったらすぐ動く）': ['E1', 'B2', 'M2', 'motion'],
+  '慎重派（よく考えてから動く）': ['E4', 'B3', 'M4', ''],
+  '好奇心旺盛': ['E2', 'B2', 'M3', 'sparkle'],
+  '計画的できっちりしている': ['E1', 'B4', 'M1', 'glasses_round'],
+  'マイペース': ['E3', 'B6', 'M7', ''],
+  '負けず嫌い': ['E6', 'B5', 'M5', 'flame'],
+  '楽観的': ['E5', 'B6', 'M2', ''],
+  '完璧主義': ['E6', 'B4', 'M4', 'glasses_square'],
+  '世話好きで面倒見がいい': ['E1', 'B6', 'M7', 'blush'],
+  '人見知り': ['E4', 'B3', 'M6', 'blush'],
+  'こだわりが強い': ['E3', 'B5', 'M4', ''],
+  '空気を読むのが上手い': ['E1', 'B3', 'M1', 'sweat']
+};
+const FACE_DEFAULT = ['E1', 'B1', 'M1', ''];
+const LAYERS = ['bgSky','bgFar','bgNear','aura','hairBack','body','outfit','jobOutfit','head','eyes','brows','mouth','extra',
+                'hairFront','headwear','item','debuff','bubble','fx'];
+// S9fix4：服（価値観）を引くまでの仮インナー（白い肌着）。体の輪郭に沿い、肩と脇を内側に入れたタンクトップ型。
+// ENGINE 側の追加描画で、PARTS 本体は書き換えない。完成状態（価値観を引き済み）では一切出ない
+const INNER_UNDER = {
+  '男性': () =>
+    P('M104 480 L104 386 Q104 350 142 338 L174 328 Q200 380 226 328 L258 338 Q296 350 296 386 L296 480 Z', '#ffffff') +
+    P('M258 338 Q296 350 296 386 L296 480 L252 480 Q272 408 258 338 Z', '#000', 0, null, ' opacity=".07"') +
+    P('M174 328 Q200 380 226 328', null, 8, '#e0d9cf') +
+    P('M174 328 Q200 380 226 328', null, 4),
+  '女性': () =>
+    P('M116 480 L116 392 Q116 356 150 344 L178 330 Q200 380 222 330 L250 344 Q284 356 284 392 L284 480 Z', '#ffffff') +
+    P('M250 344 Q284 356 284 392 L284 480 L240 480 Q262 410 250 344 Z', '#000', 0, null, ' opacity=".07"') +
+    P('M178 330 Q200 380 222 330', null, 8, '#e0d9cf') +
+    P('M178 330 Q200 380 222 330', null, 4)
+};
+
+// 引いたカード(state) → 各レイヤーのSVG文字列。opt.ph=true で未実装部品に目印を出す
+function layerOf(state, opt) {
+  opt = opt || {};
+  const g = state['性別'] === '女性' ? '女性' : '男性';
+  // S9fix3：「生える形」― 引いたカテゴリのレイヤーだけを出す。未引きはデフォルトで埋めない
+  const L = {};
+  LAYERS.forEach(id => { L[id] = ''; });
+  if (state['スタート環境']) {
+    const bg = PARTS.bg[state['スタート環境']] || PARTS.bg.default;
+    L.bgSky = bg.sky(); L.bgFar = bg.far(); L.bgNear = bg.near();
+  }
+  const au = state['夢・憧れ'] ? DREAM_AURA[state['夢・憧れ']] : null;
+  L.aura = au ? E(200, 270, 150, 198, au, 0).replace('/>', ' opacity=".30"/>') : '';
+  if (state['性別']) {
+    const hk = (g === '女性' ? 'F' : 'M') + (state.hairVar || 1);
+    const H = PARTS.hair[hk] || PARTS.hair[g === '女性' ? 'F1' : 'M1'];
+    L.hairBack = H.back();
+    L.body = PARTS.body[g]();
+    // S9fix4：服（価値観）を引くまでは仮インナーを着せる。価値観を引いたら本物の服に替わり、完成状態では出ない
+    if (!state['価値観']) L.body += INNER_UNDER[g]();
+    L.head = PARTS.head.base();
+    L.hairFront = H.front();
+    // 表情（性格）は頭の上に描くため、性別（頭）を引いているときだけ出す
+    if (state['性格']) {
+      const f = FACE_MAP[state['性格']] || FACE_DEFAULT;
+      const use = (kind, key, fallback) => (PARTS[kind][key] || PARTS[kind][fallback] || (() => ''))();
+      L.eyes = use('eyes', f[0], 'E1'); L.brows = use('brows', f[1], 'B1'); L.mouth = use('mouth', f[2], 'M1');
+      L.extra = f[3] ? use('extra', f[3], '') : '';
+    }
+  }
+  if (state['価値観']) {
+    const vs = VALUE_STYLE[state['価値観']] || { base:'#2f8f78', shade:'#23705e' };
+    PAL.shirt = vs.base; PAL.shirtShade = vs.shade;
+    // S9確認：体（性別）がまだ無いときは服だけが宙に浮くので出さない（表情と同じ扱い）
+    if (state['性別']) {
+      L.outfit = PARTS.outfit[g]();
+      if (PARTS.emblem[state['価値観']]) L.outfit += PARTS.emblem[state['価値観']]();
+    }
+  }
+  L.jobOutfit = (state['性別'] && state.jobType && PARTS.jobOutfit[state.jobType]) ? PARTS.jobOutfit[state.jobType]() : '';
+  const slot = (layer, kind, card, ph) => {
+    const fn = PARTS[kind][state[card]];
+    L[layer] = fn ? fn() : ((opt.ph && state[card]) ? ph : '');
+  };
+  slot('item', 'item', '強み', placeholder(ANCHOR.item.x + ANCHOR.item.w / 2, ANCHOR.item.y + ANCHOR.item.h / 2, 48, '#ffa94d'));
+  slot('debuff', 'debuff', '弱み', placeholder(ANCHOR.debuff.cx, ANCHOR.debuff.cy, ANCHOR.debuff.r, '#ff7070'));
+  slot('bubble', 'bubble', '夢・憧れ', placeholder(ANCHOR.bubble.cx, ANCHOR.bubble.cy, ANCHOR.bubble.r, '#d58bff'));
+  const ck7 = ['性別', '性格', '強み', '弱み', '夢・憧れ', '価値観', 'スタート環境'];
+  L.fx = (ck7.every(k => state[k]) && PARTS.fx.sparkle) ? PARTS.fx['sparkle']() : '';
+  return L;
+}
+
+function svgOpen(vb, cls) { return '<svg viewBox="' + (vb || '0 0 400 480') + '" class="' + (cls || 'hero') + '" xmlns="http://www.w3.org/2000/svg" overflow="hidden">'; }
+function svgFromLayers(L, vb, guide) {
+  return svgOpen(vb) + LAYERS.map(id => '<g class="L L-' + id + '" data-layer="' + id + '">' + (L[id] || '') + '</g>').join('') + (guide ? GUIDE : '') + '</svg>';
+}
+function heroSVG(state, opt) { opt = opt || {}; return svgFromLayers(layerOf(state, opt), opt.vb, opt.guide); }
+
+// アプリ画面の主人公パネル：変わったレイヤーだけ差し替えて、そこだけ弾ませる
+let heroShown = null, heroWasEmpty = true;
+function updateHero() {
+  const stage = document.getElementById('charaStage'); if (!stage) return;
+  const prog = document.getElementById('charaProg');
+  const n = cats.filter(c => current[c]).length;
+  if (!heroShown) {
+    stage.innerHTML = svgOpen('0 0 400 480') + LAYERS.map(id => '<g class="L L-' + id + '" data-layer="' + id + '"></g>').join('') + '</svg>';
+    stage.querySelectorAll('.L').forEach(g => g.addEventListener('animationend', e => { if (e.animationName === 'heroPop') g.classList.remove('pop'); }));
+    heroShown = {};
+  }
+  const svg = stage.querySelector('svg');
+  const L = layerOf(current, {});
+  const empty = n === 0;
+  LAYERS.forEach(id => {
+    if (heroShown[id] !== L[id]) {
+      const g = svg.querySelector('[data-layer="' + id + '"]');
+      g.innerHTML = L[id];
+      if (heroShown[id] !== undefined && !empty && !id.startsWith('bg')) { g.classList.remove('pop'); void g.getBoundingClientRect(); g.classList.add('pop'); }
+      heroShown[id] = L[id];
+    }
+  });
+  if (heroWasEmpty && !empty) svg.querySelectorAll('.L:not([data-layer^="bg"])').forEach(g => { g.classList.remove('pop'); void g.getBoundingClientRect(); g.classList.add('pop'); });
+  heroWasEmpty = empty;
+  // S9fix2：0枚の間はステージと髪型バーを隠し、案内プレースホルダーを出す
+  stage.style.display = empty ? 'none' : '';
+  const cph = document.getElementById('charaEmpty');
+  if (cph) cph.style.display = empty ? '' : 'none';
+  const chb = document.getElementById('hairBar');
+  // S9fix3：髪型バーは髪（性別）を引いた後だけ出す
+  if (chb) chb.style.display = current['性別'] ? '' : 'none';
+  syncHairBar();
+  prog.textContent = empty ? 'カードを引くと姿が現れるよ' : (n === cats.length ? '主人公完成！' : (current['性別'] ? 'あと ' + (cats.length - n) + ' 枚で完成' : '「性別」を引くと体と顔が出るよ'));
+  const gf = document.getElementById('gameProgFill');
+  if (gf) gf.style.width = (n / cats.length * 100) + '%';
+  const gt = document.getElementById('gameProgText');
+  if (gt) gt.textContent = n + ' / ' + cats.length;
+  if (typeof checkTitle === 'function') checkTitle();
+}
+// 髪の見た目チェンジ（1〜3）。性別が変わっても同じ番号を使う
+function setHair(n) { current.hairVar = n; updateHero(); }
+function syncHairBar() {
+  document.querySelectorAll('#hairBar button').forEach(b => b.classList.toggle('on', +b.dataset.v === (current.hairVar || 1)));
+}
+function buildHairBar() {
+  const bar = document.getElementById('hairBar'); if (!bar) return;
+  bar.innerHTML = '<span>髪型</span>' + [1, 2, 3].map(n => '<button data-v="' + n + '" onclick="setHair(' + n + ')">' + n + '</button>').join('');
+  syncHairBar();
+}
+/*==END:ENGINE==*/
+
+/*==GALLERY==*/
+// ?dev=gallery で開く確認ページ（開発用。生徒には見せない）
+const GUIDE = '<g class="guide" fill="none" stroke-width="2" stroke-dasharray="6 4">' +
+  '<path d="' + FACE_PATH + '" stroke="#ffe14a"/>' +
+  '<line x1="0" y1="200" x2="400" y2="200" stroke="#ff6b9a" stroke-width="1.2"/>' +
+  '<line x1="0" y1="165" x2="400" y2="165" stroke="#a7ff6b" stroke-width="1.2"/>' +
+  '<line x1="200" y1="0" x2="200" y2="480" stroke="#ffffff" stroke-width="1" opacity=".5"/>' +
+  '<rect x="178" y="270" width="44" height="50" stroke="#6bd5ff"/>' +
+  '<circle cx="318" cy="92" r="64" stroke="#d58bff"/>' +
+  '<rect x="240" y="340" width="150" height="130" stroke="#ffa94d"/>' +
+  '<circle cx="70" cy="410" r="38" stroke="#ff7070"/>' +
+  '<g stroke-dasharray="none" stroke-width="2.5" stroke="#fff"><circle cx="160" cy="198" r="3"/><circle cx="240" cy="198" r="3"/><circle cx="200" cy="248" r="3"/></g></g>';
+
+const COORD_TABLE = [
+  ['キャンバス', 'viewBox 0 0 400 480（バストアップ、下端は画面外に切る）', '—'],
+  ['頭（顔の輪郭）', '中心 (200,190)・横半径92・縦半径98（y 92〜288）', 'head'],
+  ['目', 'y=198、x=160 / 240（白目は横半径22・縦半径25）', 'eyes'],
+  ['眉', 'y=165（x 138〜182 / 218〜262）', 'brows'],
+  ['口', '中心 (200,248)', 'mouth'],
+  ['首', 'x 178〜222、y 270〜320（女性は x 180〜220）', 'body'],
+  ['肩・胴', 'y 310 以降。男性 x 80〜320 / 女性 x 92〜308', 'body / outfit'],
+  ['夢の吹き出し', '中心 (318,92)・半径64（右上）', 'bubble'],
+  ['強み（持ち物）', '領域 x 240〜390・y 340〜470（右手 (310,410) 付近）', 'item'],
+  ['弱みのサイン', '中心 (70,410)・半径38（左下）', 'debuff'],
+  ['背景', '全面。sky（空・壁）／far（遠景）／near（近景）の3層', 'bgSky / bgFar / bgNear'],
+  ['輪郭線', '濃い茶色 #3a2418・太さ4（細部は3〜3.5、まつ毛の弧は5.5）', '全部品共通']
+];
+const THUMB_VB = { eyes:'80 130 240 140', brows:'80 120 240 120', mouth:'110 190 180 120', extra:'80 80 240 240', head:'80 60 240 260', hair:'60 40 280 320', emblem:'118 306 164 164', bubble:'208 6 198 198', item:'228 326 168 152', debuff:'22 362 96 96', jobOutfit:'55 285 290 195' };
+
+function isDone(kind, key) {
+  const p = PARTS[kind][key];
+  if (!p) return false;
+  if (kind === 'hair') return !!(p.back && p.front);
+  if (kind === 'bg') return !!(p.sky && p.far && p.near);
+  return true;
+}
+function thumbSVG(kind, key) {
+  const st = {};
+  if (kind === 'body' || kind === 'outfit') st['性別'] = key;
+  if (kind === 'hair') { st['性別'] = key[0] === 'F' ? '女性' : '男性'; st.hairVar = +key.slice(1); }
+  if (kind === 'bg') st['スタート環境'] = key;
+  if (kind === 'emblem') st['価値観'] = key;
+  if (kind === 'bubble') st['夢・憧れ'] = key;
+  const L = layerOf(st, {});
+  if (['eyes','brows','mouth','extra','item','debuff','bubble','jobOutfit','fx'].includes(kind)) L[kind] = PARTS[kind][key]();
+  // emblem は layerOf が 価値観 から服色ごと描くので、ここでは足さない
+  return svgFromLayers(L, THUMB_VB[kind] || '0 0 400 480', false);
+}
+function faceGallery() {
+  return '<div class="faces">' + Object.keys(FACE_MAP).map(p => {
+    const f = FACE_MAP[p];
+    const one = g => heroSVG({ '性別': g, '性格': p }, { vb: '70 50 260 270' });
+    return '<div class="pcard"><div class="pair">' + one('男性') + one('女性') + '</div><b>' + p.replace(/（.*）/, '') + '</b><br>eyes.' + f[0] + ' / brows.' + f[1] + ' / mouth.' + f[2] + (f[3] ? ' / extra.' + f[3] : '') + '</div>';
+  }).join('') + '</div>';
+}
+function hairGallery() {
+  return '<div class="faces">' + [['男性', 'M'], ['女性', 'F']].map(g => [1, 2, 3].map(n =>
+    '<div class="pcard">' + heroSVG({ '性別': g[0], hairVar: n }, { vb: '20 30 360 340' }) + '<b>hair.' + g[1] + n + '</b></div>').join('')).join('') + '</div>';
+}
+function valueGallery() {
+  return '<div class="faces">' + Object.keys(VALUE_STYLE).map(v =>
+    '<div class="pcard">' + heroSVG({ '性別': '女性', '価値観': v }, { vb: '55 285 290 195' }) + '<b>' + v + '</b><br>服の色 ' + VALUE_STYLE[v].base + '（影 ' + VALUE_STYLE[v].shade + '） / emblem.' + v + '</div>'
+  ).join('') + '</div>';
+}
+function dreamGallery() {
+  return '<div class="faces">' + SPEC.bubble.map(d =>
+    '<div class="pcard">' + heroSVG({ '性別': '男性', '夢・憧れ': d }, { vb: '208 6 198 198' }) + '<b>' + d + '</b><br>bubble.' + d + ' / オーラ ' + DREAM_AURA[d] + '</div>'
+  ).join('') + '</div>';
+}
+function itemGallery() {
+  return '<div class="faces">' + SPEC.item.map(k =>
+    '<div class="pcard">' + heroSVG({ '性別': '男性', '強み': k }, { vb: '222 318 178 162' }) + '<b>' + k + '</b><br>item.' + k + '</div>'
+  ).join('') + '</div>';
+}
+function debuffGallery() {
+  return '<div class="faces">' + SPEC.debuff.map(k =>
+    '<div class="pcard">' + heroSVG({ '性別': '女性', '弱み': k }, { vb: '0 335 175 145' }) + '<b>' + k + '</b><br>debuff.' + k + '</div>'
+  ).join('') + '</div>';
+}
+function bgGallery() {
+  return '<div class="faces">' + SPEC.bg.filter(k => k !== 'default').map(k =>
+    '<div class="pcard">' + heroSVG({ '性別': '女性', 'スタート環境': k }) + '<b>' + k + '</b><br>bg.' + k + '</div>'
+  ).join('') + '</div>';
+}
+function buildGallery() {
+  const g = document.getElementById('gallery');
+  let total = 0, done = 0;
+  const doneHtml = [], todoHtml = [];
+  Object.keys(SPEC).forEach(kind => {
+    const ok = [], ng = [];
+    SPEC[kind].forEach(key => { total++; if (isDone(kind, key)) { done++; ok.push(key); } else ng.push(key); });
+    if (ok.length) doneHtml.push('<h3>' + KIND_LABEL[kind] + '（' + kind + '）　<span class="ok">' + ok.length + ' / ' + SPEC[kind].length + '</span></h3><div class="thumbs">' +
+      ok.map(k => '<div class="th">' + thumbSVG(kind, k) + kind + '.' + k + '</div>').join('') + '</div>');
+    if (ng.length) todoHtml.push('<h3>' + KIND_LABEL[kind] + '（' + kind + '）　' + ng.length + '点</h3><div class="chips">' +
+      ng.map(k => '<span class="chip">' + kind + '.' + k + '</span>').join('') + '</div>');
+  });
+  const pct = Math.round(done / total * 100);
+  const sample = { '性別':'女性', '性格':'好奇心旺盛', '強み':'粘り強い', '弱み':'朝が弱い', '夢・憧れ':'海外で働く', '価値観':'家族', 'スタート環境':'都市に出たい' };
+  g.innerHTML =
+    '<h1>パーツ確認ページ（S8）</h1><p>開発用ページです。通常の画面は <code>?dev=gallery</code> を外して開きます。直したいパーツは下に出る <code>種類.キー</code> の ID で伝えてください。</p>' +
+    '<div class="stat"><b>実装済み ' + done + ' / ' + total + ' 点（' + pct + '%）</b><div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+    '<h2>1. 座標仕様表</h2><table><tr><th>要素</th><th>位置・サイズ</th><th>レイヤー</th></tr>' +
+    COORD_TABLE.map(r => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>').join('') + '</table>' +
+    '<h2>2. ベース男女（ガイド線つき）</h2><p>黄＝頭の輪郭／桃＝目の高さ／緑＝眉の高さ／水色＝首／紫＝夢の吹き出し／橙＝持ち物の領域／赤＝弱みのサイン</p><div class="row">' +
+    '<div class="fig big">' + heroSVG({ '性別':'男性' }, { guide:true }) + '男性ベース（M1）</div>' +
+    '<div class="fig big">' + heroSVG({ '性別':'女性' }, { guide:true }) + '女性ベース（F1）</div></div>' +
+    '<h2>3. ベース男女（ガイドなし）と、全カードを引いた状態</h2><div class="row">' +
+    '<div class="fig">' + heroSVG({ '性別':'男性' }) + '男性</div>' +
+    '<div class="fig">' + heroSVG({ '性別':'女性' }) + '女性</div>' +
+    '<div class="fig">' + heroSVG(sample, { ph:true }) + '全カードを引いた状態（S8・完成エフェクトつき）</div></div>' +
+    '<h2>4. 性格12種の表情（男女）と割り当て</h2><p>カードの「性格」から 目・眉・口・小物 が決まります。似て見えるペアがあれば ID で教えてください。</p>' + faceGallery() +
+    '<h2>5. 髪の見た目6種（男性3・女性3）</h2>' + hairGallery() +
+    '<h2>6. 価値観10種（服の色＋胸エンブレム）</h2><p>カードの「価値観」で服の色と胸のマークが変わります。色が近い組（お金・収入／仲間／家族）は ID で教えてください。</p>' + valueGallery() +
+    '<h2>7. 夢12種（吹き出しアイコン＋オーラ）</h2><p>カードの「夢・憧れ」で右上の吹き出しと、キャラの後ろのオーラの色が変わります。吹き出しの位置は仕様どおり (318,92) のままです。</p>' + dreamGallery() +
+    '<h2>8. 強み12種（右手の持ち物）</h2><p>カードの「強み」で右手の持ち物が変わります。服の中央のエンブレムとは重ならない位置にしています。</p>' + itemGallery() +
+    '<h2>9. 弱み12種（左下のサイン）</h2><p>カードの「弱み」で左下の丸バッジが変わります。責める印象にならないよう、黄みがかったオレンジのバッジ＋小さめのアイコンにしています。</p>' + debuffGallery() +
+    '<h2>10. スタート環境10種（背景）</h2><p>カードの「スタート環境」で背景が変わります。主な絵はキャラの左右と上部・足元に置き、右上の吹き出しの裏は淡く保っています。「奨学金」は、貧しさを連想させない中立的で前向きな絵にしています。</p>' + bgGallery() +
+    '<h2>11. 実装済みパーツ</h2>' + doneHtml.join('') +
+    '<h2>12. 未了パーツ（' + (total - done) + '点）</h2>' + todoHtml.join('');
+}
+/*==END:GALLERY==*/
+
+/*==S8==*/
+// ==== S8：授業運用（班コード・大画面・印刷用カード・第2回自分アバター）====
+// 班コード（保存はしない。印刷用カードにだけ反映する）
+function teamCode() { const el = document.getElementById('teamCode'); return el ? (el.value || '').trim() : ''; }
+// 大画面モード（プロジェクター投影用）
+function toggleBig() {
+  const on = document.body.classList.toggle('big');
+  const b = document.getElementById('bigBtn');
+  if (b) { b.textContent = '大画面：' + (on ? 'ON' : 'OFF'); b.classList.toggle('on', on); }
+}
+const esc8 = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// 印刷用カード：押したときだけ組み立てて印刷する（通常のCtrl+Pでは従来どおり画面が印刷される）
+function printCards() {
+  buildPrintSheet();
+  document.body.classList.add('printcards');
+  window.print();
+}
+window.addEventListener('afterprint', () => document.body.classList.remove('printcards'));
+function buildPrintSheet() {
+  const ps = document.getElementById('printSheet'); if (!ps) return;
+  const code = teamCode();
+  let h = '<div class="ps-title">ライフデザイン・ゲーム　ふりかえりカード</div>' +
+    '<div class="ps-meta"><span>組・番号・名前（　　　　　　　　　）</span>' +
+    (code ? '<span>班コード：' + esc8(code) + '</span>' : '<span>班コード（　　　　　）</span>') + '</div>';
+  const drawn = cats.filter(c => current[c]);
+  if (drawn.length) {
+    h += '<div class="ps-sec">第1回　主人公カード</div><div class="ps-flex"><div class="ps-chara">' + heroSVG(current, {}) + '</div><div class="ps-main">' +
+      '<table class="ps-table">' + cats.map(c => '<tr><th>' + c + '</th><td>' + (current[c] ? esc8(current[c]) : '―') + '</td></tr>').join('') + '</table>';
+    if (drawn.length === cats.length) { const t = titleFor(); h += '<div class="ps-ev">称号：' + esc8(t.title) + '</div>'; }
+    if (curEv) h += '<div class="ps-ev">イベント：' + esc8(curEv) + '</div>';
+    h += '<div class="ps-note">主人公へのアドバイス・気づいたこと</div><div class="ps-lines"><div></div><div></div></div></div></div>';
+  }
+  const myPicked = MY_CATS.filter(c => my[c]).length + (my.jobType ? 1 : 0);
+  if (selJob || selType || myPicked) {
+    h += '<div class="ps-sec">第2回　自分の進路</div>';
+    if (myPicked) h += '<div class="ps-flex"><div class="ps-chara">' + myAvatarSVG() + '</div><div class="ps-main">' +
+      '<table class="ps-table">' + MY_CATS.map(c => '<tr><th>' + c + '</th><td>' + (my[c] ? esc8(my[c]) : '―') + '</td></tr>').join('') +
+      '<tr><th>仕事タイプ</th><td>' + (my.jobType ? esc8(my.jobType) : '―') + '</td></tr></table></div></div>';
+    h += '<table class="ps-table" style="margin-top:10px"><tr><th>決めた仕事</th><td>' + (selJob ? esc8(selJob) : '―') + '</td></tr>' +
+      '<tr><th>ミッション（30・40代までに、○○している）</th><td style="height:34px"></td></tr></table>';
+    h += '<div class="ps-note">ふりかえり（大事にしたいこと・次にやること）</div><div class="ps-lines"><div></div><div></div></div>';
+  }
+  if (!drawn.length && !selJob && !selType && !myPicked) {
+    h += '<div class="ps-note">まだカードを引いていないか、項目を選んでいません。授業の途中で印刷すると、ここに記録が入ります。</div>' +
+      '<div class="ps-note">ふりかえり</div><div class="ps-lines"><div></div><div></div><div></div></div>';
+  }
+  ps.innerHTML = h;
+}
+// 自分アバター（第2回）：自分の項目を選んで作る。仕事タイプは sec-job の選択と連動する
+const MY_CATS = ['性別', '性格', '価値観', '夢・憧れ', '強み', '弱み', 'スタート環境'];
+const my = { hairVar: 1 };
+let myFx = 'sparkle', myWasDone = false;
+const MY_FX_LABEL = { sparkle: 'キラキラ', frame: 'わく', glow: '光' };
+function myDone() { return MY_CATS.every(c => my[c]) && !!my.jobType; }
+function myAvatarSVG() {
+  const st = {}; MY_CATS.forEach(c => { if (my[c]) st[c] = my[c]; });
+  st.hairVar = my.hairVar || 1; st.jobType = my.jobType;
+  const L = layerOf(st, {});
+  L.fx = myDone() ? PARTS.fx[myFx]() : '';
+  return svgFromLayers(L);
+}
+function renderMyAvatar() {
+  const stage = document.getElementById('myStage'); if (!stage) return;
+  stage.innerHTML = myAvatarSVG();
+  const n = MY_CATS.filter(c => my[c]).length + (my.jobType ? 1 : 0);
+  // S9fix2：0項目の間はステージを隠し、案内プレースホルダーを出す（主人公側と同仕様）
+  stage.style.display = n === 0 ? 'none' : '';
+  const mph = document.getElementById('myEmpty');
+  if (mph) mph.style.display = n === 0 ? '' : 'none';
+  const prog = document.getElementById('myProg');
+  if (prog) prog.textContent = myDone() ? '自分のキャラクター完成！' : (my['性別'] ? 'あと ' + (8 - n) + ' 項目で完成' : '「性別」を選ぶと体と顔が出るよ');
+  const fxr = document.getElementById('myFxRow');
+  if (fxr) fxr.style.display = myDone() ? '' : 'none';
+  const done = document.getElementById('myDone');
+  if (done) {
+    if (myDone()) {
+      done.innerHTML = '<div class="tk">― 完成 ―</div><div class="tt">自分のキャラクター完成！</div><div class="td">仕事タイプは「' + esc8(my.jobType) + '」。この姿は印刷用カードにも残せるよ。</div>';
+      if (!done.classList.contains('show')) { done.classList.add('show'); if (!myWasDone) sfxPlay('fanfare'); }
+    } else { done.classList.remove('show'); done.innerHTML = ''; }
+  }
+  myWasDone = myDone();
+  syncMyBar();
+}
+function syncMyBar() {
+  document.querySelectorAll('#myControls [data-cat]').forEach(b => {
+    const cat = b.getAttribute('data-cat'), v = b.getAttribute('data-v');
+    b.classList.toggle('on', cat === '髪型' ? (my.hairVar || 1) === +v : my[cat] === v);
+  });
+  document.querySelectorAll('#myFxRow [data-fx]').forEach(b => b.classList.toggle('on', myFx === b.getAttribute('data-fx')));
+}
+function setMy(cat, v) { my[cat] = v; renderMyAvatar(); }
+function setMyHair(n) { my.hairVar = n; renderMyAvatar(); }
+function setMyFx(f) { myFx = f; renderMyAvatar(); }
+function syncMyJob(t) { my.jobType = t; renderMyAvatar(); }
+function buildMyBar() {
+  const box = document.getElementById('myControls'); if (!box) return;
+  const COLORS = {'性別':'#0369a1','髪型':'#0b5fa5','性格':'#7e22ce','価値観':'#5b21b6','夢・憧れ':'#be185d','強み':'#15803d','弱み':'#c2410c','スタート環境':'#0e7490','仕事タイプ':'#b45309'};
+  const row = (label, items) => '<div class="avrow"><span class="avlabel" style="background:' + (COLORS[label] || '#0b5fa5') + '">' + label + '</span>' + items + '</div>';
+  const catBtns = cat => DATA.cards[cat].map(v => '<button data-cat="' + cat + '" data-v="' + v + '" onclick="setMy(this.dataset.cat,this.dataset.v)">' + v + '</button>').join('');
+  const group = (title, inner) => '<div class="avgroup"><div class="avgroup-title">' + title + '</div>' + inner + '</div>';
+  let h = '';
+  h += group('姿を決める', row('性別', catBtns('性別')) + row('髪型', [1, 2, 3].map(n => '<button data-cat="髪型" data-v="' + n + '" onclick="setMyHair(+this.dataset.v)">' + n + '</button>').join('')) + row('性格', catBtns('性格')));
+  h += group('気持ち', row('価値観', catBtns('価値観')) + row('夢・憧れ', catBtns('夢・憧れ')));
+  h += group('力', row('強み', catBtns('強み')) + row('弱み', catBtns('弱み')));
+  h += group('出発点', row('スタート環境', catBtns('スタート環境')) + row('仕事タイプ', Object.keys(TYPES).map(t => '<button data-cat="jobType" data-v="' + t + '" onclick="selectType(this.dataset.v)">' + t + '</button>').join('')));
+  box.innerHTML = h;
+  const fxr = document.getElementById('myFxRow');
+  if (fxr) fxr.innerHTML = '<span class="avlabel">完成エフェクト</span>' + Object.keys(MY_FX_LABEL).map(f => '<button data-fx="' + f + '" onclick="setMyFx(this.dataset.fx)">' + MY_FX_LABEL[f] + '</button>').join('');
+  syncMyBar();
+}
+/*==END:S8==*/
+
+/*==BOOT==*/
+// render は game.html 本体の1本だけ（末尾で updateMission と updateHero を呼ぶ）。ここで上書きしない
+buildHairBar();
+buildFxBar();
+buildMyBar();
+renderMyAvatar();
+render();
+if (DEV_GALLERY) { document.body.classList.add('devmode'); buildGallery(); }
+/*==END:BOOT==*/
+</script>
+
+<div id="miniChara" title="クリックするとキャラクターの所へ戻ります">
+  <div class="mini-head"><span id="miniLabel">主人公キャラクター</span><small>タップで本体へ</small></div>
+  <div id="miniStage"></div>
+</div>
+<script>
+(function () {
+  var mini = document.getElementById('miniChara');
+  var miniStage = document.getElementById('miniStage');
+  var miniLabel = document.getElementById('miniLabel');
+  if (!mini || !miniStage) return;
+  var PAIRS = [
+    { stage: 'charaStage', sec: 'sec-avatar', label: '主人公キャラクター' },
+    { stage: 'myStage', sec: 'sec-avatar', label: '自分のキャラクター' }
+  ];
+  function pair() {
+    var av = document.getElementById('sec-avatar');
+    var mode2 = av && window.getComputedStyle(av).display !== 'none';
+    return mode2 ? PAIRS[1] : PAIRS[0];
+  }
+  function hasChara(p) {
+    var st = document.getElementById(p.stage);
+    return !!(st && st.style.display !== 'none' && st.querySelector('svg'));
+  }
+  var wrapSeen = {};
+  var pending = false;
+  function sync() {
+    if (pending) return; pending = true;
+    requestAnimationFrame(function () {
+      pending = false;
+      var p = pair();
+      if (hasChara(p)) {
+        var svg = document.getElementById(p.stage).querySelector('svg');
+        miniStage.innerHTML = '';
+        miniStage.appendChild(svg.cloneNode(true));
+        miniLabel.textContent = p.label;
+      }
+      refresh();
+    });
+  }
+  function refresh() {
+    var p = pair();
+    var show = hasChara(p) && wrapSeen[p.stage] === false;
+    mini.classList.toggle('show', !!show);
+  }
+  PAIRS.forEach(function (p) {
+    var st = document.getElementById(p.stage);
+    if (!st) return;
+    var wrap = st.closest('.chara-wrap') || st;
+    wrapSeen[p.stage] = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { wrapSeen[p.stage] = e.isIntersecting; refresh(); });
+      }, { threshold: 0.12 }).observe(wrap);
+    }
+    new MutationObserver(sync).observe(st, { childList: true, subtree: true, attributes: true });
+  });
+  ['mode1', 'mode2'].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (b) b.addEventListener('click', function () { setTimeout(sync, 80); });
+  });
+  mini.addEventListener('click', function () {
+    var p = pair();
+    var st = document.getElementById(p.stage);
+    var wrap = st && (st.closest('.chara-wrap') || st);
+    if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  sync();
+})();
+</script>
+</body>
+</html>
