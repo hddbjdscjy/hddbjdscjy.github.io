@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>情報I 前提知識クエスト</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body {
+    margin: 0; background: #0e1526; color: #f2f5fa;
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 14px 48px; }
+  header.top { text-align: center; padding: 10px 0 4px; }
+  header.top h1 { font-size: 1.45rem; margin: 0 0 4px; letter-spacing: .02em; }
+  header.top h1 .accent { color: #ffd23f; }
+  header.top p.sub { margin: 0; color: #aebadd; font-size: .9rem; }
+  .charbox {
+    background: #182238; border: 3px solid #2c3d63; border-radius: 20px;
+    padding: 14px 12px 10px; margin: 16px 0 6px; text-align: center;
+  }
+  .charrow { display: flex; align-items: flex-end; justify-content: center; gap: 18px; }
+  .charcell { text-align: center; }
+  .charcell .cap { font-size: .78rem; color: #aebadd; margin-top: 2px; }
+  .charcell .cap.now { color: #ffd23f; font-weight: 700; }
+  .charcell svg { image-rendering: pixelated; }
+  @keyframes pop { 0% { transform: scale(.6); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .pop { animation: pop .45s ease; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .floaty { animation: floaty 2.4s ease-in-out infinite; }
+  .arrow { font-size: 1.3rem; color: #5f719e; padding-bottom: 26px; }
+  .xpwrap { margin: 10px 2px 2px; }
+  .xpmeta { display: flex; justify-content: space-between; font-size: .85rem; color: #aebadd; }
+  .xpmeta b { color: #fff; }
+  .xpbar { height: 14px; background: #0a0f1e; border-radius: 999px; overflow: hidden; border: 2px solid #2c3d63; }
+  .xpfill { height: 100%; background: #37e0a0; border-radius: 999px; transition: width .6s ease; }
+  .tabs { display: flex; gap: 8px; margin: 18px 0 12px; }
+  .tabs button {
+    flex: 1; min-height: 48px; border-radius: 12px; border: 2px solid #2c3d63;
+    background: #182238; color: #f2f5fa; font-size: 1rem; font-weight: 700; cursor: pointer;
+  }
+  .tabs button.on { background: #ffd23f; color: #14213d; border-color: #ffd23f; }
+  .tabs button .badge {
+    display: inline-block; min-width: 22px; padding: 0 5px; margin-left: 4px;
+    background: #e05252; color: #fff; border-radius: 999px; font-size: .8rem; line-height: 1.5;
+  }
+  .tabs button.on .badge { background: #14213d; color: #ffd23f; }
+  .card { background: #182238; border: 2px solid #2c3d63; border-radius: 16px; padding: 16px 14px; margin-bottom: 12px; }
+  .card h2 { font-size: 1.05rem; margin: 0 0 8px; }
+  .card p.note { color: #aebadd; font-size: .9rem; margin: 0 0 10px; }
+  .bigbtn {
+    display: block; width: 100%; min-height: 56px; border: none; border-radius: 14px;
+    background: #ffd23f; color: #14213d; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+    padding: 10px; margin: 8px 0;
+  }
+  .bigbtn.sub { background: #37e0a0; }
+  .bigbtn:disabled { background: #33436b; color: #8494b8; cursor: default; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips button {
+    flex: 1 1 46%; min-height: 50px; border-radius: 12px; border: 2px solid #2c3d63;
+    background: #0e1526; color: #f2f5fa; font-size: .98rem; font-weight: 700; cursor: pointer; padding: 8px 6px;
+  }
+  .chips button small { display: block; font-weight: 400; color: #aebadd; font-size: .78rem; }
+  .qmeta { display: flex; justify-content: space-between; align-items: center; color: #aebadd; font-size: .88rem; margin-bottom: 8px; }
+  .qmeta .ch { background: #2c3d63; color: #fff; border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 700; }
+  .qprog { height: 10px; background: #0a0f1e; border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
+  .qprog div { height: 100%; background: #4cc9f0; transition: width .3s ease; }
+  .qtext { font-size: 1.08rem; font-weight: 700; margin: 0 0 14px; }
+  .choices { display: grid; gap: 10px; }
+  .choices button {
+    width: 100%; min-height: 54px; text-align: left; border-radius: 12px; padding: 10px 12px;
+    border: 2px solid #2c3d63; background: #0e1526; color: #f2f5fa; font-size: 1rem; cursor: pointer; line-height: 1.5;
+  }
+  .choices button:disabled { cursor: default; opacity: 1; }
+  .choices button.ok { background: #14532d; border-color: #37e0a0; }
+  .choices button.ng { background: #5b1d1d; border-color: #e05252; }
+  .choices button.dim { opacity: .55; }
+  .judge { font-size: 1.25rem; font-weight: 800; margin: 14px 0 6px; }
+  .judge.ok { color: #37e0a0; } .judge.ng { color: #ff7b7b; }
+  .exp {
+    background: #0e1526; border: 2px solid #2c3d63; border-radius: 12px;
+    padding: 12px; font-size: .95rem; white-space: pre-line; margin-bottom: 12px;
+  }
+  .exp b { color: #ffd23f; }
+  .result { text-align: center; }
+  .result .score { font-size: 2.2rem; font-weight: 800; margin: 6px 0; }
+  .result .score small { font-size: 1rem; color: #aebadd; }
+  .listgroup h3 { font-size: 1rem; margin: 18px 0 8px; color: #ffd23f; }
+  .listitem { background: #182238; border: 2px solid #2c3d63; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+  .listitem .k { font-weight: 800; }
+  .listitem .st { float: right; font-size: .85rem; }
+  .listitem .m { color: #c6d0e8; font-size: .92rem; }
+  .hidden { display: none !important; }
+  .center { text-align: center; }
+  .small { font-size: .85rem; color: #aebadd; }
+  .resetlink { background: none; border: none; color: #8494b8; text-decoration: underline; font-size: .85rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>情報I <span class="accent">前提知識</span>クエスト</h1>
+    <p class="sub">共通テストの情報Iで「問題文が説明してくれない知識」だけを集めたクイズ。全40問。</p>
+  </header>
+
+  <div class="charbox">
+    <div class="charrow">
+      <div class="charcell">
+        <div id="charNow"></div>
+        <div class="cap now" id="charNowName"></div>
+      </div>
+      <div class="arrow">▶</div>
+      <div class="charcell">
+        <div id="charNext"></div>
+        <div class="cap">つぎは ？？？</div>
+      </div>
+    </div>
+    <div class="xpwrap">
+      <div class="xpmeta"><span>つうさん正解数 <b id="xpNum">0</b></span><span id="xpNext"></span></div>
+      <div class="xpbar"><div class="xpfill" id="xpFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button id="tabQuiz" class="on">クイズ</button>
+    <button id="tabRetry">解き直し<span class="badge hidden" id="retryBadge">0</span></button>
+    <button id="tabList">知識リスト</button>
+  </div>
+
+  <!-- ホーム（クイズ選択） -->
+  <section id="viewHome">
+    <div class="card">
+      <h2>ランダム10問</h2>
+      <p class="note">全範囲からランダムで10問。すきま時間にどうぞ。</p>
+      <button class="bigbtn" id="btnAll">スタート</button>
+    </div>
+    <div class="card">
+      <h2>分野ごとに10問</h2>
+      <p class="note">教科書の章ごとに分かれている。苦手な分野を集中して。</p>
+      <div class="chips" id="chapterChips"></div>
+    </div>
+    <p class="center"><button class="resetlink" id="btnReset">記録をリセットする</button></p>
+  </section>
+
+  <!-- 解き直し -->
+  <section id="viewRetry" class="hidden">
+    <div class="card">
+      <h2>解き直しリスト</h2>
+      <p class="note">前に間違えた問題がここに集まる。正解するとリストから消える。</p>
+      <div id="retryList"></div>
+      <button class="bigbtn sub" id="btnRetryStart">解き直しスタート</button>
+    </div>
+  </section>
+
+  <!-- 知識リスト -->
+  <section id="viewList" class="hidden">
+    <p class="note small">クイズに出る知識の一覧。○は一度正解した問題、×は間違えた問題。</p>
+    <div id="knowledgeList"></div>
+  </section>
+
+  <!-- クイズ画面 -->
+  <section id="viewQuiz" class="hidden">
+    <div class="card">
+      <div class="qmeta"><span class="ch" id="qChapter"></span><span id="qCount"></span></div>
+      <div class="qprog"><div id="qProgFill" style="width:0%"></div></div>
+      <p class="qtext" id="qText"></p>
+      <div class="choices" id="qChoices"></div>
+      <div id="qFeedback" class="hidden">
+        <div class="judge" id="qJudge"></div>
+        <div class="exp" id="qExp"></div>
+        <button class="bigbtn" id="btnNext">次の問題へ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 結果画面 -->
+  <section id="viewResult" class="hidden">
+    <div class="card result">
+      <div class="small">けっか</div>
+      <div class="score"><span id="resScore">0</span><small> / </small><span id="resTotal">10</span><small> 問正解</small></div>
+      <div id="resMsg"></div>
+      <div id="resGrow" class="hidden">
+        <div class="judge ok">キャラが成長した！</div>
+        <div id="resChar" class="center"></div>
+      </div>
+      <button class="bigbtn" id="btnBack">もどる</button>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+/* ===== 成長キャラ（ピクセル） ===== */
+var STAGES = [
+  { name: "なぞのドット", xp: 0,   color: "#8d99ae", map: [
+    "............","............","............","............",
+    "....####....","....####....","....####....","....####....",
+    "............","............","............","............"] },
+  { name: "ピクセル玉", xp: 10,  color: "#4cc9f0", map: [
+    "............","............","...######...","..########..",
+    "..##K##K##..","..########..","..########..","...######...",
+    "............","............","............","............"] },
+  { name: "ピクセル生物", xp: 25,  color: "#37e0a0", map: [
+    "............","...######...","..########..",".##K####K##.",
+    ".##########.",".####KK####.","..########..","...######...",
+    "..##....##..","..##....##..","............","............"] },
+  { name: "ミニロボ", xp: 45,  color: "#b388ff", map: [
+    ".....AA.....",".....AA.....","....####....","..########..",
+    "..#K####K#..","..########..","..###KK###..","..########..",
+    "....####....","............","............","............"] },
+  { name: "ロボット", xp: 70,  color: "#ff9f43", map: [
+    ".....AA.....","....####....","..########..","..#K####K#..",
+    "..########..",".##########.",".#.######.#.",".#.######.#.",
+    "...######...","...##..##...","...##..##...","..###..###.."] },
+  { name: "データヒーロー", xp: 100, color: "#ffd23f", map: [
+    ".....SS.....","....####....","..########..","..#K####K#..",
+    "..########..",".C########C.",".C#######.C.",".C.######.C.",
+    "...######...","...##..##...","...##..##...","..###..###.."] }
+];
+function pixelSVG(stage, size, silhouette) {
+  var cell = size / 12, rects = "";
+  var pal = { "#": silhouette ? "#33436b" : stage.color, "K": silhouette ? "#33436b" : "#14213d",
+              "A": silhouette ? "#33436b" : "#ffd23f", "S": silhouette ? "#33436b" : "#ffd23f",
+              "C": silhouette ? "#33436b" : "#e05252" };
+  for (var y = 0; y < 12; y++) {
+    var row = stage.map[y];
+    for (var x = 0; x < 12; x++) {
+      var ch = row.charAt(x);
+      if (pal[ch]) rects += '<rect x="' + (x * cell) + '" y="' + (y * cell) + '" width="' + cell + '" height="' + cell + '" fill="' + pal[ch] + '"/>';
+    }
+  }
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true">' + rects + '</svg>';
+}
+function stageIndex(xp) {
+  var idx = 0;
+  for (var i = 0; i < STAGES.length; i++) if (xp >= STAGES[i].xp) idx = i;
+  return idx;
+}
+</script>
+<script>
+"use strict";
+/* ===== 問題データ =====
+   c: 分野(0-3) / k: キーワード / m: 一覧用の一言 / q: 問題文 / choices: 選択肢 / a: 正解の番号 / exp: 解説（正解以外も） */
+var CHAPTERS = ["情報社会と問題解決", "コミュニケーションと情報デザイン", "コンピュータとプログラミング", "情報通信ネットワークとデータの活用"];
+var QUESTIONS = [
+/* ---- 第1分野 情報社会 ---- */
+{c:0,k:"複製性",m:"コピーしても元の情報は減らないという情報の性質",q:"情報の特性の一つ「複製性」の説明として、正しいものはどれか。",
+ choices:["コピーしても元の情報は減らず、品質もほとんど劣化しない","時間がたつと自然に消えてなくなる","受け取った人だけが独占できる","紙に印刷しないと保存できない"],a:0,
+ exp:"正解は1つ目。情報は物とちがい、複製しても元の情報が減らない。\n2つ目は逆で、情報は消えにくく残り続ける「残存性」がある。3つ目も逆で、情報は広まりやすい「伝播性」を持つ。4つ目は誤りで、デジタル情報はデータのまま保存できる。"},
+{c:0,k:"著作権の保護期間",m:"著作権は死後70年。創作した時点で自動的に発生する",q:"個人が創作した著作物の、著作権の保護期間はどれか。",
+ choices:["著作者の死後70年","著作者の死後50年","公表してから30年","登録してから20年"],a:0,
+ exp:"正解は「死後70年」。著作権は創作した時点で自動的に発生し、登録はいらない。\n「死後50年」は2018年の法改正前の期間。「公表後70年」は法人著作物の場合。「登録から20年」は特許権（出願から20年）との混同。"},
+{c:0,k:"特許権",m:"特許権は出願・審査・登録が必要。保護は出願から20年",q:"特許権について、正しいものはどれか。",
+ choices:["発明を出願し、審査を経て登録されると発生する","発明した時点で自動的に発生する","保護期間は著作者の死後70年である","登録しなくても発明を独占できる"],a:0,
+ exp:"正解は1つ目。特許権などの産業財産権は、出願・審査・登録という手続きが必要。\n「作った時点で自動発生」は著作権の特徴。「死後70年」も著作権の期間。特許の保護期間は出願から20年。"},
+{c:0,k:"個人情報",m:"特定の個人を識別できる情報。組み合わせでも当たる",q:"次のうち「個人情報」に当たるものはどれか。",
+ choices:["氏名と生年月日の組み合わせ","匿名化された年代別の統計データ","会社の売上高","昨日の天気"],a:0,
+ exp:"正解は1つ目。特定の個人を識別できる情報が個人情報で、氏名がなくても組み合わせて識別できれば当たる。\n統計データは個人を識別できない形に加工されていれば個人情報ではない。売上高や天気は個人とは結びつかない。"},
+{c:0,k:"可用性",m:"必要なときに使える状態を保つこと（セキュリティ3要素の一つ）",q:"情報セキュリティの3要素のうち「可用性」の説明はどれか。",
+ choices:["必要なときに、使いたい人がきちんと使える状態を保つこと","許可された人だけが見られるようにすること","情報が改ざんされていないこと","情報を暗号化すること"],a:0,
+ exp:"正解は1つ目。可用性は「使えること」。\n2つ目は「機密性」、3つ目は「完全性」。この3つが情報セキュリティの3要素。暗号化は対策の手段であって、要素そのものではない。"},
+{c:0,k:"フィッシング",m:"偽サイトに誘導してIDやパスワードを入力させる手口",q:"フィッシングの手口として、正しいものはどれか。",
+ choices:["本物そっくりの偽サイトに誘導し、IDやパスワードを入力させる","ファイルを暗号化して、元に戻す代わりに金銭を要求する","大量のデータを送りつけてサーバを停止させる","他人のパソコンを遠隔操作して情報を盗む"],a:0,
+ exp:"正解は1つ目。フィッシングは「釣り」のように偽のメールやSMSで偽サイトへ誘い込む手口。\n2つ目はランサムウェア、3つ目はDoS攻撃の説明。"},
+{c:0,k:"クリエイティブ・コモンズ",m:"CCのBYは「作者名を表示すること」が条件",q:"クリエイティブ・コモンズ（CCライセンス）の「BY」が表す条件はどれか。",
+ choices:["作品を使うとき、作者名を表示すること","作品を有料で使うこと","作品を改変してはいけないこと","作品を商用利用してはいけないこと"],a:0,
+ exp:"正解は「BY＝表示」。\n改変禁止は「ND」、非営利は「NC」、同じ条件での引き継ぎは「SA」。CCは著作権を放棄するものではなく、条件を示して利用を許可する仕組み。"},
+{c:0,k:"フィルターバブル",m:"アルゴリズムで好みに合う情報ばかりに囲まれる状態",q:"フィルターバブルの説明として、正しいものはどれか。",
+ choices:["アルゴリズムが好みに合う情報ばかりを表示し、異なる意見に触れにくくなる状態","嘘の情報を本当らしく見せる加工技術","個人情報が外部に漏れてしまう事故","検索結果が速く表示される仕組み"],a:0,
+ exp:"正解は1つ目。おすすめ機能などが、自分と似た意見ばかりを届けることで視野が狭くなる状態。\n似た言葉にエコーチェンバー（同じ意見の集団の中で、その意見がますます強まる現象）がある。"},
+{c:0,k:"デジタルデバイド",m:"情報技術を使える人と使えない人の間の格差",q:"デジタルデバイドとは、何の格差のことか。",
+ choices:["情報技術を使える人と使えない人の間の格差","都市と地方の人口の差","世代の間の年収の差","パソコンとスマートフォンの性能の差"],a:0,
+ exp:"正解は1つ目。年齢・地域・経済力などによって生じる情報格差のこと。\n情報社会で取り残される人をなくすための対策が課題になっている。"},
+{c:0,k:"不正アクセス禁止法",m:"他人のID・パスワードを無断で使うログインは違法",q:"不正アクセス禁止法で禁止される行為はどれか。",
+ choices:["他人のIDとパスワードを無断で使ってログインすること","自分のパスワードを変更すること","公共のWi-Fiに接続すること","自分のパソコンを初期化すること"],a:0,
+ exp:"正解は1つ目。本人の許可なく他人の識別符号（ID・パスワード）を使ってアクセスする行為が「不正アクセス行為」。\n情報を盗んだかどうかは関係なく、ログインした時点で成立する。他人のパスワードを無断で他人に教える行為も禁止されている。"},
+/* ---- 第2分野 情報デザイン ---- */
+{c:1,k:"デジタル化の手順",m:"標本化→量子化→符号化の順",q:"アナログの音をデジタル化する手順の、正しい順序はどれか。",
+ choices:["標本化 → 量子化 → 符号化","量子化 → 標本化 → 符号化","符号化 → 標本化 → 量子化","標本化 → 符号化 → 量子化"],a:0,
+ exp:"正解は「標本化→量子化→符号化」。\n標本化は一定時間ごとに値を取ること、量子化はその値を段階的な数値に丸めること、符号化は0と1の列に直すこと。順序の入れ替えは全部誤り。"},
+{c:1,k:"標本化周波数",m:"1秒間に値を取る回数。大きいほど細かいがデータ量も増える",q:"標本化周波数を大きくすると、どうなるか。",
+ choices:["元の音をより細かく記録できるが、データ量は増える","データ量が減って、音もよくなる","録音される音の高さが変わる","再生速度が速くなる"],a:0,
+ exp:"正解は1つ目。標本化周波数は1秒間に何回値を取るかで、回数が多いほど波形を細かくなぞれる。\nただしデータ量は比例して増える。「量が減って音もよくなる」はあり得ない組み合わせ。"},
+{c:1,k:"音声のデータ量",m:"周波数×量子化ビット数×チャンネル数×秒数で計算する",q:"標本化周波数44,100Hz、量子化16ビット、ステレオ（2チャンネル）で1秒間録音した音声のデータ量はどれか。",
+ choices:["1,411,200ビット","705,600ビット","176,400ビット","44,100ビット"],a:0,
+ exp:"正解は1,411,200ビット。計算は「標本化周波数 × 量子化ビット数 × チャンネル数 × 秒数」= 44,100 × 16 × 2 × 1。\n705,600はモノラル（1チャンネル）で計算した場合の値。"},
+{c:1,k:"画像のデータ量",m:"画素数 × 1画素あたりのビット数で計算する",q:"横800画素 × 縦600画素、1画素あたり24ビットで表す画像1枚のデータ量（圧縮なし）はどれか。",
+ choices:["11,520,000ビット","480,000ビット","1,440,000ビット","33,600ビット"],a:0,
+ exp:"正解は11,520,000ビット。画素数は 800 × 600 = 480,000画素で、これに1画素24ビットを掛ける。\n480,000は画素数だけの値（ビット数を掛けていない）。"},
+{c:1,k:"フルカラー",m:"RGB各8ビットで 2の24乗 = 約1,677万色",q:"RGBの各色を8ビットで表すとき、表現できる色の数はどれか。",
+ choices:["2の24乗で、約1,677万色","2の8乗で、256色","24色","約16万色"],a:0,
+ exp:"正解は約1,677万色。1色あたり 2の8乗 = 256段階、それが3色あるので 256 × 256 × 256 = 2の24乗 = 16,777,216色。\n256色は1色分だけを計算した値。"},
+{c:1,k:"非可逆圧縮",m:"JPEGやMP3の方式。大きく圧縮できるが元に完全には戻らない",q:"非可逆圧縮を使っているものはどれか。",
+ choices:["JPEG","ZIP","PNG","テキストファイルの圧縮"],a:0,
+ exp:"正解はJPEG。非可逆圧縮は元に完全には戻らない代わりに大きく圧縮でき、写真のJPEGや音楽のMP3に使われる。\nZIPやPNGは可逆圧縮で、元のデータと全く同じ形に戻せる。"},
+{c:1,k:"Unicode",m:"世界中の文字を1つの体系で表す文字コードの規格",q:"Unicodeの説明として、正しいものはどれか。",
+ choices:["世界中の文字を1つの体系で表すための、文字コードの規格","画像を圧縮するための規格","日本の文字だけを集めた文字コード","音声データの保存形式"],a:0,
+ exp:"正解は1つ目。Unicodeは文字コードの国際規格で、ASCIIは英数字中心の7ビットのコード。\nUnicodeを実際のデータとして表す方式にUTF-8などがある。機器同士でコードの対応がずれると文字化けが起きる。"},
+{c:1,k:"加法混色",m:"光の三原色RGBを全部混ぜると白になる",q:"光の三原色（RGB）をすべて同じ強さで混ぜると、何色になるか。",
+ choices:["白","黒","灰色","黄色"],a:0,
+ exp:"正解は白。光は混ぜるほど明るくなる「加法混色」で、RGB全部を混ぜると白になる。\n絵の具のような色料の三原色（CMY）を混ぜると暗くなって黒に近づく。こちらは「減法混色」。"},
+{c:1,k:"ユニバーサルデザイン",m:"最初から、誰もが使いやすいように設計する考え方",q:"ユニバーサルデザインの考え方として、正しいものはどれか。",
+ choices:["最初から、年齢や障害の有無にかかわらず、誰もが使いやすいように設計する","障害のある人のために、後から設備を追加する","製品の価格を下げて、誰でも買えるようにする","使い方の説明書を詳しく書く"],a:0,
+ exp:"正解は1つ目。設計の段階から全ての人を対象にする考え方。\n後から段差をなくすなど、特定の人の障壁を取り除く考え方は「バリアフリー」。"},
+{c:1,k:"圧縮率",m:"圧縮率 = 圧縮後の量 ÷ 元の量 × 100。小さいほど高圧縮",q:"10MBのデータを圧縮して2MBになった。圧縮率は何％か。（圧縮率 = 圧縮後の量 ÷ 元の量 × 100）",
+ choices:["20％","80％","5％","200％"],a:0,
+ exp:"正解は20％。計算は 2 ÷ 10 × 100 = 20。圧縮率は小さいほど、よく圧縮できている。\n80％は「減った割合」の計算で、圧縮率とは別の量。"},
+/* ---- 第3分野 コンピュータとプログラミング ---- */
+{c:2,k:"CPU",m:"制御と演算を行う中央処理装置",q:"コンピュータの五大装置のうち、プログラムの命令を解釈して全体を制御し、計算を行う装置はどれか。",
+ choices:["CPU（中央処理装置）","主記憶装置","補助記憶装置","出力装置"],a:0,
+ exp:"正解はCPU。制御装置と演算装置を合わせたものがCPU。\n主記憶装置は処理中のデータやプログラムを一時的に置く場所、補助記憶装置は電源を切っても残る保存用。"},
+{c:2,k:"2進数",m:"各位が2の累乗。13 = 8+4+1 なので 1101",q:"10進数の13を2進数で表すと、どれか。",
+ choices:["1101","1011","1110","10011"],a:0,
+ exp:"正解は1101。13 = 8 + 4 + 0 + 1 なので、上位の桁から 1・1・0・1 と並ぶ。\n1011は11、1110は14、10011は19。"},
+{c:2,k:"ビットと通り数",m:"nビットで表せるのは 2のn乗 通り",q:"8ビットで表せる情報の種類（組み合わせの数）はどれか。",
+ choices:["256通り","8通り","16通り","64通り"],a:0,
+ exp:"正解は256通り。1ビット増えるごとに通り数は2倍になるので、nビットでは 2のn乗 通り。8ビットなら 2の8乗 = 256。\n64通りは6ビットの場合。"},
+{c:2,k:"2の補数",m:"コンピュータで負の整数を表す方法",q:"コンピュータの内部で負の整数を表す方法として、広く使われるものはどれか。",
+ choices:["2の補数","10進数のマイナス記号をそのまま付ける","小数に変換して表す","文字として保存する"],a:0,
+ exp:"正解は「2の補数」。コンピュータは0と1しか扱えないため、符号も数値の並びで表す必要がある。\n2の補数を使うと、引き算を足し算の回路で処理できる利点がある。"},
+{c:2,k:"論理演算",m:"ORはどちらかが1なら1。ANDは両方1のときだけ1",q:"A = 1、B = 0 のとき、A OR B（論理和）の結果はどれか。",
+ choices:["1","0","2","10"],a:0,
+ exp:"正解は1。OR（論理和）は、少なくとも一方が1なら結果は1。\nAND（論理積）は両方1のときだけ1なので、この組み合わせでは0になる。NOTは値を反転させる演算で、AのNOTは0。"},
+{c:2,k:"代入",m:"プログラムの「=」は、右辺を左辺の変数に入れる命令",q:"プログラムで「x = x + 1」と書いたときの意味はどれか。",
+ choices:["xの今の値に1を加えたものを、改めてxに入れる","xとx+1が等しいという宣言","xが常に1であることの証明","文法エラーになる"],a:0,
+ exp:"正解は1つ目。プログラムの「=」は数学の等号ではなく「右辺を計算して、左辺の変数に入れる」という代入を表す。\nこの1行の前後で、xの値は1増えたものに変わる。"},
+{c:2,k:"配列の添字",m:"共通テストのプログラム表記では、添字は1から始まる",q:"共通テストのプログラム表記では添字は1から始まる。配列 a の中身が [10, 20, 30] のとき、a[2] の値はどれか。",
+ choices:["20","10","30","0"],a:0,
+ exp:"正解は20。添字は「何番目の要素か」を表し、a[1] = 10、a[2] = 20、a[3] = 30。\nプログラミング言語によっては0から始まるものもあるが、共通テストの表記は1から始まる。"},
+{c:2,k:"二分探索",m:"二分探索が使えるのは、データが整列済みのときだけ",q:"二分探索（バイナリサーチ）が使える条件はどれか。",
+ choices:["データがあらかじめ整列（ソート）されていること","データが100件以下であること","データが数値であること","データに重複がないこと"],a:0,
+ exp:"正解は1つ目。二分探索は「真ん中と比べて、範囲を半分に絞る」方法なので、大小の順序が整っていることが前提。\n整列されていないデータには、先頭から順に探す線形探索を使う。"},
+{c:2,k:"フローチャート",m:"ひし形は「判断（分岐）」を表す記号",q:"フローチャートで「判断（分岐）」を表す記号はどれか。",
+ choices:["ひし形","長方形","角の丸い長方形","平行四辺形"],a:0,
+ exp:"正解はひし形。\n長方形は「処理」、角の丸い長方形は「端子（開始・終了）」、平行四辺形は「入出力」を表す。記号と役割の対応は、問題文で説明されないことが多い。"},
+{c:2,k:"モンテカルロ法",m:"乱数を使った多数回の試行で、確率や面積を近似する方法",q:"乱数を使った多数回の試行によって、確率や面積などを近似的に求める方法はどれか。",
+ choices:["モンテカルロ法","二分探索","ソート","トレース"],a:0,
+ exp:"正解はモンテカルロ法。シミュレーションの代表例で、正方形にランダムに点を打ち、円の中に入った割合から円周率を近似する、といった使い方をする。\n試行回数が多いほど精度が上がる。"},
+/* ---- 第4分野 ネットワークとデータ ---- */
+{c:3,k:"DNS",m:"ドメイン名とIPアドレスを対応づける仕組み",q:"DNSの役割はどれか。",
+ choices:["ドメイン名をIPアドレスに変換する","メールを暗号化する","ウイルスを検出する","Webページの画像を表示する"],a:0,
+ exp:"正解は1つ目。人間向けの名前（ドメイン名）と、機械向けの住所（IPアドレス）を対応づける仕組み。\nDNSがないと、サイトの名前だけでは通信相手が分からない。"},
+{c:3,k:"ルータ",m:"ネットワーク同士を接続し、パケットの経路を選ぶ装置",q:"ルータの役割はどれか。",
+ choices:["異なるネットワーク同士を接続し、パケットの最適な経路を選んで送る","パソコンの画面を表示する","データを長期保存する","パソコンに電源を供給する"],a:0,
+ exp:"正解は1つ目。インターネットはネットワークの集合体で、ルータがその間の道案内をする。\n家庭では、ルータが自宅のLANとインターネットをつないでいる。"},
+{c:3,k:"パケット交換",m:"データを小分けにして送り、回線を共有できる方式",q:"パケット交換方式の特徴として、正しいものはどれか。",
+ choices:["データを小さい単位に分けて送り、複数の通信で回線を共有できる","1つの通信が、終わるまで回線を占有し続ける","データを暗号化して送ることが前提の方式である","電話の音声専用の方式である"],a:0,
+ exp:"正解は1つ目。パケットに分けることで回線を分け合え、一部が届かなくてもその部分だけ送り直せる。\n2つ目は「回線交換方式」（昔の電話）の説明。パケット交換は回線を共有するので効率がよい。"},
+{c:3,k:"公開鍵暗号",m:"受け手の公開鍵で暗号化し、受け手の秘密鍵で復号する",q:"公開鍵暗号方式で、送り手が受け手に秘密の文を送る正しい手順はどれか。",
+ choices:["受け手の公開鍵で暗号化し、受け手は自分の秘密鍵で復号する","受け手の秘密鍵で暗号化し、受け手は自分の公開鍵で復号する","自分の公開鍵で暗号化し、自分の秘密鍵で復号する","共通鍵をメールで送ってから、その鍵で暗号化する"],a:0,
+ exp:"正解は1つ目。公開鍵は誰に知られてもよい「施錠専用」の鍵、秘密鍵は本人だけが持つ「開錠専用」の鍵。\nペアの鍵は結びついているが、公開鍵から秘密鍵を作ることはできない。"},
+{c:3,k:"電子署名",m:"自分の秘密鍵で署名し、相手は自分の公開鍵で検証する",q:"電子署名の仕組みとして、正しいものはどれか。",
+ choices:["送り手が自分の秘密鍵で署名し、受け手は送り手の公開鍵で検証する","送り手が自分の公開鍵で署名し、受け手は送り手の秘密鍵で検証する","受け手が自分の秘密鍵で署名する","本文にパスワードを書いて送る"],a:0,
+ exp:"正解は1つ目。署名は暗号化と鍵の使い方が逆になる。\n「本人しか作れない（秘密鍵）」と「誰でも確かめられる（公開鍵）」の組み合わせで、なりすましと改ざんを防ぐ。"},
+{c:3,k:"多要素認証",m:"知識・所持・生体のうち、異なる要素を組み合わせる認証",q:"多要素認証の例として、正しいものはどれか。",
+ choices:["パスワード（知識）と、スマートフォンへの確認コード（所持）を組み合わせる","パスワードを2回続けて入力する","パスワードを16文字以上の長さにする","パスワードを定期的に変更する"],a:0,
+ exp:"正解は1つ目。認証の要素は「知識・所持・生体」の3種類で、異なる種類を組み合わせて初めて多要素認証になる。\nパスワードを2回入力しても、要素は「知識」1種類のまま。"},
+{c:3,k:"相関と因果",m:"相関関係があっても、因果関係があるとは限らない",q:"「アイスクリームの売上と水難事故の件数には正の相関がある」という結果から、言えることはどれか。",
+ choices:["相関があっても、一方が他方の原因とは限らない","アイスクリームが水難事故の原因である","水難事故が売上の原因である","この2つの相関係数は1である"],a:0,
+ exp:"正解は1つ目。気温という第三の要因が両方を増やしている「疑似相関」の代表例。\n相関関係と因果関係は別物で、因果を主張するには別の検証がいる。相関係数は-1から1の間の値で、正の相関は0より大きいというだけで、1とは限らない。"},
+{c:3,k:"中央値",m:"小さい順に並べた真ん中の値。外れ値の影響を受けにくい",q:"データ [1, 2, 3, 4, 100] の中央値はどれか。",
+ choices:["3","22","4","100"],a:0,
+ exp:"正解は3。中央値は、小さい順に並べた真ん中の値で、この場合は3番目の3。\n22は平均値（合計110 ÷ 5）。平均は外れ値100に引っ張られるが、中央値は外れ値の影響を受けにくい。"},
+{c:3,k:"尺度水準",m:"気温は間隔尺度。差に意味はあるが、比に意味はない",q:"気温（摂氏）は、どの尺度に分類されるか。",
+ choices:["間隔尺度","名義尺度","順序尺度","比例尺度"],a:0,
+ exp:"正解は間隔尺度。差には意味があるが、0℃は「温度が無い」ことではないので、比には意味がない（20℃は10℃の2倍の暑さではない）。\n比例尺度は長さや重さ（0 = 無、比に意味あり）。名義尺度は血液型のような分類、順序尺度は満足度のランクのような順位だけのもの。"},
+{c:3,k:"主キー",m:"表の中で、各行を1つだけ特定できる列",q:"関係データベースで「主キー」の説明として、正しいものはどれか。",
+ choices:["表の中で、各行（レコード）を1つだけ特定できる列（または列の組み合わせ）","表の一番左に置かれる列のこと","数字が入っている列のこと","他の表を開くためのパスワード"],a:0,
+ exp:"正解は1つ目。主キーの値には重複が許されず、生徒番号のように対象を1つに特定するために使う。\n表の行を「レコード」、列を「フィールド（項目）」と呼ぶ。"}
+];
+</script>
+<script>
+"use strict";
+/* ===== 状態（この端末の中だけに保存） ===== */
+var LS_KEY = "johoBaseQuest:v1";
+var store = { xp: 0, state: {} }; /* state: 質問index -> "o" | "x" */
+try {
+  var raw = localStorage.getItem(LS_KEY);
+  if (raw) { var p = JSON.parse(raw); if (p && typeof p.xp === "number") store = p; }
+} catch (e) {}
+function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch (e) {} }
+function $(id) { return document.getElementById(id); }
+
+/* ===== キャラ表示 ===== */
+function renderChar(popNow) {
+  var idx = stageIndex(store.xp);
+  $("charNow").innerHTML = pixelSVG(STAGES[idx], 84, false);
+  $("charNow").className = popNow ? "pop" : "floaty";
+  $("charNowName").textContent = STAGES[idx].name;
+  if (idx < STAGES.length - 1) {
+    $("charNext").innerHTML = pixelSVG(STAGES[idx + 1], 84, true);
+    $("charNext").parentElement.style.display = "";
+    document.querySelector(".arrow").style.display = "";
+    var need = STAGES[idx + 1].xp - store.xp;
+    $("xpNext").textContent = "つぎの成長まで あと " + need + " 回正解";
+    $("xpFill").style.width = Math.min(100, Math.round(store.xp / STAGES[idx + 1].xp * 100)) + "%";
+  } else {
+    $("charNext").parentElement.style.display = "none";
+    document.querySelector(".arrow").style.display = "none";
+    $("xpNext").textContent = "最終形態！";
+    $("xpFill").style.width = "100%";
+  }
+  $("xpNum").textContent = store.xp;
+}
+
+/* ===== 画面切り替え ===== */
+var views = ["viewHome", "viewRetry", "viewList", "viewQuiz", "viewResult"];
+function show(id) {
+  views.forEach(function (v) { $(v).classList.toggle("hidden", v !== id); });
+  $("tabQuiz").classList.toggle("on", id === "viewHome" || id === "viewQuiz" || id === "viewResult");
+  $("tabRetry").classList.toggle("on", id === "viewRetry");
+  $("tabList").classList.toggle("on", id === "viewList");
+  window.scrollTo(0, 0);
+}
+function wrongList() {
+  var out = [];
+  QUESTIONS.forEach(function (q, i) { if (store.state[i] === "x") out.push(i); });
+  return out;
+}
+function renderRetry() {
+  var w = wrongList();
+  $("retryBadge").textContent = w.length;
+  $("retryBadge").classList.toggle("hidden", w.length === 0);
+  var box = $("retryList");
+  if (w.length === 0) {
+    box.innerHTML = '<p class="note">いま解き直す問題はない。クイズで間違えると、ここにたまる。</p>';
+  } else {
+    box.innerHTML = w.map(function (i) {
+      return '<div class="listitem"><span class="k">' + QUESTIONS[i].k + '</span><div class="m">' + CHAPTERS[QUESTIONS[i].c] + '</div></div>';
+    }).join("");
+  }
+  $("btnRetryStart").disabled = w.length === 0;
+}
+function renderList() {
+  var html = "";
+  CHAPTERS.forEach(function (ch, ci) {
+    html += '<div class="listgroup"><h3>' + ch + '</h3>';
+    QUESTIONS.forEach(function (q, i) {
+      if (q.c !== ci) return;
+      var st = store.state[i] === "o" ? '<span class="st" style="color:#37e0a0">○ 正解した</span>'
+             : store.state[i] === "x" ? '<span class="st" style="color:#ff7b7b">× 解き直し中</span>' : "";
+      html += '<div class="listitem">' + st + '<span class="k">' + q.k + '</span><div class="m">' + q.m + '</div></div>';
+    });
+    html += '</div>';
+  });
+  $("knowledgeList").innerHTML = html;
+}
+function renderChips() {
+  $("chapterChips").innerHTML = CHAPTERS.map(function (ch, ci) {
+    var done = QUESTIONS.filter(function (q, i) { return q.c === ci && store.state[i] === "o"; }).length;
+    return '<button data-ch="' + ci + '">' + ch + '<small>正解した問題 ' + done + ' / 10</small></button>';
+  }).join("");
+  Array.prototype.forEach.call($("chapterChips").querySelectorAll("button"), function (b) {
+    b.addEventListener("click", function () { startQuiz(QUESTIONS.map(function (q, i) { return q.c === Number(b.dataset.ch) ? i : -1; }).filter(function (i) { return i >= 0; })); });
+  });
+}
+function renderHome(popNow) { renderChar(popNow); renderRetry(); renderList(); renderChips(); }
+
+/* ===== クイズ ===== */
+var quiz = null;
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function startQuiz(indices) {
+  var picked = shuffle(indices).slice(0, 10);
+  quiz = { list: picked, pos: 0, score: 0, startStage: stageIndex(store.xp) };
+  show("viewQuiz");
+  renderQuestion();
+}
+function renderQuestion() {
+  var qi = quiz.list[quiz.pos], q = QUESTIONS[qi];
+  $("qChapter").textContent = CHAPTERS[q.c];
+  $("qCount").textContent = (quiz.pos + 1) + " / " + quiz.list.length + " 問目";
+  $("qProgFill").style.width = Math.round(quiz.pos / quiz.list.length * 100) + "%";
+  $("qText").textContent = q.q;
+  $("qFeedback").classList.add("hidden");
+  var order = shuffle([0, 1, 2, 3]);
+  quiz.order = order;
+  $("qChoices").innerHTML = "";
+  order.forEach(function (ci) {
+    var b = document.createElement("button");
+    b.textContent = q.choices[ci];
+    b.addEventListener("click", function () { answer(ci, b); });
+    $("qChoices").appendChild(b);
+  });
+}
+function answer(ci, btn) {
+  var qi = quiz.list[quiz.pos], q = QUESTIONS[qi];
+  var correct = ci === q.a;
+  Array.prototype.forEach.call($("qChoices").querySelectorAll("button"), function (b, bi) {
+    b.disabled = true;
+    var orig = quiz.order[bi];
+    if (orig === q.a) b.classList.add("ok");
+    else if (b === btn) b.classList.add("ng");
+    else b.classList.add("dim");
+  });
+  if (correct) {
+    quiz.score++;
+    store.xp++;
+    store.state[qi] = "o";
+  } else {
+    store.state[qi] = "x";
+  }
+  save();
+  $("qJudge").textContent = correct ? "○ 正解！" : "× ざんねん… 正解は「" + q.choices[q.a] + "」";
+  $("qJudge").className = "judge " + (correct ? "ok" : "ng");
+  $("qExp").innerHTML = "";
+  var bold = document.createElement("b");
+  bold.textContent = "【" + q.k + "】";
+  $("qExp").appendChild(bold);
+  $("qExp").appendChild(document.createTextNode("\n" + q.exp));
+  $("btnNext").textContent = quiz.pos + 1 >= quiz.list.length ? "結果を見る" : "次の問題へ";
+  $("qFeedback").classList.remove("hidden");
+  renderChar(false);
+}
+$("btnNext").addEventListener("click", function () {
+  quiz.pos++;
+  if (quiz.pos >= quiz.list.length) {
+    $("resScore").textContent = quiz.score;
+    $("resTotal").textContent = quiz.list.length;
+    var msgs = ["まずは知識リストで用語を確認してみよう。", "半分まであと少し。解き直しリストで復習しよう。", "いい調子。その調子で全分野を回そう。", "すごい！ほぼ完ぺき。残りも制覇しよう。", "全問正解！この分野は制覇だ。"];
+    var r = quiz.score / quiz.list.length;
+    $("resMsg").textContent = r === 1 ? msgs[4] : r >= 0.8 ? msgs[3] : r >= 0.5 ? msgs[2] : r >= 0.3 ? msgs[1] : msgs[0];
+    var grew = stageIndex(store.xp) > quiz.startStage;
+    $("resGrow").classList.toggle("hidden", !grew);
+    if (grew) $("resChar").innerHTML = pixelSVG(STAGES[stageIndex(store.xp)], 96, false);
+    renderHome(grew);
+    show("viewResult");
+  } else {
+    renderQuestion();
+  }
+});
+
+/* ===== イベント ===== */
+$("btnAll").addEventListener("click", function () { startQuiz(QUESTIONS.map(function (_, i) { return i; })); });
+$("btnRetryStart").addEventListener("click", function () { startQuiz(wrongList()); });
+$("btnBack").addEventListener("click", function () { renderHome(false); show("viewHome"); });
+$("tabQuiz").addEventListener("click", function () { renderHome(false); show("viewHome"); });
+$("tabRetry").addEventListener("click", function () { renderRetry(); show("viewRetry"); });
+$("tabList").addEventListener("click", function () { renderList(); show("viewList"); });
+$("btnReset").addEventListener("click", function () {
+  if (confirm("正解数と問題ごとの記録を全部消します。よいですか？")) {
+    store = { xp: 0, state: {} }; save(); renderHome(false);
+  }
+});
+renderHome(false);
+</script>
+</body>
+</html>
